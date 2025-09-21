@@ -69,6 +69,20 @@ You: exit
 You can type your queries and interact with the agent.
 Type exit or quit to stop the session.
 
+## Query Examples
+
+Here are some example queries you can use with the agent:
+
+- **Meeting details:**  
+  *Can you tell me the auth code for the 28 January 2025 meeting?*  
+  → The agent will search the internal knowledge base for relevant information.
+
+- **Personalized responses:**  
+  *What's my lucky number?*  
+  → The agent can use conversation memory or context to generate a response.
+
+Feel free to experiment with different questions related to your internal documentation or general queries!
+
 ## LangSmith Tracking
 
 To enable LangSmith tracking for experiment logging and tracing, set the following environment variables in your `.env` file:
