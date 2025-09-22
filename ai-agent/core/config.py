@@ -3,6 +3,8 @@ from pydantic import BaseModel, Field
 
 
 class Config(BaseModel):
+    """Configuration model for the AI agent application."""
+
     model: str = Field(..., min_length=1,
                        description="Model name, must be a non-empty string")
     embedding_name: str = Field(..., min_length=1,
@@ -18,6 +20,8 @@ class Config(BaseModel):
 
     @staticmethod
     def load_from_file(file_path: str) -> "Config":
+        """Load configuration from a JSON file."""
+
         import json
         with open(file_path, "r", encoding="utf-8") as f:
             data = json.load(f)

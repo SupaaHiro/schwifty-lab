@@ -26,9 +26,10 @@ def load_chains(model: str, tools: list[BaseTool]) -> RunnableChain:
     """
     Initializes and returns a dictionary containing a generation chain for language model interactions.
     Args:
+        model (str): The name of the language model to use.
         tools (list[BaseTool]): A list of tool instances to be bound to the language model.
     Returns:
-        dict: A dictionary with the key 'generate_chain' mapped to the chained prompt and language model.
+        RunnableChain: A dictionary with a single key "generate_chain" mapping to the configured generation chain.
     """
 
     llm = ChatOpenAI(model=model).bind_tools(tools=tools)

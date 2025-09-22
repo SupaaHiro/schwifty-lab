@@ -2,36 +2,25 @@
 
 A ReAct + RAG AI agent powered by **GPT-4o-mini** and **ChromaDB** for internal knowledge retrieval from Markdown documents.
 
-This agent is designed for testing, prototyping, and exploring AI-assisted workflows.
-
 ---
 
 ## Features
 
 - ReAct + Retrieval-Augmented Generation (RAG) architecture
 - Internal vector database powered by **ChromaDB**
-- Embeddings with `text-embedding-3-small`
-- Supports Markdown documents in `../docs`
-- Includes useful tools:
-  - `query_internal_kb`: Search internal knowledge base
-  - `get_today_date`: Return today’s date
-  - `get_current_time`: Return current time
-  - Default `llm-math` tools for calculations
-- Deterministic responses with `temperature=0` for reduced hallucinations
+- Ability to retrieve and update dinamically memory
+- Conversation history maintained to support context.
+- Invokes tools when necessary (date/time, math, KB queries, get/update memory)
 
 ---
 
 ## Requirements
 
-- **Python 3.12.11**  
+- **Python 3.12.x**  
 - **VS Code** recommended as IDE  
 - Install dependencies:
 
-```bash
-pip install -r requirements.txt
-```
-
-## Environment Setup
+## Environment File
 
 Create a .env file in the root directory with the following content:
 
@@ -45,6 +34,30 @@ There are **two** ways to obtain your OpenAI API key:
 2. Use the OpenAI CLI: openai api keys create
 
 *Never share your API key publicly!*
+
+## Environment Setup (Pip)
+
+If you prefer using `pip` for dependency management, install the required packages with:
+
+```bash
+pip install -r requirements.txt
+```
+
+## Environment Setup (Poetry)
+
+If you prefer using [Poetry](https://python-poetry.org/) for dependency management, you can restore the environment with:
+
+```bash
+poetry install
+```
+
+This will create a virtual environment and install all dependencies specified in `pyproject.toml`.
+
+To activate the environment, use:
+
+```bash
+poetry shell
+```
 
 ## Usage Example
 
@@ -95,23 +108,6 @@ LANGSMITH_PROJECT=ai-agent
 ```
 
 This will activate LangSmith tracing for your agent runs. Make sure to replace `<your-api-key>` with your actual LangSmith API key.
-
-## How It Works
-
-- Markdown documents are loaded from ../docs/ and split into chunks.
-- ChromaDB vector store is created/persisted in ../chroma_db.
-- Agent interacts using ReAct + RAG:
-- Retrieves relevant chunks from vector DB
-- Uses GPT-4o-mini for response generation
-- Invokes tools when necessary (date/time, math, KB queries)
-- Conversation history is maintained to support context.
-
-## Notes
-
-- Model: gpt-4o-mini (cost-efficient, replaceable with gpt-4o for higher quality)
-- Retrieval: 3 most similar chunks by default
-- All tools are bound to the agent for dynamic usage
-- Temperature is set to 0 for deterministic output
 
 ## License
 

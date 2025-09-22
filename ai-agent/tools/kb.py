@@ -6,6 +6,7 @@ from langchain_core.tools import tool, BaseTool
 
 
 class ToolState(TypedDict):
+    """Maintains the state of the vector database retriever tool."""
     vectordb_retriever: VectorStoreRetriever | None
 
 
@@ -20,7 +21,7 @@ def get_kb_tools(vdb_builder: Callable[[], VectorStoreRetriever] | None) -> list
       vectordb_retriever: An object used to retrieve information from a vector database.
 
     Returns:
-      BaseTool: A tool function that can be used to query the vector database.
+      list[BaseTool]: A list containing the tool function for querying the vector database.
     """
 
     # If no retriever builder is provided, return an empty list
