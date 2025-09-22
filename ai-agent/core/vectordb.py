@@ -1,61 +1,15 @@
 
-from typing import Callable
+from typing import Any, Callable, Sequence, List
 from langchain_core.documents import Document
 from langchain_core.vectorstores import VectorStoreRetriever
 from langchain_community.document_loaders import DirectoryLoader, TextLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_chroma import Chroma
-from langchain_core.embeddings.embeddings import Embeddings
 from langchain_core.vectorstores import VectorStoreRetriever
-from core.utils import deprecated
+from langchain_openai import OpenAIEmbeddings
 
 import chromadb
-import shutil
 import os
-
-
-@deprecated("Use vdb_build instead")
-def vdb_build_old(embeddings: Embeddings, db_path: str, collection_name: str, docs_chunks: list[Document], recreate: bool) -> VectorStoreRetriever:
-    """
-    Initializes a Chroma vector database from a list of document chunks and returns a retriever for similarity search.
-    Args:
-      embeddings (Embeddings | None): The embedding model to use for vectorizing documents.
-      db_path (str): Path to the directory where the vector database will be stored.
-      collection_name (str): Name of the collection within the vector database.
-      docs_chunks (list[Document]): List of document chunks to be added to the vector database.
-      recreate: Whether to recreate the database if it already exists.
-    Returns:
-      VectorStoreRetriever: A retriever object configured for similarity search over the vector database.
-    Raises:
-      Exception: If there is an error during the setup of the Chroma vector database.
-    """
-
-    # Clear existing database directory if it exists
-    if recreate and os.path.exists(db_path):
-        shutil.rmtree(db_path)
-    os.makedirs(db_path, exist_ok=True)
-
-    try:
-        vectorstore = Chroma.from_documents(
-            documents=docs_chunks,
-            embedding=embeddings,
-            persist_directory=db_path,
-            collection_name=collection_name
-        )
-        print(f"Created ChromaDB vector store!")
-
-    except Exception as e:
-        print(f"Error setting up ChromaDB: {str(e)}")
-        raise
-
-    # Now we create our retriever
-    retriever = vectorstore.as_retriever(
-        search_type="similarity",
-        # K is the amount of chunks to return (usually between 3 and 5 is good)
-        search_kwargs={"k": 5}
-    )
-
-    return retriever
 
 
 def vbd_load_documents(path: str, glob: str) -> list[Document]:
@@ -98,7 +52,7 @@ def vbd_load_documents(path: str, glob: str) -> list[Document]:
     return docs_chunks
 
 
-def vdb_build(embeddings: Embeddings, db_path: str, collection_name: str, docs_chunks: list[Document], recreate: bool) -> VectorStoreRetriever:
+def vdb_build(embedding_name: str, db_path: str, collection_name: str, docs_chunks: list[Document], recreate: bool) -> VectorStoreRetriever:
     """
     Builds or updates a ChromaDB vector store collection with embedded document chunks and returns a retriever for similarity search.
     Args:
@@ -113,14 +67,20 @@ def vdb_build(embeddings: Embeddings, db_path: str, collection_name: str, docs_c
       Exception: If there are issues initializing the database or upserting documents.
     """
 
+    # Initialize embedding model
+    embeddings = OpenAIEmbeddings(model=embedding_name)
+    # Note: It must be compatible with the LLM you are using.
+
     # Initialize ChromaDB client
-    client = chromadb.PersistentClient(path=db_path)
+    client = chromadb.PersistentClient(
+        path=db_path)
     if recreate or not os.path.exists(db_path):
         client.reset()
         print(f"Initialized ChromaDB at {db_path}")
 
     # Update collection with documents
-    collection = client.get_or_create_collection(name=collection_name)
+    collection = client.get_or_create_collection(
+        name=collection_name, embedding_function=None)
     for doc in docs_chunks:
         doc_content = doc.page_content if hasattr(
             doc, "page_content") else str(doc)
@@ -151,7 +111,7 @@ def vdb_build(embeddings: Embeddings, db_path: str, collection_name: str, docs_c
     return retriever
 
 
-def get_vdb_builder(path: str, glob: str, embeddings: Embeddings, db_path: str, collection_name: str) -> Callable[[], VectorStoreRetriever]:
+def get_vdb_builder(path: str, glob: str, embedding_name: str, db_path: str, collection_name: str) -> Callable[[], VectorStoreRetriever]:
     """
     Returns a function that loads documents from a specified folder, splits them into chunks and builds a Chroma vector database retriever.
     """
@@ -177,6 +137,6 @@ def get_vdb_builder(path: str, glob: str, embeddings: Embeddings, db_path: str, 
         print(f"Markdowns have been split into {len(docs_chunks)} chunks")
 
         # Initialize the vector database (ChromaDB) and create a retriever
-        return vdb_build(embeddings, db_path, collection_name, docs_chunks, recreate=False)
+        return vdb_build(embedding_name=embedding_name, db_path=db_path, collection_name=collection_name, docs_chunks=docs_chunks, recreate=False)
 
     return _vectordb_builder

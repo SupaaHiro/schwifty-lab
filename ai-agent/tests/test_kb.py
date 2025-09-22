@@ -20,7 +20,6 @@ def test_initialize_kb() -> None:
     # Load configuration
     cfg = Config.load_from_file("config.json")
     query = "What is LangChain?"
-    embeddings = OpenAIEmbeddings(model=cfg.embedding_name)
 
     # Act
     print("Loading and splitting markdown documents...")
@@ -28,8 +27,11 @@ def test_initialize_kb() -> None:
     imported_docs = len(docs_chunks)
     print(f"Markdowns have been split into {imported_docs} chunks")
 
-    retriever = vdb_build(embeddings, str(cfg.db_path),
-                          str(cfg.collection_name), docs_chunks, recreate=False)
+    retriever = vdb_build(embedding_name=cfg.embedding_name,
+                          db_path=str(cfg.db_path),
+                          collection_name=str(cfg.collection_name),
+                          docs_chunks=docs_chunks,
+                          recreate=False)
 
     print(f"Querying the vector database with '{query}'")
     docs = retriever.invoke(query)

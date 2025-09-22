@@ -17,20 +17,19 @@ from core.utils import print_graph
 # See https://platform.openai.com/account/api-keys
 load_dotenv()
 
-# Load configuration
+# Load configuration (config.json)
 cfg = Config.load_from_file("config.json")
 
-# Load embedding model
-embeddings = OpenAIEmbeddings(model=cfg.embedding_name)
-# Note: It must be compatible with the LLM you are using.
-
 # Lazy builder function for the vector database retriever
-vectordb_builder = get_vdb_builder(str(
-    cfg.docs_path), cfg.docs_glob, embeddings, str(cfg.db_path), cfg.collection_name)
+vdb_builder = get_vdb_builder(path=str(cfg.docs_path),
+                              glob=cfg.docs_glob,
+                              embedding_name=cfg.embedding_name,
+                              db_path=str(cfg.db_path),
+                              collection_name=cfg.collection_name)
 
 # Load all tools
 all_tools = load_all_tools(
-    model=cfg.model, vdb_builder=vectordb_builder, memory_path="../assets/bot_memory.json")
+    model=cfg.model, vdb_builder=vdb_builder, memory_path="../assets/bot_memory.json")
 
 # Load chains
 chains = load_chains(model=cfg.model, tools=all_tools)
