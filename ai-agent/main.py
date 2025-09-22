@@ -6,6 +6,7 @@ from langgraph.graph.message import add_messages  # Reducer function
 from langgraph.graph import StateGraph, START, END
 from langgraph.prebuilt import ToolNode
 
+from core.config import Config
 from tools import load_all_tools
 from core.chains import load_chains
 from core.vectordb import get_vdb_builder
@@ -16,20 +17,23 @@ from core.utils import print_graph
 # See https://platform.openai.com/account/api-keys
 load_dotenv()
 
-model = "gpt-4o-mini"
-embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
-# Note: The embedding model must be compatible with the LLM you are using.
+# Load configuration
+cfg = Config.load_from_file("config.json")
+
+# Load embedding model
+embeddings = OpenAIEmbeddings(model=cfg.embedding_name)
+# Note: It must be compatible with the LLM you are using.
 
 # Lazy builder function for the vector database retriever
-vectordb_builder = get_vdb_builder(
-    "../assets/docs", "**/*.md", embeddings, r"../chroma_db", "internal_kb")
+vectordb_builder = get_vdb_builder(str(
+    cfg.docs_path), cfg.docs_glob, embeddings, str(cfg.db_path), cfg.collection_name)
 
 # Load all tools
 all_tools = load_all_tools(
-    model=model, vdb_builder=vectordb_builder, memory_path="../assets/bot_memory.json")
+    model=cfg.model, vdb_builder=vectordb_builder, memory_path="../assets/bot_memory.json")
 
 # Load chains
-chains = load_chains(model=model, tools=all_tools)
+chains = load_chains(model=cfg.model, tools=all_tools)
 generate_chain = chains["generate_chain"]
 
 

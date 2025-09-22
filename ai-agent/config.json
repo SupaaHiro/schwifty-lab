@@ -1,0 +1,8 @@
+{
+  "model": "gpt-4o-mini",
+  "embedding_name": "text-embedding-3-small",
+  "docs_path": "../assets/docs",
+  "docs_glob": "**/*.md",
+  "db_path": "../assets/chroma_db",
+  "collection_name": "internal_kb"
+}
