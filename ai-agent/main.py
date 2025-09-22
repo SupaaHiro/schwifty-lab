@@ -1,6 +1,5 @@
 from typing import Any, Literal, Final, TypedDict, List, Union, Annotated, Sequence, Iterator
 from dotenv import load_dotenv
-from langchain_openai import OpenAIEmbeddings
 from langchain_core.messages import BaseMessage, HumanMessage, AIMessage, SystemMessage, ToolMessage
 from langgraph.graph.message import add_messages  # Reducer function
 from langgraph.graph import StateGraph, START, END
@@ -9,7 +8,7 @@ from langgraph.prebuilt import ToolNode
 from core.config import Config
 from tools import load_all_tools
 from core.chains import load_chains
-from core.vectordb import get_vdb_builder
+from core.vectordb import vdb_builder
 from core.utils import print_graph
 
 # Load environment variables from .env file
@@ -20,16 +19,18 @@ load_dotenv()
 # Load configuration (config.json)
 cfg = Config.load_from_file("config.json")
 
-# Lazy builder function for the vector database retriever
-vdb_builder = get_vdb_builder(path=str(cfg.docs_path),
-                              glob=cfg.docs_glob,
-                              embedding_name=cfg.embedding_name,
-                              db_path=str(cfg.db_path),
-                              collection_name=cfg.collection_name)
+# Function for building or loading the vector database retriever
+vdb_builder = vdb_builder(path=str(cfg.docs_path),
+                          glob=cfg.docs_glob,
+                          embedding_name=cfg.embedding_name,
+                          db_path=str(cfg.db_path),
+                          collection_name=cfg.collection_name,
+                          recreate=False)
 
 # Load all tools
-all_tools = load_all_tools(
-    model=cfg.model, vdb_builder=vdb_builder, memory_path="../assets/bot_memory.json")
+all_tools = load_all_tools(model=cfg.model,
+                           vdb_builder=vdb_builder,
+                           memory_path=str(cfg.memory_path))
 
 # Load chains
 chains = load_chains(model=cfg.model, tools=all_tools)

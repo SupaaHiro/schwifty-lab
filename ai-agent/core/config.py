@@ -14,6 +14,7 @@ class Config(BaseModel):
     db_path: Path = Field(..., description="Path to the database file")
     collection_name: str = Field(..., min_length=1,
                                  description="Collection name, must be a non-empty string")
+    memory_path: Path = Field(..., description="Path to the memory file")
 
     @staticmethod
     def load_from_file(file_path: str) -> "Config":
