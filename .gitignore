@@ -1,6 +1,13 @@
 # Custom
 assets/*[-_]memory.json
 
+# Jekyll
+_site
+.sass-cache
+.jekyll-cache
+.jekyll-metadata
+vendor
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
