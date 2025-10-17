@@ -10,6 +10,12 @@ Some things may be polished, others experimental, but all are intended to spark 
 - 🔬 Random experiments  
 - ⚡ Blog's article code examples
 
+## Blog Articles
+Here are some articles you can check out:
+
+- [CKAD Experiments: Testing Kubernetes NetworkPolicy - 2025/10/20](blog-articles/ckad-20251020/article_EN.md)  
+- [Blog Presentation - 2025/05/01](blog-articles/introduction-20250501/article_EN.md)
+
 ## How to use  
 
 Clone it, poke around and get inspired
