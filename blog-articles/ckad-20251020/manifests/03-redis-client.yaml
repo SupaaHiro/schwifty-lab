@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: redis-client
+spec:
+  containers:
+    - name: python-tester
+      image: python:3.12-alpine
+      command:
+      - sh 
+      - -c
+      - >
+        pip install --upgrade pip --root-user-action ignore > /dev/null && 
+        pip install redis --root-user-action ignore > /dev/null && 
+        python /scripts/test-redis-ping.py
+      env:
+        - name: REDIS_HOST
+          value: "redis"
+        - name: REDIS_PORT
+          value: "6379"
+      volumeMounts:
+        - name: script-volume
+          mountPath: /scripts
+  volumes:
+    - name: script-volume
+      configMap:
+        name: test-redis-ping
+  restartPolicy: Never
