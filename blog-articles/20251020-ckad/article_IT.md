@@ -51,7 +51,7 @@ k create -f manifests/01-redis.yaml
 Verifichiamo che il Pod raggiunga lo stato Running:
 
 ```bash
-k get pod --watch
+k get pod -o=wide -l=app=redis --watch
 ```
 
 ## Creazione del Service
@@ -83,6 +83,7 @@ k create -f manifests/02-redis-svc.yaml
 Una volta applicato, controlliamo che l’endpoint sia correttamente popolato con:
 
 ```bash
+k get svc -l=app=redis -o=wide
 k describe svc redis
 ```
 
@@ -150,6 +151,8 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: redis-client
+  labels:
+    app: redis-client
 spec:
   containers:
     - name: python-tester
@@ -185,7 +188,7 @@ k create -f manifests/03-redis-client.yaml
 Attendiamo che il Pod sia Running e controlliamo i log:
 
 ```bash
-k get pod --watch
+k get pod -o=wide -l=app=redis-client --watch
 k logs redis-client
 ```
 
