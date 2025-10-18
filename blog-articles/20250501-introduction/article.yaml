@@ -1,12 +1,12 @@
 apiVersion: blog.supaahiro.io/v1alpha1
 kind: BlogArticle
 metadata:
-  name: introduction-20250501
+  name: 20250501-introduction
 spec:
   title: "My Personal Journey into Cloud-Native Technologies"
-  previewImage: "https://supaahiro.github.io/schwifty-lab/blog-articles/introduction-20250501/article.webp"  
+  previewImage: "https://supaahiro.github.io/schwifty-lab/blog-articles/20250501-introduction/article.webp"  
   summary: "Personal introduction describing how a pandemic pause led me to Docker, Kubernetes and cloud-native technologies — and why this blog will share practical guides and insights for beginners and experienced practitioners."
-  url: "https://supaahiro.github.io/schwifty-lab/blog-articles/introduction-20250501/article_EN.md"
+  url: "https://supaahiro.github.io/schwifty-lab/blog-articles/20250501-introduction/article_EN.md"
   publishedOn: "2025-05-01T00:00:00Z"
   publishedBy: "Hiro"
   categoryId: "7111870b-3a87-9be5-1424-fea77073e618"
