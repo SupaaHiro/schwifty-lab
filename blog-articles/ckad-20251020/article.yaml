@@ -1,0 +1,16 @@
+apiVersion: blog.supaahiro.io/v1alpha1
+kind: BlogArticle
+metadata:
+  name: ckad-20251020-testing-networkpolicy
+spec:
+  title: "Testing Kubernetes NetworkPolicy"
+  previewImage: "https://supaahiro.github.io/schwifty-lab/blog-articles/ckad-20251020/article.webp"  
+  summary: "Hands-on exercise showing how to test Kubernetes Ingress NetworkPolicy using a Redis Pod and a client Pod, with manifests and a Python connectivity test."
+  url: "https://supaahiro.github.io/schwifty-lab/blog-articles/ckad-20251020/article_EN.md"
+  publishedOn: "2025-10-20T00:00:00Z"
+  publishedBy: "Hiro"
+  categoryId: "7111870b-3a87-9be5-1424-fea77073e618"
+  relatedArticleIds: []
+status:
+  published: true
+---
