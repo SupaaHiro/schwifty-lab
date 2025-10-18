@@ -11,10 +11,7 @@ In this first exercise we will create two Pods to test an Ingress NetworkPolicy.
 ## Prerequisites
 
 ⚠️ Important:
-Make sure the cluster uses a CNI that implements NetworkPolicy. Otherwise the policies will be ignored, even if they appear "applied".
-
-I ran some local tests with Kubernetes on Docker Desktop and with minikube, but neither supports them natively.
-In the end I opted for a temporary environment on [KillerCoda Playgrounds](https://killercoda.com/playgrounds)
+Verify that your Kubernetes cluster is configured with a CNI plugin that implements NetworkPolicy. Without such support, any defined policies will be silently ignored. I ran some local tests with Kubernetes on Docker Desktop and with minikube, but neither supports them natively. In the end I opted for a temporary environment on [KillerCoda Playgrounds](https://killercoda.com/playgrounds)
 
 ## Creating the Redis Pod
 

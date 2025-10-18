@@ -11,10 +11,7 @@ In questo primo esercizio creeremo due Pod per testare una NetworkPolicy di tipo
 ## Prerequisiti
 
 ⚠️ Importante:
-Assicurati che il cluster utilizzi una CNI che implementa le NetworkPolicy. In caso contrario le policy verranno ignorate, anche se risultano “applicate”.
-
-Io ho effettuato alcuni test in locale con Kubernetes su Docker Desktop e con minikube, ma nessuno dei due le supporta nativamente.
-Alla fine ho optato per un ambiente temporaneo su [KillerCoda Playgrounds](https://killercoda.com/playgrounds)
+Verifica che il tuo cluster Kubernetes sia configurato con un plugin CNI che implementi le NetworkPolicy. In assenza di tale supporto, le policy definite verranno semplicemente ignorate. Io ho effettuato alcuni test in locale con Kubernetes su Docker Desktop e con minikube, ma nessuno dei due le supporta nativamente. Alla fine ho optato per un ambiente temporaneo su [KillerCoda Playgrounds](https://killercoda.com/playgrounds)
 
 ## Creazione del Pod Redis
 
