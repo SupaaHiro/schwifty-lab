@@ -35,10 +35,14 @@ spec:
         - containerPort: 6379
 ```
 
-Applichiamo il manifest e verifichiamo che il Pod raggiunga lo stato Running:
-
+Applichiamo il manifest:
 ```bash
 k create -f manifests/01-redis.yaml
+```
+
+Verifichiamo che il Pod raggiunga lo stato Running:
+
+```bash
 k get pod --watch
 ```
 
@@ -62,10 +66,15 @@ spec:
       targetPort: 6379
 ```
 
-Una volta applicato, controlliamo che l’endpoint sia correttamente popolato con:
+Applichiamo il manifest:
 
 ```bash
 k create -f manifests/02-redis-svc.yaml
+```
+
+Una volta applicato, controlliamo che l’endpoint sia correttamente popolato con:
+
+```bash
 k describe svc redis
 ```
 
@@ -159,10 +168,15 @@ spec:
   restartPolicy: Never
 ```
 
-Applichiamo il manifest, attendiamo che il Pod sia Running e controlliamo i log:
+Applichiamo il manifest:
 
 ```bash
 k create -f manifests/03-redis-client.yaml
+```
+
+Attendiamo che il Pod sia Running e controlliamo i log:
+
+```bash
 k get pod --watch
 k logs redis-client
 ```
@@ -211,11 +225,13 @@ spec:
           port: 6379
 ```
 
-Dopo l'applicazione, la policy redis-access agirà come un “recinto” attorno ai Pod con label app=redis, permettendo connessioni solo dai Pod etichettati con access=redis.
+Applichiamo il manifest:
 
 ```bash
 k create -f manifests/04-netpol.yaml
 ```
+
+Dopo l'applicazione, la policy redis-access agirà come un “recinto” attorno ai Pod con label app=redis, permettendo connessioni solo dai Pod etichettati con access=redis.
 
 ## Test della connessione bloccata
 

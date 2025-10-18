@@ -35,10 +35,15 @@ spec:
         - containerPort: 6379
 ```
 
-Apply the manifest and verify the Pod reaches the Running state:
+Apply the manifest:
 
 ```bash
 k create -f manifests/01-redis.yaml
+```
+
+Verify the Pod reaches the Running state:
+
+```bash
 k get pod --watch
 ```
 
@@ -62,10 +67,15 @@ spec:
       targetPort: 6379
 ```
 
-Once applied, check that the endpoint is correctly populated with:
+Apply the manifest:
 
 ```bash
 k create -f manifests/02-redis-svc.yaml
+```
+
+Once applied, check that the endpoint is correctly populated with:
+
+```bash
 k describe svc redis
 ```
 
@@ -159,10 +169,15 @@ spec:
   restartPolicy: Never
 ```
 
-Apply the manifest, wait for the Pod to be Running and check the logs:
+Apply the manifest:
 
 ```bash
 k create -f manifests/03-redis-client.yaml
+```
+
+Wait for the Pod to be Running and check the logs:
+
+```bash
 k get pod --watch
 k logs redis-client
 ```
@@ -211,11 +226,13 @@ spec:
           port: 6379
 ```
 
-After applying, the redis-access policy will act like a "fence" around Pods with label app=redis, allowing connections only from Pods labeled with access=redis.
+Apply the manifest:
 
 ```bash
 k create -f manifests/04-netpol.yaml
 ```
+
+After applying, the redis-access policy will act like a "fence" around Pods with label app=redis, allowing connections only from Pods labeled with access=redis.
 
 ## Testing the blocked connection
 
@@ -238,7 +255,7 @@ Note: the error may take a few seconds to appear in the logs.
 
 ## Enable access via label
 
-Add the missing label access: redis to the redis-client Pod manifest and recreate it:
+Add the missing label "access: redis" to the redis-client Pod manifest and recreate it:
 
 ```bash
 yq e '.metadata.labels.access = "redis"' -i manifests/03-redis-client.yaml
