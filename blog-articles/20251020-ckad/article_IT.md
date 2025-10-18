@@ -13,6 +13,15 @@ In questo primo esercizio creeremo due Pod per testare una NetworkPolicy di tipo
 ⚠️ Importante:
 Verifica che il tuo cluster Kubernetes sia configurato con un plugin CNI che implementi le NetworkPolicy. In assenza di tale supporto, le policy definite verranno semplicemente ignorate. Io ho effettuato alcuni test in locale con Kubernetes su Docker Desktop e con minikube, ma nessuno dei due le supporta nativamente. Alla fine ho optato per un ambiente temporaneo su [KillerCoda Playgrounds](https://killercoda.com/playgrounds)
 
+## Come ottenere le risorse
+
+Puoi trovare tutte le risorse utilizzate in questo articolo clonando il repository:
+
+```yaml
+git clone https://github.com/SupaaHiro/schwifty-lab.git
+cd schwifty-lab/blog-articles/20251020-ckad
+```
+
 ## Creazione del Pod Redis
 
 Definiamo il primo Pod, che espone Redis sulla porta 6379.
