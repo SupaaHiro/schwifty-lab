@@ -24,7 +24,7 @@ cd schwifty-lab/blog-articles/20251020-ckad
 
 ## Creazione del Pod Redis
 
-Definiamo il primo Pod, che espone Redis sulla porta 6379.
+Per capire come funzionano le NetworkPolicy, dobbiamo creare un paio di pod. Ecco il primo:
 
 ```yaml
 apiVersion: v1
@@ -40,6 +40,8 @@ spec:
       ports:
         - containerPort: 6379
 ```
+
+Questo pod crea un istanza di redis in ascolto sulla porta 6379.
 
 Applichiamo il manifest:
 ```bash

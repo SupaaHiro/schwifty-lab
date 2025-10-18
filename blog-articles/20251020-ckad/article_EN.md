@@ -24,7 +24,8 @@ cd schwifty-lab/blog-articles/20251020-ckad
 
 ## Creating the Redis Pod
 
-Define the first Pod, which exposes Redis on port 6379.
+To understand how Network Policies work, we need to create a couple of pods.
+Here’s the first one:
 
 ```yaml
 apiVersion: v1
@@ -40,6 +41,8 @@ spec:
       ports:
         - containerPort: 6379
 ```
+
+This pod creates a redis instance listening on port 6379.
 
 Apply the manifest:
 
