@@ -2,7 +2,9 @@
 
 ## Introduzione
 
-Questo post inaugura una serie pensata per aiutarti a preparare l'esame Certified Kubernetes Application Developer (CKAD) tramite esercizi pratici ed esempi reali. Che tu sia agli inizi con Kubernetes o voglia affinare le tue competenze, ogni articolo tratterà una delle competenze chiave richieste per la certificazione. Poiché sono argomenti che devo rivedere anch'io per il mio esame, ho pensato — perché non pubblicare le mie note? Potrebbero essere utili ad altri che si avvicinano al CKAD per la prima volta o a chi lo ripassa come promemoria sui concetti chiave.
+Questo post inaugura una serie pensata per aiutarti a preparare l'esame Certified Kubernetes Application Developer (CKAD) tramite esercizi pratici ed esempi reali. Che tu sia agli inizi con Kubernetes o voglia affinare le tue competenze, ogni articolo tratterà una delle competenze chiave richieste per la certificazione.
+
+Poiché sono argomenti che devo rivedere anch'io per il mio esame, ho pensato — perché non pubblicare le mie note? Potrebbero essere utili ad altri che si avvicinano al CKAD per la prima volta o a chi lo ripassa come promemoria sui concetti chiave.
 
 Al momento della stesura, l'esame CKAD richiede quanto segue:
 
