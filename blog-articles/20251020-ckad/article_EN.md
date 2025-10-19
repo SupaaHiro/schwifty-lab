@@ -219,10 +219,6 @@ ENV UVICORN_PORT=5000
 # Start API inside uv virtual environment
 CMD ["uv", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "5000"]
 ```
-
-> [!NOTE]
-> What is a container?
->
 > A **container image** is an executable, immutable package that includes everything needed to run an application consistently across different environments.
 
 Build the container image:
@@ -306,9 +302,6 @@ spec:
         - containerPort: 5000
 ```
 
-> [!NOTE]
-> What is a Deployment?
-> 
 > A **Deployment** is a Kubernetes resource that manages the lifecycle of your application’s Pods.
 >   
 > It ensures the desired number of replicas are always running, automatically replaces failed Pods, and allows zero-downtime updates through rolling deployments.
