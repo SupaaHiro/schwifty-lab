@@ -19,7 +19,7 @@ All the manifests and examples mentioned in this post are available in the follo
 
 ```yaml
 git clone https://github.com/SupaaHiro/schwifty-lab.git
-cd schwifty-lab/blog-articles/20251020-ckad
+cd schwifty-lab/blog-articles/20251018-ckad
 ```
 
 ## Creating the Redis Pod
