@@ -4,7 +4,7 @@
 
 This blog post marks the beginning of a series designed to help you prepare for the Certified Kubernetes Application Developer (CKAD) exam through hands-on exercises and practical examples. Whether you're just starting out with Kubernetes or looking to sharpen your skills, each post will walk you through one of the core competencies required for the certification. Since these are topics I need to review for my own exam, I thought—why not publish my notes? They might be useful for others who are considering taking the CKAD for the first time, or for those retaking it and needing a refresher on key concepts.
 
-At the time of writing this article, the Wrapping Up: What We’ve Covered exam has the following requirement:
+At the time of writing, the CKAD exam has the following requirements:
 
 Application Design and Build
 - Define, build and modify container images
@@ -101,13 +101,13 @@ graph TD
   KubeProxy --> Pod
 ```
 
-Please note that the controlplane can also run on a worker node. In these cases, these nodes are usually "tainted", meaning they only execute the control plane components and not regular workloads.
+Please note that the control plane can also run on a worker node. In these cases, these nodes are usually "tainted", meaning they only run the control plane components and not regular workloads.
 
 ## 🖥️ What Is a Node in Kubernetes?
 
 In Kubernetes, a Node is a physical or virtual machine that runs containerized applications. It’s the worker unit of the cluster—responsible for executing workloads and hosting the components that make containers run.
 
-Each cluster typically has multiple nodes, and Kubernetes distributes Pods across them based on resource availability and scheduling rules.
+A cluster typically has multiple nodes, and Kubernetes distributes Pods across them based on resource availability and scheduling rules.
 
 Every node includes:
 - kubelet: The agent that communicates with the control plane and manages Pods on the node.
@@ -161,7 +161,7 @@ Depending on the mode in use, kube-proxy modifies the kernel’s routing table t
 - ipvs: Uses the Linux IP Virtual Server (IPVS) for more efficient load balancing. Requires the ip_vs kernel module and is ideal for large clusters.
 - userspace: An older, deprecated mode where kube-proxy manually forwards traffic. It has been replaced by iptables and ipvs.
 
-💡 In iptables mode, kube-proxy programs kernel DNAT rules to distribute traffic across backend Pods in a pseudo-random (effectively round-robin) fashion. Each new TCP connection is pinned to a selected Pod, ensuring consistent routing for the duration of the connection.
+In iptables mode, kube-proxy programs kernel DNAT rules to distribute traffic across backend Pods in a pseudo-random (effectively round-robin) fashion. Each new TCP connection is pinned to a selected Pod, ensuring consistent routing for the duration of the connection.
 
 ## 🌐 Introducing the concept of Service
 
@@ -186,7 +186,7 @@ Here's a quick recap:
 | ExternalName | DNS mapping to external service | ❌ | ❌ | Referencing external services by DNS |
 | Headless | Direct Pod endpoints (no ClusterIP) | ❌ | ❌ | StatefulSets, distributed databases, custom service discovery |
 
-Note: LoadBalancer and ExternalName require external components like MetalLB to function in bare-metal environments.
+Note: LoadBalancer and ExternalName may require external components like MetalLB to function in bare-metal environments.
 
 ## 🛣️ Introducing the CNI
 
@@ -201,17 +201,17 @@ Popular CNI plugins like Calico, Cilium, or Flannel can:
 
 Without a CNI plugin, Pods would only be able to communicate within the same node—making Kubernetes unusable in multi-node setups.
 
-🧠 In summary: kube-proxy decides where traffic should go, CNI ensures it can get there.
+In summary: kube-proxy decides where traffic should go, CNI ensures it can get there.
 
 ## 🌐 Introducing CoreDNS: Internal DNS for Kubernetes
 
-Before moving on to the control plane components, le'ts introduce the internal DNS used by Kubernetes for the name resolution.
+Before moving on to the control plane components, let's introduce the internal DNS used by Kubernetes for name resolution.
 
 CoreDNS is the default DNS server used by Kubernetes to provide internal name resolution for Services and Pods. It runs as a Deployment inside the cluster and is responsible for translating service names (like my-service.default.svc.cluster.local) into IP addresses.
 
 Whenever a Pod tries to reach another Service by name, CoreDNS is what makes that possible.
 
-🔍 What Does CoreDNS Do?
+What Does CoreDNS Do?
 - Resolves DNS queries for Kubernetes Services and Pods
 - Integrates with Kubernetes API to stay updated on resource changes
 - Supports custom DNS configurations via plugins
@@ -223,7 +223,7 @@ CoreDNS watches the Kubernetes API and dynamically updates its DNS records as Se
 
 In Kubernetes, the Control Plane is the brain of the cluster. It’s responsible for managing the overall state of the system—deciding what should run, where it should run, and how it should behave. While worker nodes execute workloads (i.e., run containers), the control plane makes all the decisions that keep the cluster functioning smoothly.
 
-🧩 What Does the Control Plane Do?
+What Does the Control Plane Do?
 The control plane continuously monitors the cluster and ensures that the desired state (as defined by your YAML manifests) matches the actual state. If something drifts—like a Pod crashing or a node going offline—the control plane takes action to restore balance.
 
 It handles tasks such as:
@@ -264,7 +264,7 @@ The API Server is the central hub of communication in a Kubernetes cluster. It a
 
 Whether you're using kubectl, deploying a new application, or a controller is watching for changes—everything goes through the API Server.
 
-🔍 What Does It Do?
+What Does It Do?
 - Validates requests: Ensures submitted manifests are syntactically and semantically correct.
 - Serves the Kubernetes API: Provides endpoints for reading and writing cluster state.
 - Authentication & Authorization: Verifies who is making the request and whether they’re allowed to do so.
@@ -278,7 +278,7 @@ etcd is a distributed key-value store that serves as the source of truth for all
 
 Think of etcd as Kubernetes’ memory: if it’s not in etcd, it doesn’t exist in the cluster.
 
-🔍 What Does It Store?
+What Does It Store?
 - Cluster configuration and metadata
 - Resource definitions (Pods, Services, Deployments, etc.)
 - State information (node health, leases, etc.)
