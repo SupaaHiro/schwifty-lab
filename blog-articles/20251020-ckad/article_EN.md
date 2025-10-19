@@ -6,12 +6,14 @@ The version is not hardcoded: it is read from a metadata.json file which, in a r
 
 The project we will create will have the following structure:
 
+```text
 src/
 ├── app/
 │   ├── main.py
 │   └── metadata.json
 ├── pyproject.toml
 └── Dockerfile
+```
 
 ## Prerequisites
 
