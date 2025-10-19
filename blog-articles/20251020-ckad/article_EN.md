@@ -313,7 +313,46 @@ spec:
 Apply the manifest:
 
 ```bash
-kubectl apply -f manifests/01-fastapi.yaml
+k apply -f manifests/01-fastapi.yaml
+```
+
+The deployment should create two ReplicaSets and two Pods. Verify that each pod reach the Running state:
+
+```bash
+k get deploy,rs -o=wide -l=app=fastapi
+k get pod -o=wide -l=app=fastapi --watch
+```
+
+To test if our API the service is working, let's quickly expose the port 5000 with a ClusterIP:
+
+```bash
+k expose deploy fastapi
+```
+
+Take note of the service IP:
+
+```bash
+k get svc -o=wide -l=app=fastapi
+```
+
+Notes: When configured to use IpTables, kube-proxy uses a pseudo-random round-robin (endpoint selection) behavior to choose an endpoint. With two backend Pods, the Pod that replies to any single request is effectively random, but across many requests the distribution should be approximately 50/50.
+
+Jump inside a temporary pod and try reach one endpoint, for example /health
+
+```bash
+k run -it --rm --image=alpine -- sh
+apk add curl
+curl <service-ip>:5000/health
+exit
+```
+
+You should see output similar to:
+
+```bash
+/ # curl 192.168.1.4:5000/health
+{"status":"ok"}/ #
+Session ended, resume using 'kubectl attach sh -c sh -i -t' command when the pod is running
+pod "sh" deleted
 ```
 
 ## Final cleanup
