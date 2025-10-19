@@ -126,6 +126,8 @@ Il container runtime è il componente a basso livello responsabile dell'esecuzio
 
 Il kubelet è l'agente Kubernetes che gira su ogni nodo. Comunica con il control plane e garantisce che i container siano eseguiti secondo le specifiche definite nella configurazione del cluster. In breve, è responsabile della gestione dei Pod sul proprio nodo.
 
+## 📦 Pods
+
 Prima di procedere, introduciamo il concetto di Pod.
 
 Un Pod è la più piccola unità distribuibile in Kubernetes. Non è solo un singolo container, ma un involucro logico attorno a uno o più container progettati per girare insieme sullo stesso nodo.
