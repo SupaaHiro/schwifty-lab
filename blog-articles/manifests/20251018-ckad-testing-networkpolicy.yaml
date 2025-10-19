@@ -3,6 +3,7 @@ kind: BlogArticle
 metadata:
   name: 20251018-ckad-testing-networkpolicy
 spec:
+  id: "67606109-caf7-17f0-255d-aa520e5c03f4"
   title: "CKAD Preparation, Testing Kubernetes NetworkPolicy"
   previewImage: "https://supaahiro.github.io/schwifty-lab/blog-articles/20251018-ckad/article.webp"  
   summary: "Hands-on exercise showing how to test Kubernetes Ingress NetworkPolicy using a Redis Pod and a client Pod, with manifests and a Python connectivity test."
