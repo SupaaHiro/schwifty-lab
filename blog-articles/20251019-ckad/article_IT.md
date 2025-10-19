@@ -309,11 +309,11 @@ Kubernetes fornisce diversi controller integrati per gestire tipi diversi di wor
 - *StatefulSet*: pensato per applicazioni stateful che richiedono identità stabili e storage persistente.
 - *DaemonSet*: garantisce che una copia di un Pod venga eseguita su ogni nodo del cluster.
 
-Comunemente usati per agenti a livello di nodo come collector di log, strumenti di monitoraggio o componenti di rete.
+Nelle prossime lezioni esamineremo ciascuno di questi aspetti in dettaglio. Per ora è sufficiente comprendere che per ogni workload si definisce una risorsa che descrive lo stato desiderato e che un controller provvede a riconciliare eventuali differenze nel cluster.
 
 ## Come vengono eseguiti i componenti di Kubernetes nel cluster
 
-Di seguito i componenti di Kubernetes e come vengono distribuiti.
+Qui di seguito trovi una tabella con l'elenco dei componenti visti nelle precedenti sezioni:
 
 | Component | Tipo / Ruolo | Come viene eseguito | Namespace / Posizione |
 |---|---|---|---|

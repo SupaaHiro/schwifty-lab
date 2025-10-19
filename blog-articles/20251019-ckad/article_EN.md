@@ -305,16 +305,15 @@ A controller is a background process that watches the Kubernetes API for changes
 Controllers are responsible for creating, updating, and deleting Pods based on higher-level resources.
 
 Kubernetes provides several built-in controllers to manage different types of workloads:
-
 - *Deployment*: The most common controller for stateless applications.
 - *StatefulSet*: Designed for stateful applications that require stable identities and persistent storage.
 - *DaemonSet*: Ensures that a copy of a Pod runs on every node in the cluster.
 
-Commonly used for node-level agents like log collectors, monitoring tools, or networking components.
+In the next lessons, we'll explore each of these aspects in detail. For now, it's enough to understand that for each workload, a resource is defined that describes the desired state, and a controller reconciles any differences within the cluster.
 
 ## How Kubernetes Components Run in the Cluster
 
-Below are the components of Kubernetes and how they are deployed.
+Below you will find a table listing the components seen in the previous sections:
 
 | Component | Type / Role | How it runs | Namespace / Location |
 |---|---|---|---|
