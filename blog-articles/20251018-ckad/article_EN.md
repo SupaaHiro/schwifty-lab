@@ -13,9 +13,9 @@ In this first exercise we will create two Pods to test an Ingress NetworkPolicy.
 ⚠️ Important:
 Verify that your Kubernetes cluster is configured with a CNI plugin that implements NetworkPolicy. Without such support, any defined policies will be silently ignored. I ran some local tests with Kubernetes on Docker Desktop and with minikube, but neither supports them natively. In the end I opted for a temporary environment on [KillerCoda Playgrounds](https://killercoda.com/playgrounds)
 
-## How to Get the Resources
+## Getting the Resources
 
-All the manifests and examples mentioned in this post are available in the following repository:
+All manifests and examples mentioned in this post are available in the following repository:
 
 ```yaml
 git clone https://github.com/SupaaHiro/schwifty-lab.git
