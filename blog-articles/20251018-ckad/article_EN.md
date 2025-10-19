@@ -1,4 +1,4 @@
-# Testing Kubernetes NetworkPolicy
+# CKAD Preparation, Testing Kubernetes NetworkPolicy
 
 ## Introduction
 

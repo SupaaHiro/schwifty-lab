@@ -1,4 +1,4 @@
-# Testare le NetworkPolicy di Kubernetes
+# Preparazione CKAD: Testare le NetworkPolicy di Kubernetes
 
 ## Introduzione
 
