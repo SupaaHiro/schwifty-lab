@@ -289,6 +289,42 @@ Cosa memorizza?
 - Dati di sicurezza (regole RBAC, Secret)
 
 etcd è progettato per essere altamente disponibile e consistente, usando l'algoritmo di consenso Raft per replicare i dati su più nodi.
+## 🔁 Controller e cicli di controllo: Gestire i workload in Kubernetes
+
+Questo è l'ultimo argomento che dobbiamo affrontare. Promesso!
+
+Una delle idee più potenti dietro Kubernetes è il concetto di configurazione dichiarativa. Non si dice a Kubernetes come fare qualcosa, ma si dice cosa si vuole, e lui si occupa del resto. Questo è reso possibile dai controller, che monitorano continuamente il cluster e lavorano per assicurare che lo stato reale corrisponda a quello desiderato.
+
+Questo processo si chiama ciclo di controllo.
+
+🔍 Cos'è un controller?
+
+Un controller è un processo in background che osserva l'API di Kubernetes per eventuali cambiamenti e prende azioni per riconciliare le differenze. Per esempio, se dichiari di voler avere tre repliche di un Pod ma ne sono in esecuzione solo due, il controller ne creerà una terza.
+
+I controller sono responsabili della creazione, aggiornamento e cancellazione dei Pod sulla base di risorse di livello superiore.
+
+Kubernetes fornisce diversi controller integrati per gestire tipi diversi di workload:
+
+- *Deployment*: il controller più comune per applicazioni stateless.
+- *StatefulSet*: pensato per applicazioni stateful che richiedono identità stabili e storage persistente.
+- *DaemonSet*: garantisce che una copia di un Pod venga eseguita su ogni nodo del cluster.
+
+Comunemente usati per agenti a livello di nodo come collector di log, strumenti di monitoraggio o componenti di rete.
+
+## Come vengono eseguiti i componenti di Kubernetes nel cluster
+
+Di seguito i componenti di Kubernetes e come vengono distribuiti.
+
+| Component | Tipo / Ruolo | Come viene eseguito | Namespace / Posizione |
+|---|---|---|---|
+| `kubelet` | Agente del nodo | servizio systemd (daemon Linux) | gira su ogni nodo |
+| Container runtime (`containerd`, `CRI-O`) | Motore per i container | servizio systemd / daemon gestito dal SO | gira su ogni nodo |
+| `kube-proxy` | Proxy di servizio / instradamento di rete | DaemonSet (un Pod per nodo) | `kube-system` |
+| `etcd` | Store dello stato del cluster | Pod statico o servizio systemd (o cluster etcd esterno) | nodo(i) del control plane o esterno |
+| `kube-apiserver` | Front-end del control plane | Pod statico | control-plane (`kube-system`) |
+| `kube-scheduler` | Scheduling dei Pod | Pod statico | control-plane (`kube-system`) |
+| `kube-controller-manager` | Riconciliazione dello stato | Pod statico | control-plane (`kube-system`) |
+| `CoreDNS` | DNS interno / service discovery | Deployment | `kube-system` |
 
 ## 🏁 Riepilogo: ciò che abbiamo coperto
 

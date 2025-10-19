@@ -290,6 +290,43 @@ What Does It Store?
 
 etcd is designed to be highly available and consistent, using the Raft consensus algorithm to replicate data across multiple nodes.
 
+## 🔁 Controllers and Control Loops: Managing Workloads in Kubernetes
+
+This is the last topic we have to address. I promise!
+
+One of the most powerful ideas behind Kubernetes is the concept of declarative configuration. You don’t tell Kubernetes how to do something—you tell it what you want, and it figures out the rest. This is made possible by controllers, which continuously monitor the cluster and work to ensure that the actual state matches the desired state.
+
+This process is called a control loop.
+
+🔍 What Is a Controller?
+
+A controller is a background process that watches the Kubernetes API for changes and takes action to reconcile differences. For example, if you declare that you want three replicas of a Pod, but only two are running, the controller will create a third.
+
+Controllers are responsible for creating, updating, and deleting Pods based on higher-level resources.
+
+Kubernetes provides several built-in controllers to manage different types of workloads:
+
+- *Deployment*: The most common controller for stateless applications.
+- *StatefulSet*: Designed for stateful applications that require stable identities and persistent storage.
+- *DaemonSet*: Ensures that a copy of a Pod runs on every node in the cluster.
+
+Commonly used for node-level agents like log collectors, monitoring tools, or networking components.
+
+## How Kubernetes Components Run in the Cluster
+
+Below are the components of Kubernetes and how they are deployed.
+
+| Component | Type / Role | How it runs | Namespace / Location |
+|---|---|---|---|
+| `kubelet` | Node agent | systemd service (Linux daemon) | runs on every node |
+| Container runtime (`containerd`, `CRI-O`) | Container engine | systemd service / OS-managed daemon | runs on every node |
+| `kube-proxy` | Service proxy / network routing | DaemonSet (one Pod per node) | `kube-system` |
+| `etcd` | Cluster state store | Static Pod or systemd service (or external etcd cluster) | control-plane node(s) or external |
+| `kube-apiserver` | Control plane front-end | Static Pod | control-plane (`kube-system`) |
+| `kube-scheduler` | Pod scheduling | Static Pod | control-plane (`kube-system`) |
+| `kube-controller-manager` | State reconciliation | Static Pod | control-plane (`kube-system`) |
+| `CoreDNS` | Internal DNS / service discovery | Deployment | `kube-system` |
+
 ## 🏁 Wrapping Up: What We’ve Covered
 
 In this first post, we explored what Kubernetes is, the key requirements for passing the CKAD exam, and the architecture and components that make up a Kubernetes cluster. These may seem like dry fundamentals—but they’re absolutely essential if we want to build a solid understanding of how Kubernetes works under the hood.
