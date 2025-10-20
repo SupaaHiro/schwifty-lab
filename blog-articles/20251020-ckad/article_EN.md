@@ -50,7 +50,8 @@ sudo yum install -y python3
 Alternatively, if you’re feeling adventurous, you can install Python by compiling it from source:
 
 ```bash
-sudo apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev libsqlite3-dev libbz2-dev liblzma-dev
+sudo apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev \
+libssl-dev libreadline-dev libffi-dev libsqlite3-dev libbz2-dev liblzma-dev
 wget https://www.python.org/ftp/python/3.12.11/Python-3.12.11.tgz
 tar -zxvf Python-3.12.11.tgz
 cd Python-3.12.11/
