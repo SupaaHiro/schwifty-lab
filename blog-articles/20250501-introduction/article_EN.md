@@ -1,3 +1,13 @@
+---
+layout: default
+title: "My Personal Journey into Cloud-Native Technologies"
+date: 2025-01-01
+categories: [ckda, kubernetes]
+author: Hiro
+image: "https://supaahiro.github.io/schwifty-lab/blog-articles/20250501-introduction/article.webp"
+summary: "Personal introduction describing how a pandemic pause led me to Docker, Kubernetes and cloud-native technologies — and why this blog will share practical guides and insights for beginners and experienced practitioners."
+---
+
 ## An Unexpected Journey
 
 Almost five years ago, in the midst of a global pandemic, the world came to a halt. Like millions of others, I had to slow down the frantic pace of my life. It was a moment of reflection, both personal and professional, that led me to discover a world that would forever change my approach to technology: Docker and the universe of microservices.

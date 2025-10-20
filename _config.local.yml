@@ -11,6 +11,4 @@ nav:
   - title: "About Me"
     url: /about-me/
 
-remote_theme: supaahiro/blog-jekyll-theme@experimental
-plugins:
-- jekyll-remote-theme
+theme: blog-jekyll-theme

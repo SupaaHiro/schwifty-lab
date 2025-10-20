@@ -1,4 +1,12 @@
-# Preparazione CKAD: Cos'è Kubernetes
+---
+layout: default
+title: "Preparazione CKAD: Cos'è Kubernetes"
+date: 2025-10-19
+categories: [ckda, kubernetes]
+author: Hiro
+image: "https://supaahiro.github.io/schwifty-lab/blog-articles/20251019-ckad/article.webp"
+summary: "Introductory CKAD prep post covering Kubernetes fundamentals: architecture, nodes, kubelet, kube-proxy, Services, CNI and CoreDNS, with a roadmap of CKAD topics to be covered in hands-on lessons."
+---
 
 ## Introduzione
 

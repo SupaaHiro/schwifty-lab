@@ -1,4 +1,14 @@
-# CKAD Preparation — Build a container image
+---
+layout: default
+title: "CKAD Preparation — Build a container image"
+date: 2025-10-20
+categories: [ckda, kubernetes]
+author: Hiro
+image: "https://supaahiro.github.io/schwifty-lab/blog-articles/20251020-ckad/article.webp"
+summary: "Step-by-step guide to build a container image for a FastAPI service that exposes /health and /version endpoints. Demonstrates using a metadata.json for versioning, building and running the image, and publishing it to Kubernetes."
+---
+
+## Introduction
 
 In this article, we’ll walk through how to build a container for a simple API service that exposes both a health status and the software version.
 

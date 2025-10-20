@@ -21,3 +21,7 @@ gem "unf", "~> 0.2.0"
 gem "webrick", "~> 1.9"
 
 gem "csv", "~> 3.3"
+
+gem "fiddle"
+
+gem "blog-jekyll-theme", path: "../blog-jekyll-theme"

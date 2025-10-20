@@ -5,7 +5,7 @@ metadata:
 spec:
   id: "a5208746-25ce-22c8-77e6-4e2a1a3cc919"
   title: "My Personal Journey into Cloud-Native Technologies"
-  previewImage: "https://supaahiro.github.io/schwifty-lab/blog-articles/20250501-introduction/article.webp"  
+  previewImage: "https://supaahiro.github.io/schwifty-lab/blog-articles/20250501-introduction/article.webp"
   summary: "Personal introduction describing how a pandemic pause led me to Docker, Kubernetes and cloud-native technologies — and why this blog will share practical guides and insights for beginners and experienced practitioners."
   url: "https://supaahiro.github.io/schwifty-lab/blog-articles/20250501-introduction/article_EN.md"
   publishedOn: "2025-05-01T00:00:00Z"

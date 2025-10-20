@@ -1,4 +1,12 @@
-# Preparazione CKAD: Testare le NetworkPolicy di Kubernetes
+---
+layout: default
+title: "Preparazione CKAD, Testare le NetworkPolicy di Kubernetes"
+date: 2025-10-18
+categories: [ckda, kubernetes]
+author: Hiro
+image: "https://supaahiro.github.io/schwifty-lab/blog-articles/20251018-ckad/article.webp"
+summary: "Hands-on exercise showing how to test Kubernetes Ingress NetworkPolicy using a Redis Pod and a client Pod, with manifests and a Python connectivity test."
+---
 
 ## Introduzione
 

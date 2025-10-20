@@ -6,17 +6,13 @@ Here you'll discover code samples, project snippets, and various experiments ins
 
 Some things may be polished, others experimental, but all are intended to spark new ideas.
 
+## My Blog
+
+Find companion articles for the examples in this repo on the schwifty-lab blog: [schwifty-lab](https://supaahiro.github.io/schwifty-lab/)
+
 ## What’s inside?  
-- 🔬 Random experiments  
 - ⚡ Blog's article code examples
-
-## Blog Articles
-Here are some articles you can check out:
-
-- [CKAD Preparation, Build a container image - 2025/10/20](blog-articles/20251020-ckad/article_EN.md)  
-- [CKAD Preparation, What is Kubernetes - 2025/10/19](blog-articles/20251019-ckad/article_EN.md)  
-- [CKAD Preparation, Testing Kubernetes NetworkPolicy - 2025/10/18](blog-articles/20251018-ckad/article_EN.md)  
-- [Blog Presentation - 2025/05/01](blog-articles/20250501-introduction/article_EN.md)
+- 🔬 Random experiments  
 
 ## How to use  
 
@@ -28,7 +24,7 @@ git clone https://github.com/SupaaHiro/schwifty-lab
 
 ## Disclaimer
 
-I am not responsible for any problems or existential crises caused by this repo. Also, don’t share this repo with any Morty.
+I am not responsible for any problems or existential crises caused by this repo.
 
 ## License
 
