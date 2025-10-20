@@ -7,9 +7,9 @@ nav:
   - title: "Home"
     url: /
   - title: "Articles"
-    url: /articles/
+    url: /articles.html
   - title: "About Me"
-    url: /about-me/
+    url: /about-me.html
 
 remote_theme: supaahiro/blog-jekyll-theme@experimental
 plugins:
