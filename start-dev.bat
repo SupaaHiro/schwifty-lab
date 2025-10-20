@@ -9,7 +9,7 @@ if exist .env (
 
 REM Start the WEB bundle
 if "%1" == "web" (  
-  call bundle exec jekyll serve --livereload  --config _config.yml,_config.local.yml
+  call bundle exec jekyll serve --livereload  --config _config.local.yml
   
   goto :EOF
 )
