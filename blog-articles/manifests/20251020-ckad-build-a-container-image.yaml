@@ -7,7 +7,7 @@ spec:
   title: "CKAD Preparation — Build a container image"
   previewImage: "https://supaahiro.github.io/schwifty-lab/blog-articles/20251020-ckad/article.webp"  
   summary: "Step-by-step guide to build a container image for a FastAPI service that exposes /health and /version endpoints. Demonstrates using a metadata.json for versioning, building and running the image, and publishing it to Kubernetes."
-  url: "https://supaahiro.github.io/schwifty-lab/blog-articles/20251020-ckad/article_EN.md"
+  url: "https://raw.githubusercontent.com/SupaaHiro/schwifty-lab/refs/heads/master/blog-articles/20251020-ckad/article_EN.md"
   publishedOn: "2025-10-20T00:00:00Z"
   publishedBy: "Hiro"
   categoryId: "7111870b-3a87-9be5-1424-fea77073e618"
