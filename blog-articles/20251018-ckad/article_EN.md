@@ -288,6 +288,15 @@ After the deploy, the connection should work again:
 ✅ Connected to Redis at redis:6379
 ```
 
+## 🏁 Wrapping Up: What We’ve Covered
+
+In this article we reviewed a practical workflow to test Kubernetes Ingress NetworkPolicy using a Redis server and a client Pod. Key takeaways:
+
+- Ensure your cluster uses a CNI that implements NetworkPolicy; without CNI support, NetworkPolicy objects are ignored.
+- Use a "default-deny" Ingress policy to block all incoming traffic by default, then add explicit allow rules to scope access (for example, by pod labels).
+- NetworkPolicies are applied to Pods (via podSelector) — label your Pods intentionally to control access and to make policies predictable.
+- Test connectivity with a lightweight client Pod and a configurable script (mounted via ConfigMap); check Pod logs for connection timeouts or success messages to validate policy effects.
+
 ## Final cleanup
 
 When you're done with the experiments, remove all created resources (Pods, Service and NetworkPolicy) to clean up the environment:

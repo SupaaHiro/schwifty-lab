@@ -14,7 +14,7 @@ This article is part of an ongoing series designed to guide you through practica
 
 In this post, we’ll cover CKAD requirements within the “Application Design and Build” domain:
 
->>> Choose and use the right workload resource (Deployment, DaemonSet, CronJob, StatefulSet, etc.)
+> Choose and use the right workload resource (Deployment, DaemonSet, CronJob, StatefulSet, etc.)
 
 You can start from the beginning of the series here: [*CKAD Preparation — What is Kubernetes*](/blog-articles/20251019-ckad/article_EN.html).
 
