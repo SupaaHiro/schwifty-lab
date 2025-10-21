@@ -17,8 +17,8 @@ Since these are topics I need to review for my own exam, I thought—why not pub
 At the time of writing, the CKAD exam has the following requirements:
 
 Application Design and Build
-- Define, build and modify container images
-- Choose and use the right workload resource (Deployment, DaemonSet, CronJob, etc.)
+- [Define, build and modify container images](https://supaahiro.github.io/schwifty-lab/blog-articles/20251020-ckad/article_EN.html).
+- [Choose and use the right workload resource (Deployment, DaemonSet, CronJob, etc.)](https://supaahiro.github.io/schwifty-lab/blog-articles/20251021-ckad/article_EN.html).
 - Understand multi-container Pod design patterns (e.g. sidecar, init and others)
 - Utilize persistent and ephemeral volumes
 
