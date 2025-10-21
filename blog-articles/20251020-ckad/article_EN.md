@@ -30,6 +30,7 @@ src/
 This article is part of a series designed to help you prepare for the **Certified Kubernetes Application Developer (CKAD)** exam.  
 
 This specific post addresses the following requirement:
+
 **Application Design and Build**  
 - Define, build and modify container images
 
