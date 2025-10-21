@@ -16,7 +16,7 @@ In this post, we’ll cover CKAD requirements within the “Application Design a
 
 > Define, build and modify container images
 
-You can start from the beginning of the series here: [*CKAD Preparation — What is Kubernetes*](/blog-articles/20251019-ckad/article_EN.html).
+You can start from the beginning of the series here: [*CKAD Preparation — What is Kubernetes*](https://supaahiro.github.io/schwifty-lab/blog-articles/20251019-ckad/article_EN.html).
 
 ## Prerequisites
 
