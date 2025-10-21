@@ -1,0 +1,16 @@
+apiVersion: blog.supaahiro.io/v1alpha1
+kind: BlogArticle
+metadata:
+  name: 20251021-ckad-choose-workload-resource
+spec:
+  id: "e4a4dc93-d21d-45f5-9648-4af2ae354b19"
+  title: "CKAD Preparation — Choose and use the right workload resource"
+  previewImage: "https://supaahiro.github.io/schwifty-lab/blog-articles/20251021-ckad/article.webp"
+  summary: "Practical guide to choosing the right Kubernetes workload resource (Deployment, DaemonSet, CronJob, StatefulSet) with examples and CKAD-focused tips."
+  url: "https://supaahiro.github.io/schwifty-lab/blog-articles/20251021-ckad/artice_EN.md"
+  publishedOn: "2025-10-21T00:00:00Z"
+  publishedBy: "Hiro"
+  categoryId: "7111870b-3a87-9be5-1424-fea77073e618"
+  relatedArticleIds: []
+status:
+  published: true
