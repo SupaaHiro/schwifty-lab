@@ -12,6 +12,10 @@ summary: "Deep dive into how Kubernetes runs multi-container Pods — from the c
 
 This article is part of an ongoing CKAD series that walks through practical Kubernetes patterns and runtime internals. Here we focus on multi-container Pod design patterns — why they exist, common use cases (sidecar, init, adapter), and a small hands-on exercise to practice creating and inspecting a Pod with multiple containers.
 
+In this post, we’ll cover CKAD requirements within the “Application Design and Build” domain:
+
+> Understand multi-container Pod design patterns (e.g. sidecar, init and others)
+
 You can start from the beginning of the series here: [*CKAD Preparation — What is Kubernetes*](https://supaahiro.github.io/schwifty-lab/blog-articles/20251019-ckad/article_EN.html).
 
 ## Prerequisites
@@ -33,9 +37,11 @@ In a previous post we introduced the Pod — the smallest deployable unit in Kub
 
 Most Pods run a single main container, but Kubernetes also supports multi-container Pods for scenarios that need composition of complementary processes. Common container roles inside a Pod include:
 
-- Sidecars: companion containers that extend the main container’s behavior (e.g., log forwarding, proxying, metrics collection).
 - Init containers: run to completion before application containers start to perform setup tasks (e.g., generating config, waiting for dependencies, preloading data).
+- Sidecars: companion containers that extend the main container’s behavior (e.g., log forwarding, proxying, metrics collection).
 - Adapters and helpers: short-lived or long-running processes that transform data, manage credentials, or perform auxiliary work.
+
+📝 Note: We’ll explore the main architectural patterns for multi-container Pods later in this series.
 
 In production, Pods are rarely created directly; they’re typically managed by controllers such as Deployments. A condensed creation lifecycle looks like this:
 
