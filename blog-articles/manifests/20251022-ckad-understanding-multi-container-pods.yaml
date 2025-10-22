@@ -1,0 +1,16 @@
+apiVersion: blog.supaahiro.io/v1alpha1
+kind: BlogArticle
+metadata:
+  name: 20251022-ckad-understanding-multi-container-pods
+spec:
+  id: "0eb7a8af-1ff7-45e6-b3f8-cfc5370ea8a7"
+  title: "CKAD Preparation — Understanding Multi-Container Pods"
+  previewImage: "https://supaahiro.github.io/schwifty-lab/blog-articles/20251022-ckad/article.webp"
+  summary: "Deep dive into how Kubernetes runs multi-container Pods — from the controller and scheduler to the runtime chain."
+  url: "https://supaahiro.github.io/schwifty-lab/blog-articles/20251022-ckad/article_EN.md"
+  publishedOn: "2025-10-22T00:00:00Z"
+  publishedBy: "Hiro"
+  categoryId: "7111870b-3a87-9be5-1424-fea77073e618"
+  relatedArticleIds: []
+status:
+  published: true
