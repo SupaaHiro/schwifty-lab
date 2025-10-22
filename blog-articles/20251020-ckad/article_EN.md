@@ -5,7 +5,7 @@ date: 2025-10-20
 categories: [ckda, kubernetes]
 author: Hiro
 image: "https://supaahiro.github.io/schwifty-lab/blog-articles/20251020-ckad/article.webp"
-summary: "Step-by-step guide to build a container image for a FastAPI service that exposes /health and /version endpoints. Demonstrates using a metadata.json for versioning, building and running the image, and publishing it to Kubernetes."
+summary: "Learn how to turn a Python/FastAPI service into a fully containerized app, run it locally with Docker, and seamlessly deploy it to Kubernetes — all step by step."
 ---
 
 ## Introduction
