@@ -65,12 +65,15 @@ Each Pod has a pause (sandbox) container that holds shared namespaces such as th
 
 You can often see pause containers listed by CRI tools (`crictl pods` / `ctr`) when inspecting low-level runtime state.
 
+## Troubleshooting and container inspection
+
 A container, once it’s running, is essentially a Linux process executing inside a set of isolated namespaces — network, PID, mount, and others. From Kubernetes’ perspective Pods are a high-level abstraction; underneath, each container remains a process managed by the container runtime.
 
 When a Pod stalls during bootstrap (e.g., ContainerCreating or an Init container hangs), kubectl exec or kubectl logs may not work yet. In those cases drop one level lower and troubleshoot on the node using runtime tools.
 
-1. crictl — the CRI client
-crictl is the official CLI for runtimes that implement the Container Runtime Interface (CRI), like containerd or CRI-O. Use it when kubectl can’t reach a Pod because it hasn’t fully started.
+1. the CRI client (`crictl`)
+
+`crictl` is the official CLI for runtimes that implement the Container Runtime Interface (CRI), like containerd or CRI-O. Use it when kubectl can’t reach a Pod because it hasn’t fully started.
 
 Common commands:
 ```bash
@@ -80,7 +83,8 @@ crictl inspectp <pod-id>    # Inspect a Pod sandbox and its containers
 crictl logs <container-id>  # View container logs (if available)
 ```
 
-2. containerd CLI (ctr) — low-level containerd interface
+2. containerd CLI (`ctr`) — low-level containerd interface
+
 If the node runs containerd, ctr inspects containers at a lower level than the CRI client. It talks directly to containerd internals.
 
 Common commands:
@@ -91,7 +95,8 @@ sudo ctr tasks exec -t <task-id> /bin/sh   # Attach to a container process
 sudo ctr tasks kill <task-id>
 ```
 
-3. nerdctl — Docker-like CLI for containerd
+3. Docker-like CLI for containerd (`nerdctl`)
+
 nerdctl offers a Docker-like experience on top of containerd, useful if you prefer familiar Docker commands.
 
 Examples:
