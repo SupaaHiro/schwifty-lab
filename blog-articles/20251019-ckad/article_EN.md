@@ -20,7 +20,7 @@ Application Design and Build
 - [Define, build and modify container images](https://supaahiro.github.io/schwifty-lab/blog-articles/20251020-ckad/article_EN.html).
 - [Choose and use the right workload resource (Deployment, DaemonSet, CronJob, etc.)](https://supaahiro.github.io/schwifty-lab/blog-articles/20251021-ckad/article_EN.html).
 - [Understand multi-container Pod design patterns (e.g. sidecar, init and others)](https://supaahiro.github.io/schwifty-lab/blog-articles/20251022-ckad/article_EN.html)
-- Utilize persistent and ephemeral volumes
+- [Utilize persistent and ephemeral volumes](https://supaahiro.github.io/schwifty-lab/blog-articles/20251023-ckad/article_EN.html)
 
 Application Deployment
 - Use Kubernetes primitives to implement common deployment strategies (e.g. blue/green or canary)
