@@ -4,7 +4,7 @@ title: "CKAD Preparation — Utilize Persistent and Ephemeral Volumes"
 date: 2025-10-23
 categories: [ckad, kubernetes]
 author: Hiro
-image: "https://supaahiro.github.io/schwifty-lab/blog-articles/20251025-ckad/article.webp"
+image: "https://supaahiro.github.io/schwifty-lab/blog-articles/20251023-ckad/article.webp"
 summary: "Learn how to persist and share data in Kubernetes using persistent and ephemeral volumes — from emptyDir to PersistentVolumeClaims."
 ---
 
