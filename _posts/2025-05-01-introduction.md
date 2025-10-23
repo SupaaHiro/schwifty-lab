@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "My Personal Journey into Cloud-Native Technologies"
-date: 2025-01-01
+date: 2025-05-01
 categories: [ckda, kubernetes]
 author: Hiro
 image: "https://supaahiro.github.io/schwifty-lab/blog-articles/20250501-introduction/article.webp"
