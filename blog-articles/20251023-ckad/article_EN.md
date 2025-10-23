@@ -1,5 +1,4 @@
 ---
----
 layout: default
 title: "CKAD Preparation — Utilize Persistent and Ephemeral Volumes"
 date: 2025-10-23
