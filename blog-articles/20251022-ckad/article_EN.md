@@ -43,7 +43,7 @@ Most Pods run a single main container, but Kubernetes also supports multi-contai
 
 📝 Note: We’ll explore the main architectural patterns for multi-container Pods later in this series.
 
-In production, Pods are rarely created directly; they’re typically managed by controllers such as Deployments. A condensed creation lifecycle looks like this:
+In production, Pods are rarely created directly; they’re typically managed by controllers such as Deployments. It all starts with creating a resource, which kicks off a chain of events leading to the container's execution. Here's a simplified version of the flow::
 
 1. You submit a Deployment manifest to the API server.
 2. The Deployment controller (in kube-controller-manager) notices the desired state and creates or updates a ReplicaSet.
