@@ -10,11 +10,15 @@ summary: "Hands-on exercise showing how to test Kubernetes Ingress NetworkPolicy
 
 ## Introduction
 
-In recent days, ahead of my CKAD renewal, I decided to review some fundamental Kubernetes concepts.
-To keep track of the experiments, I started publishing a series of practical exercises on this topic.
-In the future all the material will be included in my personal blog — as soon as, time permitting, I manage to finish publishing it.
+This article is part of an ongoing series designed to help you prepare for the [*Certified Kubernetes Application Developer (CKAD)*](https://training.linuxfoundation.org/certification/certified-kubernetes-application-developer-ckad/) exam through small, focused labs.
 
-In this first exercise we will create two Pods to test an Ingress NetworkPolicy.
+In this post, we’ll cover the requirements within the "Services and Networking” domain:
+
+> Demonstrate basic understanding of NetworkPolicies
+
+Here we'll demonstrate how to restrict ingress traffic using a Kubernetes NetworkPolicy.
+
+You can start from the beginning of the series here: [*CKAD Preparation — What is Kubernetes*](https://supaahiro.github.io/schwifty-lab/blog-articles/20251019-ckad/article_EN.html).
 
 ## Prerequisites
 

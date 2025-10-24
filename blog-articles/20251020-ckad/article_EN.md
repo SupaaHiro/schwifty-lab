@@ -10,11 +10,13 @@ summary: "Learn how to turn a Python/FastAPI service into a fully containerized 
 
 ## Introduction
 
-This article is part of an ongoing series designed to guide you through practical concepts and real-world scenarios for the Certified Kubernetes Application Developer (CKAD) exam.
+This article is part of an ongoing series designed to help you prepare for the [*Certified Kubernetes Application Developer (CKAD)*](https://training.linuxfoundation.org/certification/certified-kubernetes-application-developer-ckad/) exam through small, focused labs.
 
-In this post, we’ll cover CKAD requirements within the “Application Design and Build” domain:
+In this post, we’ll cover the requirements within the “Application Design and Build” domain:
 
 > Define, build and modify container images
+
+We’ll walk through building a container image for a Python/FastAPI service, running it locally with Docker, and deploying it to Kubernetes — all with practical, step‑by‑step commands and examples.
 
 You can start from the beginning of the series here: [*CKAD Preparation — What is Kubernetes*](https://supaahiro.github.io/schwifty-lab/blog-articles/20251019-ckad/article_EN.html).
 

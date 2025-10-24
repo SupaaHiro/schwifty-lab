@@ -10,7 +10,7 @@ summary: "Introductory CKAD prep post covering Kubernetes fundamentals: architec
 
 ## Introduction
 
-This blog post marks the beginning of a series designed to help you prepare for the Certified Kubernetes Application Developer (CKAD) exam through hands-on exercises and practical examples. Whether you're just starting out with Kubernetes or looking to sharpen your skills, each post will walk you through one of the core competencies required for the certification.
+This blog post marks the beginning of a series designed to help you prepare for the [*Certified Kubernetes Application Developer (CKAD)*](https://training.linuxfoundation.org/certification/certified-kubernetes-application-developer-ckad/) exam through hands-on exercises and practical examples. Whether you're just starting out with Kubernetes or looking to sharpen your skills, each post will walk you through one of the core competencies required for the certification.
 
 Since these are topics I need to review for my own exam, I thought—why not publish my notes? They might be useful for others who are considering taking the CKAD for the first time, or for those retaking it and needing a refresher on key concepts.
 

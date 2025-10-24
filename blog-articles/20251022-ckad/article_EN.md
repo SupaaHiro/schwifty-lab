@@ -10,11 +10,13 @@ summary: "Deep dive into how Kubernetes runs multi-container Pods — from the c
 
 ## Introduction
 
-This article is part of an ongoing CKAD series that walks through practical Kubernetes patterns and runtime internals. Here we focus on multi-container Pod design patterns — why they exist, common use cases (sidecar, init, adapter), and a small hands-on exercise to practice creating and inspecting a Pod with multiple containers.
+This article is part of an ongoing series designed to help you prepare for the [*Certified Kubernetes Application Developer (CKAD)*](https://training.linuxfoundation.org/certification/certified-kubernetes-application-developer-ckad/) exam through small, focused labs.
 
-In this post, we’ll cover CKAD requirements within the “Application Design and Build” domain:
+In this post, we’ll cover the requirements within the “Application Design and Build” domain:
 
 > Understand multi-container Pod design patterns (e.g. sidecar, init and others)
+
+Here we focus on multi-container Pod design patterns — why they exist, common use cases (init, sidecar, adapter), and a small hands-on exercise to practice creating and inspecting a Pod with multiple containers.
 
 You can start from the beginning of the series here: [*CKAD Preparation — What is Kubernetes*](https://supaahiro.github.io/schwifty-lab/blog-articles/20251019-ckad/article_EN.html).
 

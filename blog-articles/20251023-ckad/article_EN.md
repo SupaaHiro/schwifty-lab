@@ -10,12 +10,15 @@ summary: "Learn how to persist and share data in Kubernetes using persistent and
 
 ## Introduction
 
-This article is part of the CKAD Preparation series, exploring core Kubernetes patterns through small, focused labs.  
-Here we’ll cover how to **utilize persistent and ephemeral volumes** — a fundamental CKAD topic for managing stateful workloads and inter-container data sharing.
+This article is part of an ongoing series designed to help you prepare for the [*Certified Kubernetes Application Developer (CKAD)*](https://training.linuxfoundation.org/certification/certified-kubernetes-application-developer-ckad/) exam through small, focused labs.
 
-In this post, we’ll address the following CKAD requirement within the *Application Design and Build* domain:
+In this post, we’ll cover the requirements within the “Application Design and Build” domain:
 
 > Utilize persistent and ephemeral volumes
+
+Here we’ll cover how to **utilize persistent and ephemeral volumes** — a fundamental CKAD topic for managing stateful workloads and inter-container data sharing.
+
+You can start from the beginning of the series here: [*CKAD Preparation — What is Kubernetes*](https://supaahiro.github.io/schwifty-lab/blog-articles/20251019-ckad/article_EN.html).
 
 ## Prerequisites
 

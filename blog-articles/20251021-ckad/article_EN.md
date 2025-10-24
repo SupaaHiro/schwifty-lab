@@ -10,11 +10,13 @@ summary: "Practical guide to choosing the right Kubernetes workload resource (De
 
 ## Introduction
 
-This article is part of an ongoing series designed to guide you through practical concepts and real‑world scenarios for the Certified Kubernetes Application Developer (CKAD) exam.
+This article is part of an ongoing series designed to help you prepare for the [*Certified Kubernetes Application Developer (CKAD)*](https://training.linuxfoundation.org/certification/certified-kubernetes-application-developer-ckad/) exam through small, focused labs.
 
 In this post, we’ll cover CKAD requirements within the “Application Design and Build” domain:
 
 > Choose and use the right workload resource (Deployment, DaemonSet, CronJob, StatefulSet, etc.)
+
+Here we’ll cover how to choose the right Kubernetes workload resource — Deployment, DaemonSet, CronJob — using practical examples.
 
 You can start from the beginning of the series here: [*CKAD Preparation — What is Kubernetes*](https://supaahiro.github.io/schwifty-lab/blog-articles/20251019-ckad/article_EN.html).
 
