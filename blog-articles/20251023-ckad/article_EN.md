@@ -35,13 +35,15 @@ cd schwifty-lab/blog-articles/20251023-ckad
 
 ## Understanding Volumes in Kubernetes
 
-Containers are ephemeral by design: once restarted or rescheduled, their filesystem state is lost.  
-Kubernetes solves this limitation by introducing volumes — directories accessible to containers within a Pod.
+Containers are ephemeral by design: once restarted or rescheduled, their filesystem state is lost. We can overcome this limitation in Kubernetes by using volumes — directories that provide persistent storage accessible to containers within a Pod.
 
 There are two main volume types to know for the CKAD exam:
 
 - Ephemeral volumes — created and destroyed with the Pod. Examples: emptyDir, configMap, secret, downwardAPI, and ephemeral.
 - Persistent volumes — survive Pod restarts, backed by cluster-level resources such as PersistentVolume (PV) and PersistentVolumeClaim (PVC).
+
+> Note: Downward API volumes expose Pod metadata and resource information (such as labels or CPU limits) to containers as files. We’ll explore this in a dedicated article.
+
 
 ### Ephemeral Volumes (emptyDir)
 
