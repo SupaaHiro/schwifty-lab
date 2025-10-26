@@ -1,5 +1,6 @@
 # Custom
 assets/*[-_]memory.json
+.idea
 
 # Jekyll
 _site
