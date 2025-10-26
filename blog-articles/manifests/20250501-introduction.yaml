@@ -1,16 +1,18 @@
 apiVersion: blog.supaahiro.io/v1alpha1
-kind: BlogArticle
+kind: BlogPost
 metadata:
   name: 20250505-introduction
 spec:
-  id: "a5208746-25ce-22c8-77e6-4e2a1a3cc919"
-  title: "My Personal Journey into Cloud-Native Technologies"
-  previewImage: "https://supaahiro.github.io/schwifty-lab/blog-articles/20250501-introduction/article.webp"
-  summary: "Personal introduction describing how a pandemic pause led me to Docker, Kubernetes and cloud-native technologies — and why this blog will share practical guides and insights for beginners and experienced practitioners."
-  url: "https://raw.githubusercontent.com/SupaaHiro/schwifty-lab/refs/heads/master/blog-articles/20250501-introduction/article_EN.md"
-  publishedOn: "2025-05-01T00:00:00Z"
-  publishedBy: "Hiro"
-  categoryId: "7111870b-3a87-9be5-1424-fea77073e618"
-  relatedArticleIds: []
+  id: a5208746-25ce-22c8-77e6-4e2a1a3cc919
+  title: My Personal Journey into Cloud-Native Technologies
+  previewImage: https://supaahiro.github.io/schwifty-lab/blog-articles/20250501-introduction/article.webp
+  summary: "Personal introduction describing how a pandemic pause led me to Docker,\
+    \ Kubernetes and cloud-native technologies \u2014 and why this blog will share\
+    \ practical guides and insights for beginners and experienced practitioners."
+  url: https://raw.githubusercontent.com/SupaaHiro/schwifty-lab/refs/heads/master/blog-articles/20250501-introduction/article_EN.md
+  publishedOn: '2025-05-01T00:00:00Z'
+  publishedBy: Hiro
+  categoryId: 7111870b-3a87-9be5-1424-fea77073e618
+  relatedPostsIds: []
 status:
   published: true

@@ -1,16 +1,18 @@
 apiVersion: blog.supaahiro.io/v1alpha1
-kind: BlogArticle
+kind: BlogPost
 metadata:
   name: 20251019-ckad-what-is-kubernetes
 spec:
-  id: "9f7eaad9-9cac-fe7b-8e8a-d4ecd8d4f84c"
-  title: "CKAD Preparation, What is Kubernetes"
-  previewImage: "https://supaahiro.github.io/schwifty-lab/blog-articles/20251019-ckad/article.webp"  
-  summary: "Introductory CKAD prep post covering Kubernetes fundamentals: architecture, nodes, kubelet, kube-proxy, Services, CNI and CoreDNS, with a roadmap of CKAD topics to be covered in hands-on lessons."
-  url: "https://raw.githubusercontent.com/SupaaHiro/schwifty-lab/refs/heads/master/blog-articles/20251019-ckad/article_EN.md"
-  publishedOn: "2025-10-19T00:00:00Z"
-  publishedBy: "Hiro"
-  categoryId: "7111870b-3a87-9be5-1424-fea77073e618"
-  relatedArticleIds: []
+  id: 9f7eaad9-9cac-fe7b-8e8a-d4ecd8d4f84c
+  title: CKAD Preparation, What is Kubernetes
+  previewImage: https://supaahiro.github.io/schwifty-lab/blog-articles/20251019-ckad/article.webp
+  summary: 'Introductory CKAD prep post covering Kubernetes fundamentals: architecture,
+    nodes, kubelet, kube-proxy, Services, CNI and CoreDNS, with a roadmap of CKAD
+    topics to be covered in hands-on lessons.'
+  url: https://raw.githubusercontent.com/SupaaHiro/schwifty-lab/refs/heads/master/blog-articles/20251019-ckad/article_EN.md
+  publishedOn: '2025-10-19T00:00:00Z'
+  publishedBy: Hiro
+  categoryId: 7111870b-3a87-9be5-1424-fea77073e618
+  relatedPostsIds: []
 status:
   published: true
