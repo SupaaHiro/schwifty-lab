@@ -3,7 +3,7 @@ kind: BlogPost
 metadata:
   name: 20251020-ckad-build-a-container-image
 spec:
-  id: 7cdff270-677c-4379-936f-7ba2592271f4
+  id: 20251020-ckad-build-a-container-image
   title: "CKAD Preparation \u2014 Build a container image"
   previewImage: https://supaahiro.github.io/schwifty-lab/blog-articles/20251020-ckad/article.webp
   summary: Learn how to turn a Python/FastAPI service into a fully containerized app,
@@ -11,7 +11,7 @@ spec:
   url: https://raw.githubusercontent.com/SupaaHiro/schwifty-lab/refs/heads/master/blog-articles/20251020-ckad/article_EN.md
   publishedOn: '2025-10-20T00:00:00Z'
   publishedBy: Hiro
-  categoryId: 7111870b-3a87-9be5-1424-fea77073e618
+  categoryId: ckad-preparation
   relatedPostsIds: []
 status:
   published: true
