@@ -9,9 +9,9 @@ spec:
   summary: 'Introductory CKAD prep post covering Kubernetes fundamentals: architecture,
     nodes, kubelet, kube-proxy, Services, CNI and CoreDNS, with a roadmap of CKAD
     topics to be covered in hands-on lessons.'
-  url: https://raw.githubusercontent.com/SupaaHiro/schwifty-lab/refs/heads/master/blog-articles/20251019-ckad/article_EN.md
+  contentUrl: https://raw.githubusercontent.com/SupaaHiro/schwifty-lab/refs/heads/master/blog-articles/20251019-ckad/article_EN.md
   publishedOn: '2025-10-19T00:00:00Z'
-  publishedBy: Hiro
+  author: Hiro
   categoryId: ckad-preparation
   relatedPostsIds: []
 status:

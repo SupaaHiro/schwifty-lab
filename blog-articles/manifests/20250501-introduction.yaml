@@ -9,9 +9,9 @@ spec:
   summary: "Personal introduction describing how a pandemic pause led me to Docker,\
     \ Kubernetes and cloud-native technologies \u2014 and why this blog will share\
     \ practical guides and insights for beginners and experienced practitioners."
-  url: https://raw.githubusercontent.com/SupaaHiro/schwifty-lab/refs/heads/master/blog-articles/20250501-introduction/article_EN.md
+  contentUrl: https://raw.githubusercontent.com/SupaaHiro/schwifty-lab/refs/heads/master/blog-articles/20250501-introduction/article_EN.md
   publishedOn: '2025-05-01T00:00:00Z'
-  publishedBy: Hiro
+  author: Hiro
   categoryId: ckad-preparation
   relatedPostsIds: []
 status:

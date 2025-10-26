@@ -8,9 +8,9 @@ spec:
   previewImage: https://supaahiro.github.io/schwifty-lab/blog-articles/20251021-ckad/article.webp
   summary: Practical guide to choosing the right Kubernetes workload resource (Deployment,
     DaemonSet, CronJob, StatefulSet) with examples and CKAD-focused tips.
-  url: https://raw.githubusercontent.com/SupaaHiro/schwifty-lab/refs/heads/master/blog-articles/20251021-ckad/article_EN.md
+  contentUrl: https://raw.githubusercontent.com/SupaaHiro/schwifty-lab/refs/heads/master/blog-articles/20251021-ckad/article_EN.md
   publishedOn: '2025-10-21T00:00:00Z'
-  publishedBy: Hiro
+  author: Hiro
   categoryId: ckad-preparation
   relatedPostsIds: []
 status:
