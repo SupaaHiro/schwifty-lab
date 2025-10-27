@@ -1,0 +1,11 @@
+---
+
+- vars_files:
+    - ../vault/vault-keyring.yaml
+    
+  hosts:
+    - cluster
+  
+  tasks:
+    - include_tasks: ../tasks/power_off_ova.yml
+...

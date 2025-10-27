@@ -1,0 +1,26 @@
+# Nodes which are part of control plane
+controlplane:
+  hosts:
+    server:
+
+# Worker nodes which are part of the cluster
+workers:
+  hosts:
+    node[0:1]:
+
+# Local machine
+local:
+  hosts:
+    localhost:
+
+# All nodes which are part of the cluster (loadbalancers excluded)
+nodes:
+  children:
+    controlplane:
+    workers:
+
+# All members of the cluster (loadbalancers included)
+cluster:
+  children:
+    controlplane:
+    workers:

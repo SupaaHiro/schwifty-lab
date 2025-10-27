@@ -1,0 +1,30 @@
+---
+## 
+## Deploy the OVA template
+## 
+- debug:
+    msg: Deploying OVA {{ ova_path }}/{{ ova_file }} to datacenter {{ ova_deployment_datacenter }} in {{ hardware.datastore }} {{ ova_deployment_folder }}...
+         
+- name: Deploy OVA Template
+  vmware_deploy_ovf:
+    hostname: "{{ ova_deployment_hostname }}"
+    username: "{{ ova_deployment_username }}"
+    password: "{{ ova_deployment_password }}"
+    validate_certs: "{{ ova_validate_certs }}"
+    ova: "{{ ova_path }}/{{ ova_file }}"
+    name: "{{ inventory_hostname_short | lower }}"
+    folder: "{{ ova_deployment_folder | default(omit) }}"
+    datacenter: "{{ ova_deployment_datacenter | default(omit) }}"
+    cluster: "{{ ova_deployment_cluster | default(omit) }}"
+    resource_pool: "{{ ova_deployment_resource_pool | default(omit) }}"
+    datastore: "{{ hardware.datastore }}"
+    disk_provisioning: "{{ ova_deployment_disk_type }}"
+    networks: "{{ networks.mapping }}"
+    allow_duplicates: "{{ ova_allow_duplicates }}"
+    power_on: no
+    deployment_option: "{{ ova_deployment_option | default(omit) }}"
+    fail_on_spec_warnings: no
+    wait: no
+    wait_for_ip_address: no
+  delegate_to: localhost
+  register: ova_deployed_to_datacenter

@@ -1,0 +1,71 @@
+---
+## 
+## Configure network
+## 
+- name: Power On Virtual Machine
+  vmware_guest:
+    hostname: "{{ ova_deployment_hostname }}"
+    username: "{{ ova_deployment_username }}"
+    password: "{{ ova_deployment_password }}"
+    folder: "{{ ova_deployment_folder }}"
+    validate_certs: "{{ ova_validate_certs }}"
+    name: "{{ inventory_hostname_short | lower }}"
+    wait_for_ip_address: no
+    state: poweredon
+  delegate_to: localhost
+
+- name: Wait host power on
+  wait_for:
+    timeout: 15
+  delegate_to: localhost
+
+- name: Get VM information
+  vmware_guest_info:
+    hostname: "{{ ova_deployment_hostname }}"
+    username: "{{ ova_deployment_username }}"
+    password: "{{ ova_deployment_password }}"
+    datacenter: "{{ ova_deployment_datacenter }}"
+    validate_certs: "{{ ova_validate_certs }}"
+    name: "{{ inventory_hostname_short | lower }}"
+  register: vm_info
+  delegate_to: localhost
+  
+- name: Power Off Virtual Machine
+  vmware_guest:
+    hostname: "{{ ova_deployment_hostname }}"
+    username: "{{ ova_deployment_username }}"
+    password: "{{ ova_deployment_password }}"
+    folder: "{{ ova_deployment_folder }}"
+    validate_certs: "{{ ova_validate_certs }}"
+    name: "{{ inventory_hostname_short | lower }}"
+    wait_for_ip_address: no
+    state: poweredoff
+  delegate_to: localhost
+  
+- name: Remove default NIC
+  block:
+  - debug: msg="{{ vm_info.instance.hw_eth0.macaddress }}"
+  - vmware_guest_network:
+      hostname: "{{ ova_deployment_hostname }}"
+      username: "{{ ova_deployment_username }}"
+      password: "{{ ova_deployment_password }}"
+      datacenter: "{{ ova_deployment_datacenter }}"
+      validate_certs: "{{ ova_validate_certs }}"
+      name: "{{ inventory_hostname }}"
+      mac_address: "{{ vm_info.instance.hw_eth0.macaddress }}"
+      state: absent
+  delegate_to: localhost
+
+- name: Add new NIC
+  vmware_guest_network:
+    hostname: "{{ ova_deployment_hostname }}"
+    username: "{{ ova_deployment_username }}"
+    password: "{{ ova_deployment_password }}"
+    datacenter: "{{ ova_deployment_datacenter | default(omit) }}"
+    validate_certs: "{{ ova_validate_certs }}"
+    name: "{{ inventory_hostname_short | lower }}"
+    gather_network_info: False
+    network_name: "{{ item.name }}"
+    mac_address: "{{ item.mac }}"
+  delegate_to: localhost
+  loop:  "{{ networks.nics }}"

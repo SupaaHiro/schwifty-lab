@@ -1,0 +1,16 @@
+---
+
+# Hardware configuration used during the initial VM deploy from OVA
+hardware:
+  datastore: nvme1
+  num_cpus: 4
+  mem_gb: 8
+  disks:
+    - size_gb: 50
+      type: thin
+      scsi_controller: 0
+      unit_number: 0
+      scsi_type: paravirtual
+      disk_mode: persistent
+
+...

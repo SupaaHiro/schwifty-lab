@@ -1,0 +1,35 @@
+
+---
+## 
+## Upload and attach Talos ISO to VM
+## 
+- name: Upload and attach Talos ISO to VM
+  block:
+    - name: Upload Talos ISO to datastore
+      community.vmware.vsphere_copy:
+        hostname: "{{ ova_deployment_hostname }}"
+        username: "{{ ova_deployment_username }}"
+        password: "{{ ova_deployment_password }}"
+        validate_certs: "{{ ova_validate_certs }}"
+        src: "{{ talos_iso_path }}"
+        datacenter: "{{ ova_deployment_datacenter | default(omit) }}"
+        datastore: "{{ hardware.datastore }}"
+        path: "{{ ova_cloud_init_path }}"
+      delegate_to: localhost
+
+    - name: Attach an ISO image to a guest VM
+      vmware_guest:
+        hostname: "{{ ova_deployment_hostname }}"
+        username: "{{ ova_deployment_username }}"
+        password: "{{ ova_deployment_password }}"
+        validate_certs: "{{ ova_validate_certs }}"
+        folder: "{{ ova_deployment_folder }}"
+        name: "{{ inventory_hostname_short | lower }}"
+        cdrom:
+          - type: iso
+            iso_path: "[{{ hardware.datastore }}] {{ ova_cloud_init_path }}"
+            controller_type: ide
+            controller_number: 1
+            unit_number: 0
+            state: present 
+      delegate_to: localhost

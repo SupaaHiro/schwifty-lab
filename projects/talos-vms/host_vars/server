@@ -1,0 +1,10 @@
+---
+
+# Networks mapping
+networks:
+  mapping: { "VM Network": "vnet0" }
+  nics:
+    - name: vnet0
+      mac: "A7:2B:47:A3:C5:8C"
+
+...

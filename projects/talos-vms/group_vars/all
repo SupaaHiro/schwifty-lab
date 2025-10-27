@@ -1,0 +1,87 @@
+---
+
+talos_iso_path: "/mnt/c/Temp/metal-amd64-omni-omni-v1.11.3-secureboot.iso"
+
+## Specifies the source from which the OVA file should be obtained. Options are "local" or "http."
+##   If local is set, then the ova_file will be sourced from the defined ova_path.
+##   If http is set, then the ova_file will be downloaded to the defined ova_path.
+##   For http, the ova_url also needs to be set.
+ova_source: "local"
+
+## If ova_source is set to "http," this variable defines the URL from which the OVA file should be downloaded.
+ova_url: ""
+
+## The local path where the OVA file should be stored if ova_source is set to "local."
+ova_path: "/mnt/c/Temp"
+
+## The name of the OVA file to be imported.
+ova_file: "talos-vm0.ova"
+
+## Specifies whether the host FQN must be validated with a nslookup
+ova_check_host_dns_resolution: no
+
+## Specifies whether the OVA fle must be always downloaded even if there is a local copy of it locally
+## Applies only if ova_source is set to http
+ova_force_download: no
+
+## Specifies whether certificate verification should be enabled against the target host during the OVA import process.
+ova_validate_certs: no
+
+## Determines whether duplicates of the same name are allowed.
+ova_allow_duplicates: no
+
+## Specifies whether the appliance should configure the hardware during deployment.
+ova_configure_hardware: yes
+
+## Specifies whether the appliance should configure the network during deployment.
+ova_configure_network: yes
+
+## Specifies whether the appliance should use cloud-init from VM configuration.
+ova_cloud_init: no
+
+## Specifies a descriptive tag of the O.S. distribuited with the OVA file
+ova_os_info: "Talos v1.11.3"
+
+## Specifies the path wheter the cloud-init ISO file should be uploaded in the datacenter
+ova_cloud_init_path: iso/cloud-init.iso
+
+## Specifies user-data file content that should be included in the cloud-init ISO file
+ova_cloud_init_userdata: |
+    #cloud-config
+    password: password
+    chpasswd:
+      expire: False
+    runcmd:
+      - 'touch /etc/cloud/cloud-init.disabled'
+    final_message: "==== Cloud-init completed ===="
+    
+## Specifies meta-data file content that should be included in the cloud-init ISO file
+ova_cloud_init_metadata: |
+    instance-id: someid/somehostname
+    local-hostname: jammy
+    
+## Specifies whether the VM should be powered on after the OVA import process has completed.
+ova_power_on_after_deploy: yes
+
+## Specifies whether the module should wait for the IP address to become available in vCenter after powering on the OVA.
+ova_wait_for_ip_address: no
+
+##  The default disk format to use for the imported OVA's disks (e.g., "thin").
+ova_deployment_disk_type: thin
+
+## Enables or disables hot-adding of CPU during deployment.
+ova_hardware_hotadd_cpu_enabled: yes
+
+## Enables or disables hot-adding of memory during deployment. 
+ova_hardware_hotadd_mem_enabled: yes
+
+## Specifies the VMware datacenter where the VM should be deployed.
+ova_deployment_datacenter: "ha-datacenter"
+
+## Specifies the VMs path within the specified VMware datacenter.
+ova_deployment_folder: "/ha-datacenter/vm"
+
+## Specifies whether the module should fail on OVA specification warnings.
+fail_on_spec_warnings: no
+
+...

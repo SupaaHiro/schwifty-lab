@@ -1,0 +1,126 @@
+---
+## 
+## Check that all the necessary variables are set
+## 
+- name: Checks prerequisites (variables)
+  block:
+    - name: Check nslookup for host FQN
+      command: "nslookup {{ ansible_host }}"
+      register: ns
+      ignore_errors: yes 
+      delegate_to: localhost
+      when: ova_check_host_dns_resolution|bool
+    - fail:
+        msg: "Name resolution for {{ ansible_host }} failed. Did you add the proper A or AAAA record in the DNS ?"
+      when:
+        - ova_check_host_dns_resolution|bool
+        - "'server can\\'t find' in ns.stdout"
+    - fail:
+        msg: "Variable {{ item }} is not defined"
+      when: |
+        vars[item] is undefined
+      loop: "{{ variable_list }}"
+      vars:
+        variable_list:
+          - ova_source
+          - ova_url
+          - ova_path
+          - ova_file
+          - ova_force_download
+          - ova_cloud_init_path
+          - ova_cloud_init_userdata
+          - ova_cloud_init_metadata
+    - fail:
+        msg: "Variable {{ item }} is not set"
+      when: |
+        vars[item] is defined and
+        vars[item] == None
+      loop: "{{ variable_list }}"
+      vars:
+        variable_list:
+          - ova_source
+          - ova_url
+          - ova_path
+          - ova_file
+          - ova_cloud_init_path
+          - ova_cloud_init_userdata
+          - ova_cloud_init_metadata
+    - fail:
+        msg: "Variable {{ item }} is mandatory and can't be an empty string"
+      when: |
+        vars[item] is defined and
+        vars[item] == ''
+      loop: "{{ variable_list }}"
+      vars:
+        variable_list:
+          - ova_deployment_hostname
+          - ova_deployment_username
+          - ova_deployment_password
+          - hardware.datastore
+
+- name: Checks prerequisites (paths)
+  block:
+    - fail:
+        msg: "{{ item }} must be http or local"
+      when: |
+        vars[item] is defined and
+        vars[item] != 'http' and
+        vars[item] != 'local'
+      loop: "{{ variable_list }}"
+      vars:
+        variable_list:
+          - ova_source
+    - stat:
+        path: "{{ item }}"
+      register: dir_info
+      loop: "{{ variable_list }}"
+      vars:
+        variable_list:
+          - "{{ ova_path }}"
+      delegate_to: localhost
+    - fail:
+        msg: "{{ item.item }} does not exists {{ vars[item.item] | default('undefined') }}"
+      when: not item.stat.exists
+      loop: "{{ dir_info.results }}"
+    - fail:
+        msg: "{{ item.item }} path is not a directory"
+      when: not item.stat.isdir
+      loop: "{{ dir_info.results }}"
+
+- name: Checks prerequisites (files)
+  block:
+    - name: Validate image file type is OVA/OVF
+      fail:
+        msg: "The file '{{ ova_file }}' must be an OVA or OVF (expected .ova or .ovf extension). Current value is not supported for vmware_deploy_ovf."
+      when:
+        - ova_file | lower is not regex('\\.(ova|ovf)$')
+        - ova_source in ['local','http']
+
+    - stat:
+        path: "{{ item }}"
+      register: dir_info
+      loop: "{{ variable_list }}"
+      vars:
+        variable_list:
+          - "{{ [ ova_path, ova_file ] | path_join }}"
+      delegate_to: localhost
+    - fail:
+        msg: "{{ item.item }} does not exists {{ vars[item.item] | default('undefined') }}"
+      when: |
+        ova_source == "local" and
+        not item.stat.exists
+      loop: "{{ dir_info.results }}"
+    - file:
+        path: "{{ item.item }}"
+        state: absent
+      register: file_info
+      when: |
+        ova_source == "http" and
+        ova_force_download and
+        item.stat.exists
+      loop: "{{ dir_info.results }}"
+      delegate_to: localhost
+    - stat:
+        path: "{{ [ ova_path, ova_file ] | path_join }}"
+      register: check_ova_file
+      delegate_to: localhost
