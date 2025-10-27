@@ -19,8 +19,6 @@ Install Python (if needed) and Ansible:
 pip install --user ansible==11.10.0 ansible-core==2.18.9
 ```
 
-> **Compatibility note**: vault-keyring-client.py is incompatible with Ansible 12+ because the internal function get_ini_config_value in lib/ansible/config/manager.py was made private between ansible-core 2.18.9 and 2.19.2. This causes the script to fail when it relies on that internal API.
-
 Install ovftool according to VMware documentation and ensure it is on your PATH.
 
 ## Prepare an OVA template

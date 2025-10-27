@@ -12,3 +12,6 @@ nav:
     url: /about-me/
 
 theme: blog-jekyll-theme
+
+exclude:
+- projects
