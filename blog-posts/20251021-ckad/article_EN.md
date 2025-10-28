@@ -4,7 +4,7 @@ title: "CKAD Preparation — Choose and use the right workload resource"
 date: 2025-10-21
 categories: [ckad, kubernetes]
 author: Hiro
-image: "https://supaahiro.github.io/schwifty-lab/blog-articles/20251021-ckad/article.webp"
+image: "https://supaahiro.github.io/schwifty-lab/blog-posts/20251021-ckad/article.webp"
 summary: "Practical guide to choosing the right Kubernetes workload resource (Deployment, DaemonSet, CronJob, StatefulSet) with examples and CKAD-focused tips."
 ---
 
@@ -18,7 +18,7 @@ In this post, we’ll cover CKAD requirements within the “Application Design a
 
 Here we’ll cover how to choose the right Kubernetes workload resource — Deployment, DaemonSet, CronJob — using practical examples.
 
-You can start from the beginning of the series here: [*CKAD Preparation — What is Kubernetes*](https://supaahiro.github.io/schwifty-lab/blog-articles/20251019-ckad/article_EN.html).
+You can start from the beginning of the series here: [*CKAD Preparation — What is Kubernetes*](https://supaahiro.github.io/schwifty-lab/blog-posts/20251019-ckad/article_EN.html).
 
 ## Prerequisites
 
@@ -30,7 +30,7 @@ All manifests and examples mentioned in this post are available in the following
 
 ```bash
 git clone https://github.com/SupaaHiro/schwifty-lab.git
-cd schwifty-lab/blog-articles/20251021-ckad
+cd schwifty-lab/blog-posts/20251021-ckad
 ```
 
 ## Understanding the Resources

@@ -4,7 +4,7 @@ title: "CKAD Preparation, Testing Kubernetes NetworkPolicy"
 date: 2025-10-18
 categories: [ckda, kubernetes]
 author: Hiro
-image: "https://supaahiro.github.io/schwifty-lab/blog-articles/20251018-ckad/article.webp"
+image: "https://supaahiro.github.io/schwifty-lab/blog-posts/20251018-ckad/article.webp"
 summary: "Hands-on exercise showing how to test Kubernetes Ingress NetworkPolicy using a Redis Pod and a client Pod, with manifests and a Python connectivity test."
 ---
 
@@ -18,7 +18,7 @@ In this post, we’ll cover the requirements within the "Services and Networking
 
 Here we'll demonstrate how to restrict ingress traffic using a Kubernetes NetworkPolicy.
 
-You can start from the beginning of the series here: [*CKAD Preparation — What is Kubernetes*](https://supaahiro.github.io/schwifty-lab/blog-articles/20251019-ckad/article_EN.html).
+You can start from the beginning of the series here: [*CKAD Preparation — What is Kubernetes*](https://supaahiro.github.io/schwifty-lab/blog-posts/20251019-ckad/article_EN.html).
 
 ## Prerequisites
 
@@ -31,7 +31,7 @@ All manifests and examples mentioned in this post are available in the following
 
 ```yaml
 git clone https://github.com/SupaaHiro/schwifty-lab.git
-cd schwifty-lab/blog-articles/20251018-ckad
+cd schwifty-lab/blog-posts/20251018-ckad
 ```
 
 ## Creating the Redis Pod

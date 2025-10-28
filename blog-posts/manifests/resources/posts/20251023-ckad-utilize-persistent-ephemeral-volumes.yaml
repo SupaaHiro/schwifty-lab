@@ -5,10 +5,10 @@ metadata:
 spec:
   id: 20251023-ckad-utilize-persistent-ephemeral-volumes
   title: "CKAD Preparation \u2014 Utilize Persistent and Ephemeral Volumes"
-  previewImage: https://supaahiro.github.io/schwifty-lab/blog-articles/20251023-ckad/article.webp
+  previewImage: https://supaahiro.github.io/schwifty-lab/blog-posts/20251023-ckad/article.webp
   summary: "Learn how to persist and share data in Kubernetes using persistent and\
     \ ephemeral volumes \u2014 from emptyDir to PersistentVolumeClaims."
-  contentUrl: https://raw.githubusercontent.com/SupaaHiro/schwifty-lab/refs/heads/master/blog-articles/20251023-ckad/article_EN.md
+  contentUrl: https://raw.githubusercontent.com/SupaaHiro/schwifty-lab/refs/heads/master/blog-posts/20251023-ckad/article_EN.md
   publishedOn: '2025-10-23T00:00:00Z'
   author: Hiro
   categoryId: ckad-preparation

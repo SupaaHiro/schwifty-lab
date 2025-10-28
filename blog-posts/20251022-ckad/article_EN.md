@@ -4,7 +4,7 @@ title: "CKAD Preparation — Introducing Multi-Container Pods"
 date: 2025-10-22
 categories: [ckad, kubernetes]
 author: Hiro
-image: "https://supaahiro.github.io/schwifty-lab/blog-articles/20251022-ckad/article.webp"
+image: "https://supaahiro.github.io/schwifty-lab/blog-posts/20251022-ckad/article.webp"
 summary: "Deep dive into how Kubernetes runs multi-container Pods — from the controller and scheduler to the runtime chain."
 ---
 
@@ -18,7 +18,7 @@ In this post, we’ll cover the requirements within the “Application Design an
 
 Here we focus on multi-container Pod design patterns — why they exist, common use cases (init, sidecar, adapter), and a small hands-on exercise to practice creating and inspecting a Pod with multiple containers.
 
-You can start from the beginning of the series here: [*CKAD Preparation — What is Kubernetes*](https://supaahiro.github.io/schwifty-lab/blog-articles/20251019-ckad/article_EN.html).
+You can start from the beginning of the series here: [*CKAD Preparation — What is Kubernetes*](https://supaahiro.github.io/schwifty-lab/blog-posts/20251019-ckad/article_EN.html).
 
 ## Prerequisites
 
@@ -30,7 +30,7 @@ All manifests and examples mentioned in this post are available in the following
 
 ```bash
 git clone https://github.com/SupaaHiro/schwifty-lab.git
-cd schwifty-lab/blog-articles/20251022-ckad
+cd schwifty-lab/blog-posts/20251022-ckad
 ```
 
 ## Understanding multi-container Pods

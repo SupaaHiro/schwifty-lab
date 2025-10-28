@@ -4,7 +4,7 @@ title: "CKAD Preparation, What is Kubernetes"
 date: 2025-10-19
 categories: [ckda, kubernetes]
 author: Hiro
-image: "https://supaahiro.github.io/schwifty-lab/blog-articles/20251019-ckad/article.webp"
+image: "https://supaahiro.github.io/schwifty-lab/blog-posts/20251019-ckad/article.webp"
 summary: "Introductory CKAD prep post covering Kubernetes fundamentals: architecture, nodes, kubelet, kube-proxy, Services, CNI and CoreDNS, with a roadmap of CKAD topics to be covered in hands-on lessons."
 ---
 
@@ -17,10 +17,10 @@ Since these are topics I need to review for my own exam, I thought—why not pub
 At the time of writing, the CKAD exam has the following requirements:
 
 Application Design and Build
-- [Define, build and modify container images](https://supaahiro.github.io/schwifty-lab/blog-articles/20251020-ckad/article_EN.html).
-- [Choose and use the right workload resource (Deployment, DaemonSet, CronJob, etc.)](https://supaahiro.github.io/schwifty-lab/blog-articles/20251021-ckad/article_EN.html).
-- [Understand multi-container Pod design patterns (e.g. sidecar, init and others)](https://supaahiro.github.io/schwifty-lab/blog-articles/20251022-ckad/article_EN.html)
-- [Utilize persistent and ephemeral volumes](https://supaahiro.github.io/schwifty-lab/blog-articles/20251023-ckad/article_EN.html)
+- [Define, build and modify container images](https://supaahiro.github.io/schwifty-lab/blog-posts/20251020-ckad/article_EN.html).
+- [Choose and use the right workload resource (Deployment, DaemonSet, CronJob, etc.)](https://supaahiro.github.io/schwifty-lab/blog-posts/20251021-ckad/article_EN.html).
+- [Understand multi-container Pod design patterns (e.g. sidecar, init and others)](https://supaahiro.github.io/schwifty-lab/blog-posts/20251022-ckad/article_EN.html)
+- [Utilize persistent and ephemeral volumes](https://supaahiro.github.io/schwifty-lab/blog-posts/20251023-ckad/article_EN.html)
 
 Application Deployment
 - Use Kubernetes primitives to implement common deployment strategies (e.g. blue/green or canary)

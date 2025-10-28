@@ -5,10 +5,10 @@ metadata:
 spec:
   id: 20251022-ckad-understanding-multi-container-pods
   title: "CKAD Preparation \u2014 Understanding Multi-Container Pods"
-  previewImage: https://supaahiro.github.io/schwifty-lab/blog-articles/20251022-ckad/article.webp
+  previewImage: https://supaahiro.github.io/schwifty-lab/blog-posts/20251022-ckad/article.webp
   summary: "Deep dive into how Kubernetes runs multi-container Pods \u2014 from the\
     \ controller and scheduler to the runtime chain."
-  contentUrl: https://raw.githubusercontent.com/SupaaHiro/schwifty-lab/refs/heads/master/blog-articles/20251022-ckad/article_EN.md
+  contentUrl: https://raw.githubusercontent.com/SupaaHiro/schwifty-lab/refs/heads/master/blog-posts/20251022-ckad/article_EN.md
   publishedOn: '2025-10-22T00:00:00Z'
   author: Hiro
   categoryId: ckad-preparation

@@ -4,7 +4,7 @@ title: "CKAD Preparation — Build a container image"
 date: 2025-10-20
 categories: [ckda, kubernetes]
 author: Hiro
-image: "https://supaahiro.github.io/schwifty-lab/blog-articles/20251020-ckad/article.webp"
+image: "https://supaahiro.github.io/schwifty-lab/blog-posts/20251020-ckad/article.webp"
 summary: "Learn how to turn a Python/FastAPI service into a fully containerized app, run it locally with Docker, and seamlessly deploy it to Kubernetes — all step by step."
 ---
 
@@ -18,7 +18,7 @@ In this post, we’ll cover the requirements within the “Application Design an
 
 We’ll walk through building a container image for a Python/FastAPI service, running it locally with Docker, and deploying it to Kubernetes — all with practical, step‑by‑step commands and examples.
 
-You can start from the beginning of the series here: [*CKAD Preparation — What is Kubernetes*](https://supaahiro.github.io/schwifty-lab/blog-articles/20251019-ckad/article_EN.html).
+You can start from the beginning of the series here: [*CKAD Preparation — What is Kubernetes*](https://supaahiro.github.io/schwifty-lab/blog-posts/20251019-ckad/article_EN.html).
 
 ## Prerequisites
 
@@ -68,7 +68,7 @@ All manifests and examples mentioned in this post are available in the following
 
 ```bash
 git clone https://github.com/SupaaHiro/schwifty-lab.git
-cd schwifty-lab/blog-articles/20251020-ckad
+cd schwifty-lab/blog-posts/20251020-ckad
 ```
 
 ## Project initialization
@@ -176,7 +176,7 @@ uv run uvicorn app.main:app --reload
 You should see output similar to:
 
 ```bash
-INFO:     Will watch for changes in these directories: ['C:\\repos\\github\\schwifty-lab\\blog-articles\\20251020-ckad\\src']
+INFO:     Will watch for changes in these directories: ['C:\\repos\\github\\schwifty-lab\\blog-posts\\20251020-ckad\\src']
 INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
 INFO:     Started reloader process [26020] using StatReload
 INFO:     Started server process [11200]

@@ -4,7 +4,7 @@ title: "CKAD Preparation — Utilize Persistent and Ephemeral Volumes"
 date: 2025-10-23
 categories: [ckad, kubernetes]
 author: Hiro
-image: "https://supaahiro.github.io/schwifty-lab/blog-articles/20251023-ckad/article.webp"
+image: "https://supaahiro.github.io/schwifty-lab/blog-posts/20251023-ckad/article.webp"
 summary: "Learn how to persist and share data in Kubernetes using persistent and ephemeral volumes — from emptyDir to PersistentVolumeClaims."
 ---
 
@@ -18,7 +18,7 @@ In this post, we’ll cover the requirements within the “Application Design an
 
 Here we’ll cover how to **utilize persistent and ephemeral volumes** — a fundamental CKAD topic for managing stateful workloads and inter-container data sharing.
 
-You can start from the beginning of the series here: [*CKAD Preparation — What is Kubernetes*](https://supaahiro.github.io/schwifty-lab/blog-articles/20251019-ckad/article_EN.html).
+You can start from the beginning of the series here: [*CKAD Preparation — What is Kubernetes*](https://supaahiro.github.io/schwifty-lab/blog-posts/20251019-ckad/article_EN.html).
 
 ## Prerequisites
 
@@ -30,7 +30,7 @@ Clone the lab repository and navigate to this article’s folder:
 
 ```bash
 git clone https://github.com/SupaaHiro/schwifty-lab.git
-cd schwifty-lab/blog-articles/20251023-ckad
+cd schwifty-lab/blog-posts/20251023-ckad
 ```
 
 ## Understanding Volumes in Kubernetes
