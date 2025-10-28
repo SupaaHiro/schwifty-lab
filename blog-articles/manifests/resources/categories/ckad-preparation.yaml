@@ -1,0 +1,9 @@
+apiVersion: blog.supaahiro.io/v1alpha1
+kind: BlogCategory
+metadata:
+  name: ckad-preparation
+  namespace: default
+spec:
+  id: "ckad-preparation"
+  displayName: "CKAD Preparation"
+
