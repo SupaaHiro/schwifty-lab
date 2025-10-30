@@ -69,3 +69,7 @@ spec:
                   type: boolean
                   default: true
                   description: "Indicates whether the post is published. Defaults to true."
+                indexed:
+                  type: boolean
+                  default: true
+                  description: "Indicates whether the post should be indexed by search engines."

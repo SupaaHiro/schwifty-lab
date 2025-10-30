@@ -16,3 +16,4 @@ spec:
   relatedPostsIds: []
 status:
   published: true
+  indexed: false
