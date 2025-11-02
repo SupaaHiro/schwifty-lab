@@ -1,9 +1,9 @@
 ---
-## 
+##
 ## Configure hardware
-## 
+##
 - name: Configure Hot Add
-  vmware_guest:
+  community.vmware.vmware_guest:
     hostname: "{{ ova_deployment_hostname }}"
     username: "{{ ova_deployment_username }}"
     password: "{{ ova_deployment_password }}"
@@ -17,7 +17,7 @@
   delegate_to: localhost
 
 - name: Configure CPUs
-  vmware_guest:
+  community.vmware.vmware_guest:
     hostname: "{{ ova_deployment_hostname }}"
     username: "{{ ova_deployment_username }}"
     password: "{{ ova_deployment_password }}"
@@ -31,7 +31,7 @@
   when: hardware.num_cpus is defined
 
 - name: Configure Memory
-  vmware_guest:
+  community.vmware.vmware_guest:
     hostname: "{{ ova_deployment_hostname }}"
     username: "{{ ova_deployment_username }}"
     password: "{{ ova_deployment_password }}"
@@ -45,14 +45,14 @@
   when: hardware.mem_gb is defined
 
 - name: Configure Disks
-  vmware_guest_disk:
+  community.vmware.vmware_guest_disk:
     hostname: "{{ ova_deployment_hostname }}"
     username: "{{ ova_deployment_username }}"
     password: "{{ ova_deployment_password }}"
     datacenter: "{{ ova_deployment_datacenter | default(omit) }}"
     validate_certs: "{{ ova_validate_certs }}"
     name: "{{ inventory_hostname_short | lower }}"
-    disk: 
+    disk:
       - size_gb: "{{ item.size_gb | int }}"
         type: "{{ ova_deployment_disk_type }}"
         scsi_controller: "{{ item.scsi_controller }}"
@@ -67,21 +67,24 @@
     - hardware.disks is defined
 
 - name: Get the username running the deployment
+  changed_when: false
   become: false
-  local_action: command whoami
+  ansible.builtin.command: whoami
   register: username_on_the_host
+  delegate_to: localhost
+  run_once: true
 
 - name: Set annotation
-  vmware_guest:
+  community.vmware.vmware_guest:
     hostname: "{{ ova_deployment_hostname }}"
     username: "{{ ova_deployment_username }}"
     password: "{{ ova_deployment_password }}"
     folder: "{{ ova_deployment_folder }}"
     validate_certs: "{{ ova_validate_certs }}"
     name: "{{ inventory_hostname_short | lower }}"
-    annotation:  |
+    annotation: |
       Product: {{ ova_os_info }}
       Deployed by: {{ username_on_the_host.stdout }}
-      Deployed time: {{ lookup('pipe','date +%Y-%m-%d--%H:%M:%S') }}
+      Deployed time: {{ lookup('pipe', 'date +%Y-%m-%d--%H:%M:%S') }}
     state: present
   delegate_to: localhost

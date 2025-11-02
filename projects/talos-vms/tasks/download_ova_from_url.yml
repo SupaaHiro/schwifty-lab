@@ -1,10 +1,11 @@
 ---
-## 
+##
 ## Download OVA file
-## 
+##
 - name: Download OVA file
-  get_url:
+  ansible.builtin.get_url:
     url: "{{ ova_url }}/{{ ova_file }}"
     dest: "{{ ova_path }}"
+    mode: "0644"
   register: ova_file_download
   delegate_to: localhost

@@ -1,9 +1,9 @@
 ---
 ## Power on operation is performed after the OVA is deployed.
-## This is to allow vapp_properties to be configured before the 
+## This is to allow vapp_properties to be configured before the
 ## OVA is powered on.
 - name: Power On VM
-  vmware_guest:
+  community.vmware.vmware_guest:
     hostname: "{{ ova_deployment_hostname }}"
     username: "{{ ova_deployment_username }}"
     password: "{{ ova_deployment_password }}"
@@ -15,7 +15,7 @@
   delegate_to: localhost
 
 - name: Get VM information
-  vmware_guest_info:
+  community.vmware.vmware_guest_info:
     hostname: "{{ ova_deployment_hostname }}"
     username: "{{ ova_deployment_username }}"
     password: "{{ ova_deployment_password }}"
@@ -27,11 +27,19 @@
 
 - name: Print default IP address
   block:
-    - debug:
+    - name: Print network interface information
+      ansible.builtin.debug:
         var: vm_info.instance.hw_eth0
-    - debug:
+
+    - name: Print ETH 1 information
+      ansible.builtin.debug:
         var: vm_info.instance.hw_eth1
       when: vm_info.instance.hw_eth1 is defined
-    - debug:
+
+    - name: Print IPv4 address
+      ansible.builtin.debug:
         var: vm_info.instance.ipv4
-- debug: msg="{{ lookup('pipe','date +%Y-%m-%d--%H:%M:%S') }}"
+
+- name: Print current timestamp
+  ansible.builtin.debug:
+    msg: "{{ lookup('pipe', 'date +%Y-%m-%d--%H:%M:%S') }}"

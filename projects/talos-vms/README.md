@@ -1,48 +1,53 @@
 # Talos VMs on VMware ESXi
 
-This repository contains an Ansible playbook to quickly provision a set of VMs on a VMware ESXi host for use with SideroLabs Omni and Talos.
+This repository provides an Ansible playbook to provision VMs on a VMware ESXi host for use with SideroLabs Omni and Talos.
 
 ## Prerequisites
 
-- A running VMware ESXi hypervisor with access credentials
+- A running VMware ESXi hypervisor and credentials
 - Python 3.8+ and pip
 - Ansible (ansible and ansible-core)
 - ovftool (VMware OVF Tool) for OVF/OVA conversion
-- Access to SideroLabs Omni portal to generate a Talos ISO
+- Access to the SideroLabs Omni portal to generate/download a Talos ISO
 
 ## Install prerequisites
 
-Install Python (if needed) and Ansible:
+Install Ansible and related tooling:
 
 ```bash
-# Example with pip
-pip install --user ansible==11.10.0 ansible-core==2.18.9
+pip install ansible==12.1.0 ansible-core==2.19.3 ansible-lint==25.9.2
 ```
 
-Install ovftool according to VMware documentation and ensure it is on your PATH.
+Install required Ansible collections:
+
+```bash
+ansible-galaxy collection install -r requirements.yml
+```
 
 ## Prepare an OVA template
 
-1. On the ESXi host, create a minimal VM that will serve as the template and export it as an OVF (or OVA).
-2. If you exported an OVF, convert it to OVA locally:
+OVF/OVA are virtual appliance formats. Use OVF Tool to convert if needed.
+
+1. On the ESXi host create a minimal VM to act as the template and export it as an OVF (or OVA).
+2. If you exported an OVF, convert it locally to OVA:
 
 ```bash
 ovftool talos-vm0.ovf talos-vm0.ova
 ```
 
-3. Place the OVA file in a location accessible to your playbook host and note the path.
+3. Place the OVA where the playbook host can access it and update the `ova_file` variable in your inventory or `group_vars` (for example, `group_vars/all.yaml`) to point to that path.
 
-Update the `ova_file` variable in your inventory or group_vars file (for example, `group_vars/all.yaml`) to point to that OVA path.
+## Create an Ansible Vault for secrets
 
-## Create a local Ansible Vault for secrets
+Use Ansible Vault to store ESXi credentials and other secrets. Do not commit the vault file or its password.
 
-Create an encrypted vault file to store ESXi credentials and other secrets. Do not commit the vault file or its password to source control.
+Create the vault:
 
 ```bash
 ansible-vault create vault/vault-keyring.yaml
 ```
 
-Example contents (inside the vault file):
+Example contents (inside the vault):
 
 ```yaml
 ova_deployment_hostname: "esxi.example.com"
@@ -50,22 +55,22 @@ ova_deployment_username: "root"
 ova_deployment_password: "your-esxi-password"
 ```
 
-You can also use `ansible-vault edit` to change values later. When running playbooks, you will be prompted for the vault password (or use `--vault-id` if you have a vault ID file).
+You can edit the vault with `ansible-vault edit` or supply a vault ID / file with `--vault-id` when running playbooks.
 
 ## Configure host_vars
 
-For each host you plan to create, add a `host_vars/<hostname>.yaml` file with at least the MAC address and NIC name that should be attached to the VM. Example `host_vars/talos-vm0.yaml`:
+For each VM to create, add `host_vars/<hostname>.yaml` with at least the MAC address and NIC name. Example `host_vars/talos-vm0.yaml`:
 
 ```yaml
 mac_address: "00:50:56:aa:bb:cc"
 nic_name: "vmnic0"
 ```
 
-Adjust other host-specific variables as required by your environment.
+Adjust additional host-specific variables as required.
 
 ## Fix permissions on WSL (if needed)
 
-On WSL, having overly permissive permissions on the playbook directory can cause Ansible inventory loading issues. Restrict permissions:
+On WSL, overly permissive permissions on the playbook directory can break Ansible inventory loading. Restrict permissions:
 
 ```bash
 chmod -R 755 talos-vms/
@@ -73,7 +78,7 @@ chmod -R 755 talos-vms/
 
 ## Generate Talos ISO
 
-Generate or download a Talos ISO from the SideroLabs Omni portal. Place the ISO in a location accessible to the machine that runs the playbook, then update the `talos_iso_path` variable in your inventory or group_vars (example: `group_vars/all.yaml`) to point to the ISO.
+Generate or download a Talos ISO from the SideroLabs Omni portal and place it where the playbook host can access it. Update `talos_iso_path` in your inventory or `group_vars/all.yaml` to point to the ISO.
 
 ## Deploy
 
@@ -83,30 +88,36 @@ Run the deployment playbook:
 ansible-playbook -i hosts.yaml playbooks/deploy.yaml --ask-vault-pass
 ```
 
-When prompted, enter the vault password to decrypt secrets.
+If you want, you can also perform a syntax check on the playbook before running it:
+
+```bash
+ansible-lint
+```
+
+Enter the vault password when prompted (or use `--vault-id`).
 
 ## Common variables
 
-- ova_file: path to the OVA template (local or remote as required)
-- talos_iso_path: path to the Talos ISO to be attached to new VMs
-- ova_deployment_hostname: ESXi host FQDN or IP
-- ova_deployment_username: ESXi user
-- ova_deployment_password: ESXi password
+- `ova_file`: path to the OVA template (local or remote)
+- `talos_iso_path`: path to the Talos ISO to attach to new VMs
+- `ova_deployment_hostname`: ESXi host FQDN or IP
+- `ova_deployment_username`: ESXi user
+- `ova_deployment_password`: ESXi password
 
-Place these in `group_vars/all.yaml` or an appropriate vars file for your inventory.
+Place these in `group_vars/all.yaml` or the appropriate vars file for your inventory.
 
 ## Troubleshooting
 
-- ovftool not found: ensure OVF Tool is installed and on PATH.
+- ovftool not found: install OVF Tool and ensure it is on PATH.
 - Permission issues on WSL: enforce restrictive permissions (see section above).
-- Inventory not found: verify `inventory/hosts` path and permissions.
-- Vault errors: check you are using the correct vault password or vault-id.
+- Inventory not found: verify `hosts.yaml` or `inventory/hosts` path and permissions.
+- Vault errors: verify the vault password or vault-id being used.
 
 ## Security
 
-- Never commit `vault/vault-keyring.yaml` or any file containing plaintext credentials.
-- Protect the vault password and use a secure way to supply it in CI/CD (vault IDs, environment variables, or Ansible Vault password files with restricted permissions).
+- Never commit `vault/vault-keyring.yaml` or any plaintext credentials.
+- Protect the vault password and use secure methods in CI/CD (vault IDs, environment variables, or restricted vault password files).
 
 ## License and Support
 
-Refer to repository LICENSE file for licensing. For issues, open a GitHub issue in this repository.
+Refer to the repository LICENSE file for licensing. For issues, open a GitHub issue in this repository.

@@ -1,24 +1,28 @@
 ---
-## 
+##
 ## Check that all the necessary variables are set
-## 
+##
 - name: Checks prerequisites (variables)
   block:
-    - name: Check nslookup for host FQN
-      command: "nslookup {{ ansible_host }}"
+    - name: Verify DNS resolution for target host
+      changed_when: false
+      ansible.builtin.command: "nslookup {{ ansible_host }}"
       register: ns
-      ignore_errors: yes 
+      ignore_errors: true
       delegate_to: localhost
       when: ova_check_host_dns_resolution|bool
-    - fail:
-        msg: "Name resolution for {{ ansible_host }} failed. Did you add the proper A or AAAA record in the DNS ?"
+
+    - name: Fail when DNS resolution fails
+      ansible.builtin.fail:
+        msg: "Name resolution for {{ ansible_host }} failed. Did you add the proper A or AAAA record in DNS?"
       when:
         - ova_check_host_dns_resolution|bool
         - "'server can\\'t find' in ns.stdout"
-    - fail:
+
+    - name: Ensure required OVA-related variables are defined
+      ansible.builtin.fail:
         msg: "Variable {{ item }} is not defined"
-      when: |
-        vars[item] is undefined
+      when: vars[item] is undefined
       loop: "{{ variable_list }}"
       vars:
         variable_list:
@@ -27,10 +31,9 @@
           - ova_path
           - ova_file
           - ova_force_download
-          - ova_cloud_init_path
-          - ova_cloud_init_userdata
-          - ova_cloud_init_metadata
-    - fail:
+
+    - name: Ensure required OVA-related variables are not None
+      ansible.builtin.fail:
         msg: "Variable {{ item }} is not set"
       when: |
         vars[item] is defined and
@@ -45,7 +48,9 @@
           - ova_cloud_init_path
           - ova_cloud_init_userdata
           - ova_cloud_init_metadata
-    - fail:
+
+    - name: Ensure critical deployment variables are not empty
+      ansible.builtin.fail:
         msg: "Variable {{ item }} is mandatory and can't be an empty string"
       when: |
         vars[item] is defined and
@@ -58,9 +63,10 @@
           - ova_deployment_password
           - hardware.datastore
 
-- name: Checks prerequisites (paths)
+- name: Validate paths and directories
   block:
-    - fail:
+    - name: Validate ova_source value
+      ansible.builtin.fail:
         msg: "{{ item }} must be http or local"
       when: |
         vars[item] is defined and
@@ -70,47 +76,58 @@
       vars:
         variable_list:
           - ova_source
-    - stat:
+
+    - name: Check ova_path exists and is a directory
+      ansible.builtin.stat:
         path: "{{ item }}"
-      register: dir_info
+      register: ova_path_info
       loop: "{{ variable_list }}"
       vars:
         variable_list:
           - "{{ ova_path }}"
       delegate_to: localhost
-    - fail:
+
+    - name: Fail when configured path does not exist
+      ansible.builtin.fail:
         msg: "{{ item.item }} does not exists {{ vars[item.item] | default('undefined') }}"
       when: not item.stat.exists
-      loop: "{{ dir_info.results }}"
-    - fail:
+      loop: "{{ ova_path_info.results }}"
+
+    - name: Fail when configured path is not a directory
+      ansible.builtin.fail:
         msg: "{{ item.item }} path is not a directory"
       when: not item.stat.isdir
-      loop: "{{ dir_info.results }}"
+      loop: "{{ ova_path_info.results }}"
 
-- name: Checks prerequisites (files)
+- name: Validate image files and Talos ISO
   block:
-    - name: Validate image file type is OVA/OVF
-      fail:
+    - name: Validate OVA/OVF file extension
+      ansible.builtin.fail:
         msg: "The file '{{ ova_file }}' must be an OVA or OVF (expected .ova or .ovf extension). Current value is not supported for vmware_deploy_ovf."
       when:
         - ova_file | lower is not regex('\\.(ova|ovf)$')
         - ova_source in ['local','http']
 
-    - stat:
-        path: "{{ item }}"
-      register: dir_info
+    - name: Stat OVA file path
+      ansible.builtin.stat:
+        path: "{{ [ova_path, ova_file] | path_join }}"
+      register: ova_file_info
       loop: "{{ variable_list }}"
       vars:
         variable_list:
-          - "{{ [ ova_path, ova_file ] | path_join }}"
+          - "{{ [ova_path, ova_file] | path_join }}"
       delegate_to: localhost
-    - fail:
+
+    - name: Fail when OVA not found for local source
+      ansible.builtin.fail:
         msg: "{{ item.item }} does not exists {{ vars[item.item] | default('undefined') }}"
       when: |
         ova_source == "local" and
         not item.stat.exists
-      loop: "{{ dir_info.results }}"
-    - file:
+      loop: "{{ ova_file_info.results }}"
+
+    - name: Remove existing OVA before forced download (http source)
+      ansible.builtin.file:
         path: "{{ item.item }}"
         state: absent
       register: file_info
@@ -118,9 +135,54 @@
         ova_source == "http" and
         ova_force_download and
         item.stat.exists
-      loop: "{{ dir_info.results }}"
+      loop: "{{ ova_file_info.results }}"
       delegate_to: localhost
-    - stat:
-        path: "{{ [ ova_path, ova_file ] | path_join }}"
+
+    - name: Re-check OVA file presence
+      ansible.builtin.stat:
+        path: "{{ [ova_path, ova_file] | path_join }}"
       register: check_ova_file
       delegate_to: localhost
+
+    - name: Check talos_iso_path existence when provided
+      ansible.builtin.stat:
+        path: "{{ talos_iso_path }}"
+      register: talos_iso_info
+      delegate_to: localhost
+      when: talos_iso_path is defined and talos_iso_path != ''
+
+    - name: Fail when talos_iso_path does not exist
+      ansible.builtin.fail:
+        msg: "talos_iso_path '{{ talos_iso_path }}' does not exist"
+      when: talos_iso_path is defined and talos_iso_path != '' and not talos_iso_info.stat.exists
+
+- name: Test connectivity to vCenter
+  block:
+    - name: Test connection to vCenter
+      community.vmware.vmware_host_facts:
+        hostname: "{{ ova_deployment_hostname }}"
+        username: "{{ ova_deployment_username }}"
+        password: "{{ ova_deployment_password }}"
+        validate_certs: "{{ ova_validate_certs | default(true) | bool }}"
+      register: vc_connection
+      delegate_to: localhost
+
+    - name: Fail when connection to vCenter fails
+      ansible.builtin.fail:
+        msg: "Unable to connect to vCenter {{ ova_deployment_hostname }}: {{ vc_connection.msg }}"
+      when: vc_connection.failed
+
+- name: Upload and attach Talos ISO to VM
+  block:
+    - name: Upload Talos ISO to datastore
+      community.vmware.vsphere_copy:
+        hostname: "{{ ova_deployment_hostname }}"
+        username: "{{ ova_deployment_username }}"
+        password: "{{ ova_deployment_password }}"
+        validate_certs: "{{ ova_validate_certs | default(true) | bool }}"
+        src: "{{ talos_iso_path }}"
+        datacenter: "{{ ova_deployment_datacenter | default(omit) }}"
+        datastore: "{{ hardware.datastore }}"
+        path: "/iso/{{ talos_iso_path | basename }}"
+      delegate_to: localhost
+  when: talos_iso_path is defined and talos_iso_path != ''

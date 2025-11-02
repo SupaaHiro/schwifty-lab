@@ -1,11 +1,14 @@
 ---
 
-- vars_files:
+- name: Power off the cluster nodes
+
+  vars_files:
     - ../vault/vault-keyring.yaml
-    
+
   hosts:
     - cluster
-  
+
   tasks:
-    - include_tasks: ../tasks/power_off_ova.yml
+    - name: Power Off OVA
+      ansible.builtin.include_tasks: ../tasks/power_off_ova.yml
 ...

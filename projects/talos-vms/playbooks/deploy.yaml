@@ -1,50 +1,55 @@
 ---
 
-- vars_files:
+- name: Deploy OVA to VMware ESXI and configure it
+
+  vars_files:
     - ../vault/vault-keyring.yaml
-    
+
   hosts:
     - cluster
-  
-  tasks:
-    - include_tasks: ../tasks/prerequisites.yml
 
-    - include_tasks: ../tasks/download_ova_from_url.yml
+  tasks:
+    - name: Include prerequisites tasks
+      ansible.builtin.include_tasks: ../tasks/prerequisites.yml
+
+    - name: Include download OVA tasks
+      ansible.builtin.include_tasks: ../tasks/download_ova_from_url.yml
       when: |
-        ova_source|lower == "http" and
-        not (check_ova_file.stat.exists|bool)
+        ova_source | lower == "http" and
+        not (check_ova_file.stat.exists | bool)
 
     - name: Deploy Vm to datacenter
-      include_tasks: ../tasks/deploy_ova_to_datacenter.yml
+      ansible.builtin.include_tasks: ../tasks/deploy_ova_to_datacenter.yml
       when: |
-        check_ova_file.stat.exists|bool or
-        ova_file_download.changed|bool
+        check_ova_file.stat.exists | bool or
+        ova_file_download.changed | bool
 
     - name: Configure hardware
-      include_tasks: ../tasks/configure_hardware.yml
+      ansible.builtin.include_tasks: ../tasks/configure_hardware.yml
       when: |
-        ova_deployed_to_datacenter.changed|bool and 
-        ova_configure_hardware|bool
+        ova_deployed_to_datacenter.changed | bool and
+        ova_configure_hardware | bool
 
     - name: Configure networks
-      include_tasks: ../tasks/configure_networks.yml
+      ansible.builtin.include_tasks: ../tasks/configure_networks.yml
       when: |
-        ova_deployed_to_datacenter.changed|bool and 
-        ova_configure_network|bool
+        ova_deployed_to_datacenter.changed | bool and
+        ova_configure_network | bool
 
     - name: Execute cloud-init
-      include_tasks: ../tasks/cloud_init.yml
+      ansible.builtin.include_tasks: ../tasks/cloud_init.yml
       when: |
-        ova_deployed_to_datacenter.changed|bool and
-        ova_cloud_init|bool
+        ova_deployed_to_datacenter.changed | bool and
+        ova_cloud_init | bool
 
     - name: Upload and attach Talos ISO to VM
-      include_tasks: ../tasks/upload_and_attach_iso.yml
+      ansible.builtin.include_tasks: ../tasks/upload_and_attach_iso.yml
       when: |
-        ova_deployed_to_datacenter.changed|bool and
-        not (ova_cloud_init|bool) and
+        ova_deployed_to_datacenter.changed | bool and
+        not (ova_cloud_init | bool) and
         talos_iso_path is defined
 
-    - include_tasks: ../tasks/power_on_ova.yml
-      when: ova_power_on_after_deploy|bool
+    - name: Power on the deployed OVA
+      ansible.builtin.include_tasks: ../tasks/power_on_ova.yml
+      when: ova_power_on_after_deploy | bool
 ...

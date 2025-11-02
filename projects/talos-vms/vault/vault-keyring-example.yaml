@@ -1,0 +1,3 @@
+ova_deployment_hostname: "your-esxi-hostname"
+ova_deployment_username: "your-username"
+ova_deployment_password: "your-password"

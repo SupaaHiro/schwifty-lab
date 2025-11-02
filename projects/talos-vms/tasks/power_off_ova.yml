@@ -1,9 +1,9 @@
 ---
 ## Power on operation is performed after the OVA is deployed.
-## This is to allow vapp_properties to be configured before the 
+## This is to allow vapp_properties to be configured before the
 ## OVA is powered on.
 - name: Power Off VM
-  vmware_guest:
+  community.vmware.vmware_guest:
     hostname: "{{ ova_deployment_hostname }}"
     username: "{{ ova_deployment_username }}"
     password: "{{ ova_deployment_password }}"
@@ -13,3 +13,4 @@
     wait_for_ip_address: "{{ ova_wait_for_ip_address }}"
     state: poweredoff
   delegate_to: localhost
+...

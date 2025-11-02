@@ -1,0 +1,14 @@
+---
+
+- name: Power off the cluster nodes
+
+  hosts:
+    - cluster
+
+  vars_files:
+    - ../vault/vault-keyring.yaml
+
+  tasks:
+    - name: Power On OVA
+      ansible.builtin.include_tasks: ../tasks/power_on_ova.yml
+...
