@@ -15,7 +15,7 @@ This repository provides an Ansible playbook to provision VMs on a VMware ESXi h
 Install Ansible and related tooling:
 
 ```bash
-pip install ansible==12.1.0 ansible-core==2.19.3 ansible-lint==25.9.2
+pip install ansible==12.1.0 ansible-core==2.19.3 ansible-lint==25.9.2 pyvmomi==9 requests=2.32.5
 ```
 
 Install required Ansible collections:
