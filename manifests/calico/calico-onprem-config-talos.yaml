@@ -15,20 +15,12 @@ metadata:
   name: default
 spec:
   calicoNetwork:
+    bgp: Disabled
     linuxDataplane: BPF
-    bpfNetworkBootstrap: Enabled
-    kubeProxyManagement: Enabled
-    ipPools:
-      - name: default-ipv4-ippool
-        blockSize: 26
-        cidr: 10.244.0.0/16
-        encapsulation: VXLANCrossSubnet
-        natOutgoing: Enabled
-        nodeSelector: all()
   cni:
     type: Calico
     ipam:
-      type: Calico
+      type: HostLocal
   kubeletVolumePluginPath: None
 ---
 # This section configures the Calico API server.
