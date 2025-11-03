@@ -21,6 +21,11 @@ python -m venv .venv
 Activate it:
 
 ```bash
+
+# Make sure you are on a linux partition and not on the windows mount (/mnt/c)
+cd $HOME
+mkdir ansible
+
 # Linux / macOS
 source .venv/bin/activate
 
@@ -91,11 +96,22 @@ Adjust additional host-specific variables as required.
 
 ## Fix permissions on WSL (if needed)
 
-On WSL, overly permissive permissions on the playbook directory can break Ansible inventory loading. Restrict permissions:
+If you work from the Windows partition (/mnt/c), you must enable NTFS extended attributes:
+
+```yaml
+[automount]
+options = "metadata,uid=1000,gid=1000,umask=022"
+```
+
+To apply the changes, restart WSL:
 
 ```bash
-chmod -R 755 talos-vms/
+wsl --shutdown
 ```
+
+This causes files under /mnt/c to store permissions in NTFS extended attributes (user.LxUid, user.LxGid, user.LxMode), and makes your user (uid 1000) the actual owner.
+
+👉 Now chmod, chown, and umask work correctly, and Ansible will see consistent permissions.
 
 ## Generate Talos ISO
 
