@@ -10,12 +10,33 @@ This repository provides an Ansible playbook to provision VMs on a VMware ESXi h
 - ovftool (VMware OVF Tool) for OVF/OVA conversion
 - Access to the SideroLabs Omni portal to generate/download a Talos ISO
 
+## Create a Virtual Environment
+
+Create a venv:
+
+```bash
+python -m venv .venv
+```
+
+Activate it:
+
+```bash
+# Linux / macOS
+source .venv/bin/activate
+
+# Windows (cmd.exe)
+.venv\Scripts\activate.bat
+
+# Windows (PowerShell)
+.venv\Scripts\Activate.ps1
+```
+
 ## Install prerequisites
 
 Install Ansible and related tooling:
 
 ```bash
-pip install ansible==12.1.0 ansible-core==2.19.3 ansible-lint==25.9.2 pyvmomi==9 requests=2.32.5
+pip install ansible==12.1.0 ansible-core==2.19.3 ansible-lint==25.9.2 pyvmomi==9 requests==2.32.5
 ```
 
 Install required Ansible collections:
