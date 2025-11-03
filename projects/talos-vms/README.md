@@ -15,17 +15,16 @@ This repository provides an Ansible playbook to provision VMs on a VMware ESXi h
 Create a venv:
 
 ```bash
+# Make sure you are on a linux partition and not on the windows mount (/mnt/c)
+cd $HOME
+mkdir ansible
+
 python -m venv .venv
 ```
 
 Activate it:
 
 ```bash
-
-# Make sure you are on a linux partition and not on the windows mount (/mnt/c)
-cd $HOME
-mkdir ansible
-
 # Linux / macOS
 source .venv/bin/activate
 
