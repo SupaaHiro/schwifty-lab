@@ -1,0 +1,57 @@
+---
+apiVersion: crd.projectcalico.org/v1
+kind: FelixConfiguration
+metadata:
+  name: default
+spec:
+  cgroupV2Path: "/sys/fs/cgroup"
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+name: kubernetes-services-endpoint
+namespace: tigera-operator
+data:
+KUBERNETES_SERVICE_HOST: "localhost"
+KUBERNETES_SERVICE_PORT: "7445"
+---
+apiVersion: operator.tigera.io/v1
+kind: Installation
+metadata:
+  name: default
+spec:
+  calicoNetwork:
+    bgp: Disabled
+    linuxDataplane: BPF
+  cni:
+    type: Calico
+    ipam:
+      type: HostLocal
+  kubeletVolumePluginPath: None
+
+---
+apiVersion: operator.tigera.io/v1
+kind: APIServer
+metadata:
+  name: default
+spec: {}
+
+---
+apiVersion: operator.tigera.io/v1
+kind: Goldmane
+metadata:
+  name: default
+
+---
+apiVersion: operator.tigera.io/v1
+kind: Whisker
+metadata:
+  name: default
+
+---
+apiVersion: projectcalico.org/v3
+kind: IPAMConfiguration
+metadata:
+  name: default
+spec:
+  strictAffinity: true
