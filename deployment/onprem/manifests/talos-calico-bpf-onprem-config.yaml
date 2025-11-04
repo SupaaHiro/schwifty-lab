@@ -6,6 +6,7 @@ metadata:
   name: default
 spec:
   cgroupV2Path: "/sys/fs/cgroup"
+  bpfKubeProxyIptablesCleanupEnabled: false
 ---
 # This section includes base Calico installation configuration.
 # For more information, see: https://docs.tigera.io/calico/latest/reference/installation/api#operator.tigera.io/v1.Installation
@@ -15,12 +16,17 @@ metadata:
   name: default
 spec:
   calicoNetwork:
-    bgp: Disabled
     linuxDataplane: BPF
+    bpfNetworkBootstrap: Enabled
+    kubeProxyManagement: Enabled
+    ipPools:
+      - name: default-ipv4-ippool
+        blockSize: 26
+        cidr: 10.86.0.0/16
   cni:
-    type: Calico
     ipam:
       type: HostLocal
+    type: Calico
   kubeletVolumePluginPath: None
 ---
 # This section configures the Calico API server.
@@ -30,20 +36,15 @@ kind: APIServer
 metadata:
   name: default
 spec: {}
-
 ---
 # Configures the Calico Goldmane flow aggregator.
 apiVersion: operator.tigera.io/v1
 kind: Goldmane
 metadata:
   name: default
-
 ---
 # Configures the Calico Whisker observability UI.
 apiVersion: operator.tigera.io/v1
 kind: Whisker
 metadata:
   name: default
-
----
-
