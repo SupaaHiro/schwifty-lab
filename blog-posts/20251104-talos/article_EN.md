@@ -50,7 +50,6 @@ cluster:
       name: custom
       urls:
         - https://raw.githubusercontent.com/SupaaHiro/schwifty-lab/refs/heads/master/deployment/onprem/manifests/talos-coredns-onprem-config.yaml
-        - https://raw.githubusercontent.com/SupaaHiro/schwifty-lab/refs/heads/master/manifests/coredns/coredns-onprem-config-talos.yaml
         - https://raw.githubusercontent.com/projectcalico/calico/v3.31.0/manifests/operator-crds.yaml
         - https://raw.githubusercontent.com/projectcalico/calico/v3.31.0/manifests/tigera-operator.yaml
         - https://raw.githubusercontent.com/SupaaHiro/schwifty-lab/refs/heads/master/deployment/onprem/manifests/talos-calico-bpf-onprem-config.yaml
