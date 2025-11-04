@@ -159,10 +159,10 @@ Connectivity, DNS resolution, and service discovery should remain stable across 
 
 ## Learn more
 
-- 🔗 Project Calico Documentation: https://projectcalico.docs.tigera.io/
-- 💻 Calico GitHub Repository: https://github.com/projectcalico/calico
-- 🧩 SideroLabs Talos: https://www.talos.dev/
-- ☁️ SideroLabs Omni: https://docs.siderolabs.com/omni/overview/what-is-omni
+- 🔗 [Project Calico Documentation](https://projectcalico.docs.tigera.io/)
+- 💻 [Calico GitHub Repository](https://github.com/projectcalico/calico)
+- 🧩 [SideroLabs Talos](https://www.talos.dev/)
+- ☁️ [SideroLabs Omni](https://docs.siderolabs.com/omni/overview/what-is-omni)
 
 ## Wrapping up
 
