@@ -39,7 +39,7 @@ The challenge: Talos automatically installs Flannel as the default CNI, so repla
 
 ## The key insight — patch before deploying
 
-After reading a lot of documentation across Calico, Talos, and Omni, I found the cleanest approach is simply to apply a custom network configuration before the cluster is deployed.
+After reading a lot of documentation across [Calico](https://docs.tigera.io/calico/latest/getting-started/kubernetes/self-managed-onprem/onpremises), [Talos](https://docs.siderolabs.com/kubernetes-guides/cni/deploy-calico#ebpf), and [Omni](https://docs.siderolabs.com/omni/reference/cluster-templates), I found the cleanest approach is simply to apply a custom network configuration before the cluster is deployed.
 
 Here’s the patch that made it work:
 
@@ -56,7 +56,7 @@ cluster:
 ```
 
 > ⚠️ Important: This patch must be applied before the cluster bootstrap.
-> If you deploy the default cluster first, Flannel will already be initialized and Calico won’t be able to take over cleanly.
+>    If you deploy the default cluster first, Flannel will already be initialized and Calico won’t be able to take over cleanly.
 
 ---
 
