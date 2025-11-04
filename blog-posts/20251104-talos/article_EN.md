@@ -17,13 +17,11 @@ But, in parallel, I’ve been exploring something that’s been on my list for m
 That cluster served me well for years. I built and upgraded everything by hand: control planes, kube-proxy, CNI, certificates, and so on. It was a great learning journey — but now that I know Kubernetes deeply, maintaining it manually has become unnecessary overhead.
 
 So, I started looking for something declarative, self-managed, yet fully under my control.
-I already knew about Talos Linux
-, but never really dug into it. Then, almost by accident, I discovered SideroLabs Omni
- — and since then, I’ve been experimenting with it non-stop for three days straight.
+I already knew about [Talos Linux](https://www.talos.dev/), but never really dug into it. Then, almost by accident, I discovered [SideroLabs Omni](https://www.siderolabs.com/products/omni) — and since then, I’ve been experimenting with it non-stop for three days straight.
 
 Today, I finally managed to replace the default Flannel CNI that comes with Talos with Calico, which I’ve been using for about four years in production environments.
 
-Spoiler: it works beautifully.
+**Spoiler: it works beautifully.**
 
 ---
 
@@ -64,6 +62,8 @@ cluster:
 ---
 
 ## Why patch the CoreDNS manifest?
+
+Because of one small (**but critical**) issue:
 
 After the first reboot, CoreDNS couldn’t start because the network wasn’t ready yet — and Calico couldn’t start because the DNS wasn’t working. Classic chicken-and-egg.
 
