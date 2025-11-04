@@ -1,0 +1,8 @@
+apiVersion: blog.supaahiro.io/v1alpha1
+kind: BlogCategory
+metadata:
+  name: talos
+  namespace: default
+spec:
+  id: "talos"
+  displayName: "Talos"

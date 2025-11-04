@@ -1,0 +1,17 @@
+apiVersion: blog.supaahiro.io/v1alpha1
+kind: BlogPost
+metadata:
+  name: 20251104-talos-replace-flannel-with-calico
+spec:
+  id: 20251104-talos-replace-flannel-with-calico
+  title: "Replacing Flannel with Calico on Talos + Omni"
+  previewImage: https://supaahiro.github.io/schwifty-lab/blog-posts/20251104-talos/article.webp
+  summary: "LeExperimenting with replacing Talos’ default Flannel CNI with Calico using SideroLabs Omni — exploring BPF dataplane, kube-proxy management, and declarative cluster configuration."
+  contentUrl: https://raw.githubusercontent.com/SupaaHiro/schwifty-lab/refs/heads/master/blog-posts/20251104-talos/article_EN.md
+  publishedOn: "2025-11-04T00:00:00Z"
+  author: Hiro
+  categoryId: talos
+  relatedPostsIds: []
+status:
+  published: true
+  indexed: true

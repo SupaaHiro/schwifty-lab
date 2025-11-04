@@ -11,3 +11,4 @@ resources:
   - ./posts/20251021-ckad-choose-workload-resource.yaml
   - ./posts/20251022-ckad-understanding-multi-container-pods.yaml
   - ./posts/20251023-ckad-utilize-persistent-ephemeral-volumes.yaml
+  - ./posts/20251104-talos-replace-flannel-with-calico.yaml
