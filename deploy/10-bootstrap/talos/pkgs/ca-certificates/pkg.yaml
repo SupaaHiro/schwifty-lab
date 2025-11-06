@@ -7,7 +7,7 @@ dependencies:
     to: /rootfs
 steps:
   - sources:
-      - url: https://raw.githubusercontent.com/SupaaHiro/schwifty-lab/refs/heads/master/deploy/10-bootstrap/pki/ca.pem
+      - url: https://raw.githubusercontent.com/SupaaHiro/schwifty-lab/refs/heads/master/deploy/10-bootstrap/pki/cacert.pem
         destination: cacert.pem
         sha256: c4f2c8608d287eb9f80b00c76aaca46d9ac9156353b688d0185f7111f244452c
         sha512: 6fb0e06544122c120f8b2f0217210425eb6e4ea88e67d330841cec78a28785fb858676a422b73f97e492fae2998ff1e70888ed5ac7e4badf90551d8ff58ae2c7
