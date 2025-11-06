@@ -1,0 +1,29 @@
+name: ca-certificates
+variant: scratch
+shell: /bin/bash
+dependencies:
+  - stage: base
+  - image: "{{ .TOOLS_PREFIX }}tools-ca-certificates:{{ .TOOLS_REV }}"
+    to: /rootfs
+steps:
+  - install:
+      - |
+        # The build must provide a local CA via the LOCAL_CA environment variable.
+        if [ -z "${LOCAL_CA:-}" ]; then
+          echo "Error: LOCAL_CA must be set to the path of a local CA file to include." >&2
+          exit 1
+        fi
+
+        # Verify that the LOCAL_CA file exists and is readable.
+        if [ ! -f "$LOCAL_CA" ]; then
+          echo "Error: LOCAL_CA file '$LOCAL_CA' not found or not accessible." >&2
+          exit 1
+        fi
+
+        cat "$LOCAL_CA" >> "/rootfs/etc/ssl/certs/$(basename "$LOCAL_CA")"
+    test:
+      - |
+        fhs-validator /rootfs
+finalize:
+  - from: /rootfs
+    to: /
