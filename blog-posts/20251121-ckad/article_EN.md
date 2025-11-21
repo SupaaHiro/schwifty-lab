@@ -122,7 +122,6 @@ k apply -f manifests/02-green.yaml
 ```
 
 Now both versions are running. Next, we create a Service to route traffic initially to the blue version.
-#### 3\. Create a Service pointing initially to the blue version (manifests/03-service.yaml)
 
 ```yaml
 apiVersion: v1
@@ -164,14 +163,13 @@ k run -it --rm --image=curlimages/curl -- curl demo-svc
 
 ## Hands-On Challenge: Canary Deployment
 
-Kubernetes Service does not natively support traffic weighting, but we can simulate a Canary deployment by adjusting the number of replicas.
+A canary deployment is used to gradually roll out a new version of an application to a subset of users before making it available to everyone. Kubernetes Service does not natively support traffic weighting, but we can simulate a Canary deployment by adjusting the number of replicas.
 
-We'll run:
-
+In this lab we'll create two Deployments:
 -   **stable-app** --- the stable version
 -   **canary-app** --- the new version, with fewer replicas
 
-Both share the same label so both receive traffic.
+Notice that both deployments will be selected by the same Service, allowing traffic to be split based on the number of replicas.
 
 This is the manifest for the stable version:
 
