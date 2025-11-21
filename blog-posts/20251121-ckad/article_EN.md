@@ -55,7 +55,42 @@ We'll run two Deployments:
 
 Traffic will be routed through a Service that selects which version to expose.
 
-Let's start by creating the manifests for the blue deployment:
+Before we start, we need to create a ConfigMap to hold simple two HTML files representing each version "color".
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: web-assets
+data:
+  blue.html: |
+    <html>
+      <body>
+        <div>Hello, it's BLUE !</div>
+      </body>
+    </html>
+
+  green.html: |
+    <html>
+      <body>
+        <div>Hello, it's GREEN !</div>
+      </body>
+    </html>
+```
+
+Apply it:
+
+```bash
+kubectl apply -f manifests/00-web-assets.yaml
+```
+
+Alternatively, you can create it directly from files. During the exam, you might prefer this method to save time.
+
+```bash
+k create configmap web-assets --from-file=assets/blue.html --from-file=assets/green.html
+```
+
+Now we can create the blue deployment manifest:
 
 ```yaml
 apiVersion: apps/v1
@@ -74,12 +109,23 @@ spec:
         app: demo
         version: blue
     spec:
+      volumes:
+        - name: web-assets
+          configMap:
+            name: web-assets
+            items:
+              - key: blue.html
+                path: index.html
       containers:
         - name: app
           image: nginx:1.29.3-perl
           env:
             - name: COLOR
               value: "blue"
+          volumeMounts:
+            - name: web-assets
+              mountPath: "/usr/share/nginx/html"
+              readOnly: true
 ```
 
 Apply it:
@@ -88,7 +134,7 @@ Apply it:
 k apply -f manifests/01-blue.yaml
 ```
 
-Now let's create the green deployment manifest.
+Also, let's create the green deployment manifest as well.
 
 ```yaml
 apiVersion: apps/v1
@@ -107,12 +153,23 @@ spec:
         app: demo
         version: green
     spec:
+      volumes:
+        - name: web-assets
+          configMap:
+            name: web-assets
+            items:
+              - key: green.html
+                path: index.html
       containers:
         - name: app
           image: nginx:1.29.3-perl
           env:
             - name: COLOR
               value: "green"
+          volumeMounts:
+            - name: web-assets
+              mountPath: "/usr/share/nginx/html"
+              readOnly: true
 ```
 
 Apply it:
@@ -121,7 +178,21 @@ Apply it:
 k apply -f manifests/02-green.yaml
 ```
 
-Now both versions are running. Next, we create a Service to route traffic initially to the blue version.
+Now both versions should be running. Let's check it:
+
+```bash
+k get pods -l app=demo
+```
+
+You should get two pods running, one for each version.
+
+```bash
+NAME                         READY   STATUS    RESTARTS   AGE
+blue-app-674544c6cf-vfnc9    1/1     Running   0          8m17s
+green-app-76897ccfb6-n29b4   1/1     Running   0          7m50s
+```
+
+Next, we create a Service to route traffic initially to the `blue` version.
 
 ```yaml
 apiVersion: v1
@@ -137,28 +208,28 @@ spec:
       targetPort: 80
 ```
 
-Apply the Service:
+Apply it:
 
 ```bash
 k apply -f manifests/03-service.yaml
 ```
 
-Let's check that the traffic goes to the blue deployment:
+Let's check that the traffic goes to the `blue` deployment:
 
 ```bash
-k run -it --rm --image=curlimages/curl -- curl demo-svc
+k run -it --rm --image=curlimages/curl --restart=Never -- curl demo-svc
 ```
 
-By patching the Service selector, we can switch traffic to the green deployment:
+By patching the Service selector, we can switch traffic to the `green` deployment:
 
 ```bash
 k patch svc demo-svc -p '{"spec":{"selector":{"app":"demo","version":"green"}}}'
 ```
 
-If we run the curl command again we should now hit the green version:
+If we run the curl command again we should now hit the `green` version:
 
 ```bash
-k run -it --rm --image=curlimages/curl -- curl demo-svc
+k run -it --rm --image=curlimages/curl --restart=Never -- curl demo-svc
 ```
 
 ## Hands-On Challenge: Canary Deployment
@@ -248,7 +319,7 @@ spec:
       targetPort: 80
 ```
 
-Apply the manifest:
+Apply it:
 
 ```bash
 k apply -f manifests/06-service.yaml
@@ -258,7 +329,7 @@ Run multiple curl commands to test traffic distribution:
 
 ```bash
 for i in {1..20}; do
-  k run -it --rm --restart=Never --image=curlimages/curl curl canary-svc
+  k run -it --rm --image=curlimages/curl --restart=Never curl canary-svc
 done
 ```
 

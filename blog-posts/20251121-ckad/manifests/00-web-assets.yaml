@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: web-assets
+data:
+  blue.html: |
+    <html>
+      <body>
+        <div>BLUE</div>
+      </body>
+    </html>
+
+  green.html: |
+    <html>
+      <body>
+        <div>GREEN</div>
+      </body>
+    </html>

@@ -14,9 +14,20 @@ spec:
         app: demo
         version: blue
     spec:
+      volumes:
+        - name: web-assets
+          configMap:
+            name: web-assets
+            items:
+              - key: blue.html
+                path: index.html
       containers:
         - name: app
           image: nginx:1.29.3-perl
           env:
             - name: COLOR
               value: "blue"
+          volumeMounts:
+            - name: web-assets
+              mountPath: "/usr/share/nginx/html"
+              readOnly: true
