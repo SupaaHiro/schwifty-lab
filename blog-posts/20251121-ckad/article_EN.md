@@ -55,7 +55,7 @@ We'll run two Deployments:
 
 Traffic will be routed through a Service that selects which version to expose.
 
-Before we start, we need to create a ConfigMap to hold simple two HTML files representing each version "color".
+Before we start, we need to create a ConfigMap to hold two simple HTML files representing each version "color".
 
 ```yaml
 apiVersion: v1
