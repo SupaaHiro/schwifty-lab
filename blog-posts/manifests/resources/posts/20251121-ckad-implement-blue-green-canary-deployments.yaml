@@ -1,0 +1,17 @@
+apiVersion: blog.supaahiro.io/v1alpha1
+kind: BlogPost
+metadata:
+  name: 20251121-ckad-implement-blue-green-canary-deployments
+spec:
+  id: 20251121-ckad-implement-blue-green-canary-deployments
+  title: "CKAD Preparation — Implement Blue/Green and Canary Deployments Using Kubernetes Primitives"
+  previewImage: https://supaahiro.github.io/schwifty-lab/blog-posts/20251121-ckad/article.webp
+  summary: "Learn how to implement Blue/Green and Canary deployments using Kubernetes primitives — a key CKAD skill for application design and build."
+  contentUrl: https://raw.githubusercontent.com/SupaaHiro/schwifty-lab/refs/heads/master/blog-posts/20251121-ckad/article_EN.md
+  publishedOn: "2025-11-21T00:00:00Z"
+  author: Hiro
+  categoryId: ckad-preparation
+  relatedPostsIds: []
+status:
+  published: true
+  indexed: true

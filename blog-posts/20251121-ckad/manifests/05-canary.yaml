@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: canary-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: canary-demo
+      version: canary
+  template:
+    metadata:
+      labels:
+        app: canary-demo
+        version: canary
+    spec:
+      containers:
+        - name: app
+          image: nginx:1.29.3-perl
+          env:
+            - name: CANARY
+              value: "true"
