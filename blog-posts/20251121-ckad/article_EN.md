@@ -35,27 +35,27 @@ cd schwifty-lab/blog-posts/20251121-ckad
 
 ## Understanding Deployment Strategies in Kubernetes
 
-Modern application delivery often requires updating workloads with **zero downtime**. Kubernetes provides native primitives---Deployments, Services, labels, and rolling updates---that help implement common release strategies without external tools.
+Modern application delivery often requires updating workloads with zero downtime. Kubernetes provides native primitives — Deployments, Services, labels, and rolling updates — that make it possible to implement common release strategies without relying on external tools.
 
 In this exercise, we focus on two CKAD-relevant patterns:
 
--   **Blue/Green deployments** --- keep two versions running side-by-side; switch traffic by updating labels/selectors.
--   **Canary deployments** --- send a small portion of traffic to the new version for validation before rolling out fully.
+-   **Blue/Green deployments** — keep two versions running side by side and switch traffic by updating labels and selectors.
+-   **Canary deployments** — send a small portion of traffic to the new version for validation before rolling it out fully.
 
-Both examples use only Kubernetes-native mechanisms.
+Both examples rely only on Kubernetes-native mechanisms.
 
 ## Hands-On Challenge: Blue/Green Deployment
 
-A Blue/Green deployment is a release strategy that uses two identical environments — one running the current version of an application (Blue) and one running the new version (Green).
+A Blue/Green deployment uses two identical environments: one running the current version (Blue) and the other running the new version (Green).
 
 We'll run two Deployments:
 
--   **blue-app** --- version 1
--   **green-app** --- version 2
+-   **blue-app** — version 1
+-   **green-app** — version 2
 
 Traffic will be routed through a Service that selects which version to expose.
 
-Before we start, we need to create a ConfigMap to hold two simple HTML files representing each version "color".
+Before starting, create a ConfigMap containing two simple HTML files representing each version’s “color.”
 
 ```yaml
 apiVersion: v1
@@ -90,7 +90,7 @@ Alternatively, you can create it directly from files. During the exam, you might
 k create configmap web-assets --from-file=assets/blue.html --from-file=assets/green.html
 ```
 
-Now we can create the blue deployment manifest:
+Now we can create the Blue deployment manifest:
 
 ```yaml
 apiVersion: apps/v1
@@ -134,7 +134,7 @@ Apply it:
 k apply -f manifests/01-blue.yaml
 ```
 
-Also, let's create the green deployment manifest as well.
+Next, create the Green deployment:
 
 ```yaml
 apiVersion: apps/v1
@@ -178,13 +178,13 @@ Apply it:
 k apply -f manifests/02-green.yaml
 ```
 
-Now both versions should be running. Let's check it:
+Confirm both versions are running:
 
 ```bash
 k get pods -l app=demo
 ```
 
-You should get two pods running, one for each version.
+We should get two pods running, one for each version.
 
 ```bash
 NAME                         READY   STATUS    RESTARTS   AGE
@@ -192,7 +192,7 @@ blue-app-674544c6cf-vfnc9    1/1     Running   0          8m17s
 green-app-76897ccfb6-n29b4   1/1     Running   0          7m50s
 ```
 
-Next, we create a Service to route traffic initially to the `blue` version.
+Create a Service that initially routes traffic to the `blue` version:
 
 ```yaml
 apiVersion: v1
@@ -234,13 +234,13 @@ k run -it --rm --image=curlimages/curl --restart=Never -- curl demo-svc
 
 ## Hands-On Challenge: Canary Deployment
 
-A canary deployment is used to gradually roll out a new version of an application to a subset of users before making it available to everyone. Kubernetes Service does not natively support traffic weighting, but we can simulate a Canary deployment by adjusting the number of replicas.
+A canary deployment gradually introduces a new version to a subset of users before rolling it out completely. Kubernetes Services do not natively support traffic weighting, but we can simulate it by adjusting replica counts.
 
-In this lab we'll create two Deployments:
--   **stable-app** --- the stable version
--   **canary-app** --- the new version, with fewer replicas
+We’ll create two Deployments:
+-   **stable-app** — the stable version
+-   **canary-app** — the new version with fewer replicas
 
-Notice that both deployments will be selected by the same Service, allowing traffic to be split based on the number of replicas.
+Both will be selected by the same Service, allowing traffic distribution to follow replica proportions.
 
 This is the manifest for the stable version:
 
@@ -265,7 +265,7 @@ spec:
           image: nginx:1.29.3-perl
 ```
 
-Let's apply it:
+Apply it:
 
 ```bash
 k apply -f manifests/04-stable.yaml
@@ -304,7 +304,7 @@ Apply it:
 k apply -f manifests/05-canary.yaml
 ```
 
-Finally, create a Service that selects both deployments:
+Create a Service that selects both deployments:
 
 ```yaml
 apiVersion: v1
@@ -325,7 +325,7 @@ Apply it:
 k apply -f manifests/06-service.yaml
 ```
 
-Run multiple curl commands to test traffic distribution:
+Now, let's test traffic distribution:
 
 ```bash
 for i in {1..20}; do
@@ -345,27 +345,27 @@ If everything looks good with the canary, we can promote it by scaling up the ca
 k scale deploy/stable-app --replicas=0
 ```
 
-You've completed a manual canary promotion using Kubernetes primitives only.
+You’ve completed a manual canary promotion using Kubernetes-native mechanisms only.
 
 ## Wrapping Up: What We’ve Covered
 
 In this exercise, we practiced how to implement Blue/Green and Canary deployments using only Kubernetes-native constructs.
 
-Here's a recap of what we did in this lab:
-- A Blue/Green deployment implemented entirely through label switching and Service routing.
-- A Canary rollout created by proportioning traffic via Pod replica ratios.
+Here’s a quick recap:
+- **Blue/Green deployment** implemented through label switching and Service routing.
+- **Canary rollout** simulated by distributing traffic based on replica counts.
 
-While these approaches are fully valid for CKAD and work well in controlled scenarios, must be noted that Kubernetes offers only basic primitives for deployment strategies. Traffic routing is binary (a Pod matches a selector or it doesn't), and there’s no native way to shift precise percentages, use custom metrics, or automate progressive analysis.
+While these approaches are valid for CKAD and effective for controlled scenarios, Kubernetes provides only basic primitives for rollout strategies. Traffic routing is binary — a Pod either matches a selector or it doesn’t — and there’s no native support for precise percentage-based routing, custom metrics, or automated progressive analysis.
 
-In real-world environments, these limitations are often addressed by:
-- Advanced CNIs that provide richer traffic control capabilities.
-- Service mesh layers such as Istio, which enable features like weighted traffic splitting, automated rollback, per-request routing, and shadow deployments.
+In production environments, these limitations are commonly addressed through:
+- Advanced CNIs, which offer more granular traffic control.
+- Service mesh layers such as Istio, which enable weighted routing, automated rollback, request-level policies, and shadow deployments.
 
-📝 In later modules, we’ll explore these ecosystem components and see how they enable more advanced deployment patterns beyond what’s available with native Kubernetes alone.
+📝 In later modules, we’ll explore these components and see how they unlock more advanced deployment patterns beyond what Kubernetes provides natively.
 
 ## Final cleanup
 
-When done, remove all resources:
+When you’re done, remove all resources:
 
 ```bash
 k delete -f manifests/
