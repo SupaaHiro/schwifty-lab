@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "CKAD Preparation — Implementing Blue/Green and Canary Deployments Using Kubernetes Primitives"
-date: 2025-10-23
+date: 2025-11-21
 categories: [ckad, kubernetes]
 author: Hiro
 image: "https://supaahiro.github.io/schwifty-lab/blog-posts/20251121-ckad/article.webp"
