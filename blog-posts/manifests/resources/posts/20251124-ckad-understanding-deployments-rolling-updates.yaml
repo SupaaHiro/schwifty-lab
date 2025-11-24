@@ -1,0 +1,17 @@
+apiVersion: blog.supaahiro.io/v1alpha1
+kind: BlogPost
+metadata:
+  name: 20251124-ckad-understanding-deployments-rolling-updates
+spec:
+  id: 20251124-ckad-understanding-deployments-rolling-updates
+  title: "CKAD Preparation — Understanding Deployments and Rolling Updates in Kubernetes"
+  previewImage: https://supaahiro.github.io/schwifty-lab/blog-posts/20251124-ckad/article.webp
+  summary: "Learn how to update Kubernetes Deployments and perform rolling updates using native primitives — an essential CKAD skill for managing application rollout strategies with zero downtime."
+  contentUrl: https://raw.githubusercontent.com/SupaaHiro/schwifty-lab/refs/heads/master/blog-posts/20251124-ckad/article_EN.md
+  publishedOn: "2025-11-24T00:00:00Z"
+  author: Hiro
+  categoryId: ckad-preparation
+  relatedPostsIds: []
+status:
+  published: true
+  indexed: true
