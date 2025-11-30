@@ -12,3 +12,5 @@ resources:
   - ./posts/20251022-ckad-understanding-multi-container-pods.yaml
   - ./posts/20251023-ckad-utilize-persistent-ephemeral-volumes.yaml
   - ./posts/20251104-talos-replace-flannel-with-calico.yaml
+  - ./posts/20251121-ckad-implement-blue-green-canary-deployments.yaml
+  - ./posts/20251124-ckad-understanding-deployments-rolling-updates.yaml
