@@ -24,7 +24,7 @@ Application Design and Build
 
 Application Deployment
 - [Use Kubernetes primitives to implement common deployment strategies (e.g. blue/green or canary)](https://supaahiro.github.io/schwifty-lab/blog-posts/20251121-ckad/article_EN.html)
-- [Understand Deployments and how to perform rolling updates](https://supaahiro.github.io/schwifty-lab/blog-posts/20251024-ckad/article_EN.html)
+- [Understand Deployments and how to perform rolling updates](https://supaahiro.github.io/schwifty-lab/blog-posts/20251124-ckad/article_EN.html)
 - Use the Helm package manager to deploy existing packages
 - Kustomize
 
