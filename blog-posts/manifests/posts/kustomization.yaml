@@ -1,0 +1,16 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+metadata:
+  name: blog-posts-bundle
+resources:
+  - ./categories/ckad-preparation.yaml
+  - ./20250501-introduction.yaml
+  - ./20251018-ckad-testing-networkpolicy.yaml
+  - ./20251019-ckad-what-is-kubernetes.yaml
+  - ./20251020-ckad-build-a-container-image.yaml
+  - ./20251021-ckad-choose-workload-resource.yaml
+  - ./20251022-ckad-understanding-multi-container-pods.yaml
+  - ./20251023-ckad-utilize-persistent-ephemeral-volumes.yaml
+  - ./20251104-talos-replace-flannel-with-calico.yaml
+  - ./20251121-ckad-implement-blue-green-canary-deployments.yaml
+  - ./20251124-ckad-understanding-deployments-rolling-updates.yaml

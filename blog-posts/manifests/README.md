@@ -16,6 +16,7 @@ kubectl -n <namespace> apply -k .
 ## Delete
 
 ```bash
-kustomize build ./resources | kubectl -n <namespace> apply -f -
+kustomize build ./posts | kubectl -n <namespace> apply -f -
+kustomize build ./categories | kubectl -n <namespace> apply -f -
 kustomize build ./crds | kubectl -n <namespace> apply -f -
 ```
