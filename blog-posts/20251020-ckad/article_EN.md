@@ -2,7 +2,7 @@
 layout: default
 title: "CKAD Preparation — Build a container image"
 date: 2025-10-20
-categories: [ckda, kubernetes]
+categories: [ckad, kubernetes]
 author: Hiro
 image: "https://supaahiro.github.io/schwifty-lab/blog-posts/20251020-ckad/article.webp"
 summary: "Learn how to turn a Python/FastAPI service into a fully containerized app, run it locally with Docker, and seamlessly deploy it to Kubernetes — all step by step."
@@ -325,7 +325,7 @@ spec:
 ```
 
 > A **Deployment** is a Kubernetes resource that manages the lifecycle of your application’s Pods.
->   
+>
 > It ensures the desired number of replicas are always running, automatically replaces failed Pods, and allows zero-downtime updates through rolling deployments.
 
 Apply the manifest:

@@ -2,7 +2,7 @@
 layout: default
 title: "CKAD Preparation, What is Kubernetes"
 date: 2025-10-19
-categories: [ckda, kubernetes]
+categories: [ckad, kubernetes]
 author: Hiro
 image: "https://supaahiro.github.io/schwifty-lab/blog-posts/20251019-ckad/article.webp"
 summary: "Introductory CKAD prep post covering Kubernetes fundamentals: architecture, nodes, kubelet, kube-proxy, Services, CNI and CoreDNS, with a roadmap of CKAD topics to be covered in hands-on lessons."
@@ -23,8 +23,8 @@ Application Design and Build
 - [Utilize persistent and ephemeral volumes](https://supaahiro.github.io/schwifty-lab/blog-posts/20251023-ckad/article_EN.html)
 
 Application Deployment
-- Use Kubernetes primitives to implement common deployment strategies (e.g. blue/green or canary)
-- Understand Deployments and how to perform rolling updates
+- [Use Kubernetes primitives to implement common deployment strategies (e.g. blue/green or canary)](https://supaahiro.github.io/schwifty-lab/blog-posts/20251121-ckad/article_EN.html)
+- [Understand Deployments and how to perform rolling updates](https://supaahiro.github.io/schwifty-lab/blog-posts/20251024-ckad/article_EN.html)
 - Use the Helm package manager to deploy existing packages
 - Kustomize
 
@@ -77,7 +77,7 @@ Kubernetes is widely adopted across industries and is especially popular in:
 
 ## Kubernetes architecture
 
-Kubernetes is built around a master-worker architecture. The Control Plane manages the cluster and makes global decisions (e.g., scheduling), while the Nodes (workers) run the actual applications in containers. 
+Kubernetes is built around a master-worker architecture. The Control Plane manages the cluster and makes global decisions (e.g., scheduling), while the Nodes (workers) run the actual applications in containers.
 
 ```mermaid
 graph TD
