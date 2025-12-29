@@ -1,0 +1,8 @@
+apiVersion: blog.supaahiro.io/v1alpha1
+kind: BlogCategory
+metadata:
+  name: cka-preparation
+  namespace: default
+spec:
+  id: "cka-preparation"
+  displayName: "CKA Preparation"
