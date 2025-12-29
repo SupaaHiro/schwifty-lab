@@ -15,6 +15,23 @@ spec:
     - name: v1alpha1
       served: true
       storage: true
+      additionalPrinterColumns:
+        - name: Title
+          type: string
+          description: "Title of the blog post."
+          jsonPath: .spec.title
+        - name: Author
+          type: string
+          description: "Author of the blog post."
+          jsonPath: .spec.author
+        - name: Published
+          type: boolean
+          description: "Indicates whether the post is published."
+          jsonPath: .status.published
+        - name: Published On
+          type: date
+          description: "Date when the post was published."
+          jsonPath: .spec.publishedOn
       schema:
         openAPIV3Schema:
           type: object

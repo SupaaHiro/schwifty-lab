@@ -3,5 +3,6 @@ kind: Kustomization
 metadata:
   name: blog-categories-bundle
 resources:
+  - ./cka-preparation.yaml
   - ./ckad-preparation.yaml
   - ./talos.yaml

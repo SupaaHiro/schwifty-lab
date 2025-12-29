@@ -3,7 +3,6 @@ kind: Kustomization
 metadata:
   name: blog-posts-bundle
 resources:
-  - ./categories/ckad-preparation.yaml
   - ./20250501-introduction.yaml
   - ./20251018-ckad-testing-networkpolicy.yaml
   - ./20251019-ckad-what-is-kubernetes.yaml
@@ -14,3 +13,4 @@ resources:
   - ./20251104-talos-replace-flannel-with-calico.yaml
   - ./20251121-ckad-implement-blue-green-canary-deployments.yaml
   - ./20251124-ckad-understanding-deployments-rolling-updates.yaml
+  - ./20251229-cka-resources-allocation.yaml
