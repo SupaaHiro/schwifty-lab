@@ -4,7 +4,7 @@ title: "CKA Preparation — Assegnazione delle Risorse in Base alla Disponibilit
 date: 2025-12-29
 categories: [cka, kubernetes]
 author: Hiro
-image: "https://supaahiro.github.io/schwifty-lab/blog-posts/20251124-ckad/article.webp"
+image: "https://supaahiro.github.io/schwifty-lab/blog-posts/20251229-cka/article.webp"
 summary: "Impara a calcolare e assegnare correttamente le risorse CPU e memoria ai Pod in Kubernetes in base alla disponibilità del nodo — una competenza essenziale per la certificazione CKA per garantire stabilità e prestazioni ottimali del cluster."
 ---
 

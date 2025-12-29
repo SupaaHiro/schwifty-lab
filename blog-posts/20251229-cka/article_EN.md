@@ -4,7 +4,7 @@ title: "CKA Preparation — Resource Allocation Based on Node Availability"
 date: 2025-12-29
 categories: [cka, kubernetes]
 author: Hiro
-image: "https://supaahiro.github.io/schwifty-lab/blog-posts/20251124-ckad/article.webp"
+image: "https://supaahiro.github.io/schwifty-lab/blog-posts/20251229-cka/article.webp"
 summary: "Learn how to properly calculate and allocate CPU and memory resources to Pods in Kubernetes based on node availability — an essential skill for the CKA certification to ensure cluster stability and optimal performance."
 ---
 
