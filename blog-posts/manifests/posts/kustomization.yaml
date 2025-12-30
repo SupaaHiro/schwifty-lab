@@ -14,3 +14,4 @@ resources:
   - ./20251121-ckad-implement-blue-green-canary-deployments.yaml
   - ./20251124-ckad-understanding-deployments-rolling-updates.yaml
   - ./20251229-cka-resources-allocation.yaml
+  - ./20260102-ckad-helm.yaml

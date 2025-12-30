@@ -1,0 +1,17 @@
+apiVersion: blog.supaahiro.io/v1alpha1
+kind: BlogPost
+metadata:
+  name: 20260102-ckad-helm
+spec:
+  id: 20260102-ckad-helm
+  title: Use the Helm package manager to deploy existing packages
+  previewImage: https://supaahiro.github.io/schwifty-lab/blog-posts/20260102-ckad/article.webp
+  summary: "Learn how to use Helm, the Kubernetes package manager, to simplify application installation and management. Master creating, installing, and managing Helm charts through a hands-on exercise with Nginx."
+  contentUrl: https://raw.githubusercontent.com/SupaaHiro/schwifty-lab/refs/heads/master/blog-posts/20260102-ckad/article_EN.md
+  publishedOn: "2026-01-02T00:00:00Z"
+  author: Hiro
+  categoryId: ckad-preparation
+  relatedPostsIds: []
+status:
+  published: true
+  indexed: false
