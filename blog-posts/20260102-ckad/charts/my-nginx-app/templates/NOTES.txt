@@ -12,9 +12,24 @@ To check the status of the pods:
 To view the logs of the first pod:
   kubectl logs -l app={{ include "my-nginx-app.name" . }} -n {{ .Release.Namespace }} --tail=100
 
-To connect to Redis from the cluster network:
-  kubectl run -it redis-client --image=redis --rm -- \
-    redis-cli -h {{ include "my-nginx-app.fullname" . }}
-
 To remove the release:
   helm uninstall {{ .Release.Name }} -n {{ .Release.Namespace }}
+
+------------------------------------------------------------
+Accessing nginx
+
+If you are running inside the cluster:
+  curl http://{{ include "my-nginx-app.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
+
+If the Service type is ClusterIP (default), you can use port-forward:
+  kubectl port-forward svc/{{ include "my-nginx-app.fullname" . }} -n {{ .Release.Namespace }} 8080:80
+  curl http://localhost:8080
+
+If the Service type is NodePort:
+  kubectl get svc {{ include "my-nginx-app.fullname" . }} -n {{ .Release.Namespace }}
+  # Then access using:
+  http://<NodeIP>:<NodePort>
+
+If the Service is exposed via Ingress:
+  kubectl get ingress -n {{ .Release.Namespace }}
+  # Then access using the configured host name.

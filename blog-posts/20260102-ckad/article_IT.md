@@ -131,17 +131,32 @@ Replica Count: {{ .Values.replicaCount }}
 Image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
 
 To check the status of the pods:
-  kubectl get pods -l app={{ include "redis-demo.name" . }} -n {{ .Release.Namespace }}
+  kubectl get pods -l app={{ include "my-nginx-app.name" . }} -n {{ .Release.Namespace }}
 
 To view the logs of the first pod:
-  kubectl logs -l app={{ include "redis-demo.name" . }} -n {{ .Release.Namespace }} --tail=100
-
-To connect to Redis from the cluster network:
-  kubectl run -it redis-client --image=redis --rm -- \
-    redis-cli -h {{ include "redis-demo.fullname" . }}
+  kubectl logs -l app={{ include "my-nginx-app.name" . }} -n {{ .Release.Namespace }} --tail=100
 
 To remove the release:
   helm uninstall {{ .Release.Name }} -n {{ .Release.Namespace }}
+
+------------------------------------------------------------
+Accessing nginx
+
+If you are running inside the cluster:
+  curl http://{{ include "my-nginx-app.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
+
+If the Service type is ClusterIP (default), you can use port-forward:
+  kubectl port-forward svc/{{ include "my-nginx-app.fullname" . }} -n {{ .Release.Namespace }} 8080:80
+  curl http://localhost:8080
+
+If the Service type is NodePort:
+  kubectl get svc {{ include "my-nginx-app.fullname" . }} -n {{ .Release.Namespace }}
+  # Then access using:
+  http://<NodeIP>:<NodePort>
+
+If the Service is exposed via Ingress:
+  kubectl get ingress -n {{ .Release.Namespace }}
+  # Then access using the configured host name.
 ```
 
 - Per finire, sostituisci il contenuto di `values.yaml` con il seguente:
@@ -151,7 +166,7 @@ replicaCount: 1
 
 image:
   repository: nginx
-  tag: "1.29"
+  tag: "1.27"
   pullPolicy: IfNotPresent
 ```
 
@@ -191,7 +206,7 @@ helm template my-nginx-app > ../manifests/nginx-manifests.yaml
 Se vuoi modificare qualche parametro, puoi farlo direttamente nel file `values.yaml` o passare i valori personalizzati tramite la linea di comando usando l'opzione `--set`.
 
 ```bash
-helm template my-nginx-app --set replicaCount=2 > manifests/nginx-manifests.yaml
+helm template my-nginx-app --set replicaCount=2 > ../manifests/nginx-manifests.yaml
 ```
 
 Ora siamo pronti per installare il nostro chart Helm nel cluster Kubernetes. Usiamo il comando `helm install` per distribuire l'applicazione:
