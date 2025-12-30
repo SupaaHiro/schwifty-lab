@@ -1,0 +1,20 @@
+Nginx has been successfully installed 🎉
+
+Release: {{ .Release.Name }}
+Namespace: {{ .Release.Namespace }}
+
+Replica Count: {{ .Values.replicaCount }}
+Image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+
+To check the status of the pods:
+  kubectl get pods -l app={{ include "my-nginx-app.name" . }} -n {{ .Release.Namespace }}
+
+To view the logs of the first pod:
+  kubectl logs -l app={{ include "my-nginx-app.name" . }} -n {{ .Release.Namespace }} --tail=100
+
+To connect to Redis from the cluster network:
+  kubectl run -it redis-client --image=redis --rm -- \
+    redis-cli -h {{ include "my-nginx-app.fullname" . }}
+
+To remove the release:
+  helm uninstall {{ .Release.Name }} -n {{ .Release.Namespace }}
