@@ -1,0 +1,8 @@
+resources:
+  - ../../base
+
+namespace: production
+nameSuffix: -prod
+
+patchesStrategicMerge:
+  - patch.yaml
