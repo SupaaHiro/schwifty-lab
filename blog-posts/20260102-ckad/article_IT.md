@@ -185,7 +185,7 @@ Ovviamente il nostro chart è molto semplice e non include CRD, ma in scenari re
 Prima di installare il chart, possiamo anche generare i manifesti Kubernetes che Helm creerà per noi usando il comando `helm template`. Questo ci permette di vedere esattamente quali risorse verranno create nel cluster:
 
 ```bash
-helm template my-nginx-app > manifests/nginx-manifests.yaml
+helm template my-nginx-app > ../manifests/nginx-manifests.yaml
 ```
 
 Se vuoi modificare qualche parametro, puoi farlo direttamente nel file `values.yaml` o passare i valori personalizzati tramite la linea di comando usando l'opzione `--set`.
