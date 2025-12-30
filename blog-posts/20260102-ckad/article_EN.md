@@ -103,6 +103,8 @@ spec:
             - containerPort: 80
 ```
 
+> Note: The files in the `templates/` folder are not just static YAML manifests. Helm uses Go Templating, a templating system that allows you to insert dynamic expressions within the YAML files.
+
 - Replace the content of `templates/service.yaml` with the following:
 
 ```yaml
