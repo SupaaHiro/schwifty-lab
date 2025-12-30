@@ -220,7 +220,7 @@ Il comando sopra installerà il chart `my-nginx-app` con il nome di rilascio `my
 Puoi verificare che il deployment e il servizio siano stati creati correttamente con il seguente comando:
 
 ```bash
-kubectl get deploy,svc,po -n nginx
+k get deploy,svc,po -n nginx
 ```
 
 Con il comando `helm list` o `helm ls`, puoi vedere tutti i rilasci Helm installati nel cluster:
@@ -229,17 +229,16 @@ Con il comando `helm list` o `helm ls`, puoi vedere tutti i rilasci Helm install
 helm list -n nginx
 ```
 
-I comandi `helm upgrade` e `helm rollback` ti permettono di aggiornare o tornare a una versione precedente del rilascio, rispettivamente. Ad esempio, per aggiornare l'immagine del container:
-
-```bash
-helm upgrade my-nginx-release my-nginx-app --set image.tag="1.29" -n nginx
-helm rollback my-nginx-release 1 -n nginx
-```
-
 Con il comando `helm status`, puoi ottenere informazioni dettagliate sullo stato del rilascio:
 
 ```bash
 helm status my-nginx-release -n nginx
+```
+
+Il comando `helm upgrade` ti permette di aggiornare un rilascio esistente con nuove configurazioni o versioni del chart. Ad esempio, per aggiornare l'immagine del container Nginx alla versione 1.29:
+
+```bash
+helm upgrade my-nginx-release my-nginx-app --set image.tag="1.29" -n nginx
 ```
 
 Helm mantiene una cronologia delle versioni per ogni rilascio:
@@ -248,7 +247,34 @@ Helm mantiene una cronologia delle versioni per ogni rilascio:
 helm history my-nginx-release -n nginx
 ```
 
-Tieni presente che lo stesso rollback genera un nuovo rilascio, quindi la cronologia mostrerà tutte le versioni, inclusi i rollback.
+Ecco un esempio di output:
+
+```bash
+REVISION        UPDATED                         STATUS          CHART                   APP VERSION     DESCRIPTION
+1               Tue Dec 30 18:32:22 2025        superseded      my-nginx-app-0.1.0      1.16.0          Install complete
+2               Tue Dec 30 18:36:43 2025        deployed        my-nginx-app-0.1.0      1.16.0          Upgrade complete
+```
+
+Questa cronoligia viene salvata su dei secret gestiti da Helm all'interno del namespace in cui è stato installato il rilascio:
+
+```bash
+k get secrets -n nginx
+```
+
+Il comando `helm rollback` ti consente di tornare a una versione precedente del rilascio se qualcosa va storto durante un aggiornamento. Ad esempio, per tornare alla revisione 1:
+
+```bash
+helm rollback my-nginx-release 1 -n nginx
+```
+
+Tieni presente che lo stesso rollback genera un nuovo rilascio, quindi la cronologia mostrerà tutte le versioni, inclusi i rollback:
+
+```bash
+REVISION        UPDATED                         STATUS          CHART                   APP VERSION     DESCRIPTION
+1               Tue Dec 30 18:32:22 2025        superseded      my-nginx-app-0.1.0      1.16.0          Install complete
+2               Tue Dec 30 18:36:43 2025        superseded      my-nginx-app-0.1.0      1.16.0          Upgrade complete
+3               Tue Dec 30 18:41:15 2025        deployed        my-nginx-app-0.1.0      1.16.0          Rollback to 1
+```
 
 Infine, quando non hai più bisogno dell'applicazione, puoi rimuoverla con il comando `helm uninstall`:
 
@@ -275,3 +301,11 @@ Abbiamo imparato a:
 Helm è uno strumento fondamentale nell'ecosistema Kubernetes e rappresenta una competenza essenziale per l'esame CKAD. La capacità di utilizzare chart Helm esistenti, comprenderli e personalizzarli ti permetterà di distribuire applicazioni complesse in modo rapido ed efficiente, mantenendo al contempo la riproducibilità e la gestibilità nel tempo.
 
 Nella pratica quotidiana, Helm ti farà risparmiare tempo prezioso e ridurrà gli errori di configurazione, permettendoti di concentrarti sugli aspetti più importanti dello sviluppo delle tue applicazioni.
+
+# Pulizia finale
+
+Per concludere, rimuoviamo il namespace creato per questo esercizio:
+
+```bash
+k delete ns nginx
+```
