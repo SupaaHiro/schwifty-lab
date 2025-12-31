@@ -155,7 +155,7 @@ strategy:
 Apply the new manifest:
 
 ```bash
-kubectl apply -f manifests/02-update-strategy.yaml
+k apply -f manifests/02-update-strategy.yaml
 ```
 
 To trigger a new rolling update let's change again the image:

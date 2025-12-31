@@ -23,13 +23,13 @@ A running Kubernetes cluster (like, Minikube, Docker Desktop, or use one of the 
 Optionally, a metrics server (for example `metrics-server`) can be installed in the cluster to monitor resource usage. You can install it by running the following command:
 
 ```bash
-kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+k apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
 ```
 
 In case of TLS issues, modify the `metrics-server` deployment to add the `--kubelet-insecure-tls` argument to the container.
 
 ```bash
-kubectl -n kube-system edit deployment metrics-server
+k -n kube-system edit deployment metrics-server
 # In spec.template.spec.containers[].args add:
 # - --kubelet-insecure-tls
 ```
@@ -75,13 +75,13 @@ Hints: see Question-4 Resource-Allocation/SolutionNotes.bash
 The first thing we're asked to do is scale the `wordpress` deployment down to 0 replicas. Let's do this:
 
 ```bash
-kubectl scale deploy wordpress --replicas 0
+k scale deploy wordpress --replicas 0
 ```
 
 Before we can resize the deployment, we need to calculate how many resources we can assign to each Pod. To do this, let's check how many resources are available on the node:
 
 ```bash
-kubectl describe node node01 | grep "Allocatable:" -A5
+k describe node node01 | grep "Allocatable:" -A5
 ```
 
 We should see something similar to this:
@@ -98,7 +98,7 @@ For simplicity, let's assume that our cluster has a single worker node available
 These values already take into account the resources used by the system and by kubelet. However, from these values we need to subtract the resources already in use by existing Pods.
 
 ```bash
-kubectl describe node node01 | grep "Allocated resources:" -A5
+k describe node node01 | grep "Allocated resources:" -A5
 ```
 
 We should see something similar to this:
@@ -143,7 +143,7 @@ Now that we know the limits, we need to leave some margin to avoid node instabil
 Now we can modify the `wordpress` deployment to set the resource requests and limits for the main containers and the init containers. Let's open the deployment manifest:
 
 ```bash
-kubectl edit deploy wordpress
+k edit deploy wordpress
 ```
 
 Let's add the following `resources` sections under the main containers and the init containers:
@@ -167,7 +167,7 @@ Similarly, let's assign the same resources to the init containers as well.
 After saving the changes, let's scale the `wordpress` deployment back to 3 replicas:
 
 ```bash
-kubectl scale deploy wordpress --replicas 3
+k scale deploy wordpress --replicas 3
 ```
 
 After a while, the pods should be running.
@@ -175,7 +175,7 @@ After a while, the pods should be running.
 Let's verify the status of the Pods:
 
 ```bash
-kubectl get pods -l app=wordpress
+k get pods -l app=wordpress
 ```
 
 We should see something similar to this:
@@ -190,7 +190,7 @@ wordpress-5d7f9c6b7b-klmno   1/1     Running   0          30s
 Let's double-check the allocated resources on the node to make sure everything is correct:
 
 ```bash
-kubectl describe node node01 | grep "Allocated resources:" -A5
+k describe node node01 | grep "Allocated resources:" -A5
 ```
 
 We should see something similar to this:

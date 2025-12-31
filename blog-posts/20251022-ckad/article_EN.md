@@ -221,5 +221,5 @@ Finally, by manually killing the container’s process on the node, we observed 
 When you're done with the exercise remove the Pod and any resources you created:
 
 ```bash
-kubectl delete -f manifests/nginx-with-sidecar.yaml
+k delete -f manifests/nginx-with-sidecar.yaml
 ```

@@ -80,8 +80,8 @@ Here’s a condensed version of the technical steps I followed.
 Talos includes Flannel by default. You can remove it manually if you’re testing on an existing cluster
 
 ```bash
-kubectl delete ds kube-flannel -n kube-system
-kubectl -n kube-flannel delete sa flannel
+k delete ds kube-flannel -n kube-system
+k -n kube-flannel delete sa flannel
 ```
 
 ### 2. Install Calico via Tigera Operator
@@ -89,14 +89,14 @@ kubectl -n kube-flannel delete sa flannel
 Calico’s recommended way to install today is through the Tigera Operator.
 
 ```bash
-kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.31.0/manifests/operator-crds.yaml
-kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.31.0/manifests/tigera-operator.yaml
+k create -f https://raw.githubusercontent.com/projectcalico/calico/v3.31.0/manifests/operator-crds.yaml
+k create -f https://raw.githubusercontent.com/projectcalico/calico/v3.31.0/manifests/tigera-operator.yaml
 ```
 
 Then apply your custom Calico configuration (in my case, configured for the BPF dataplane):
 
 ```bash
-kubectl create -f custom-resources-talos-bpf.yaml
+k create -f custom-resources-talos-bpf.yaml
 ```
 
 ### 3. Monitor the deployment
@@ -110,7 +110,7 @@ watch kubectl get tigerastatus
 Or inspect the node logs for more detail:
 
 ```bash
-kubectl logs -l k8s-app=calico-node -n calico-system
+k logs -l k8s-app=calico-node -n calico-system
 ```
 
 ### 4. Disable kube-proxy (Calico BPF mode)
@@ -120,13 +120,13 @@ When Calico runs in eBPF mode, it replaces `kube-proxy` entirely. Both try to bi
 To disable kube-proxy on Calico nodes:
 
 ```bash
-kubectl patch ds kube-proxy -n kube-system --type merge -p '{"spec":{"template":{"spec":{"nodeSelector":{"non-calico":"true"}}}}}'
+k patch ds kube-proxy -n kube-system --type merge -p '{"spec":{"template":{"spec":{"nodeSelector":{"non-calico":"true"}}}}}'
 ```
 
 On Windows PowerShell, remember to escape quotes:
 
 ```powershell
-kubectl patch ds kube-proxy -n kube-system --type merge -p "{\"spec\":{\"template\":{\"spec\":{\"nodeSelector\":{\"non-calico\":\"true\"}}}}}"
+k patch ds kube-proxy -n kube-system --type merge -p "{\"spec\":{\"template\":{\"spec\":{\"nodeSelector\":{\"non-calico\":\"true\"}}}}}"
 ```
 
 ### 5. Test pod connectivity
@@ -134,7 +134,7 @@ kubectl patch ds kube-proxy -n kube-system --type merge -p "{\"spec\":{\"templat
 You can quickly launch a test pod and validate network connectivity:
 
 ```bash
-kubectl run -it --rm test-pod --image=alpine --restart=Never \
+k run -it --rm test-pod --image=alpine --restart=Never \
   --overrides='{"spec": {"nodeSelector": {"kubernetes.io/hostname": "worker-01"}}}'
 ```
 

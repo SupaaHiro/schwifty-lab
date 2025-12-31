@@ -81,7 +81,7 @@ data:
 Apply it:
 
 ```bash
-kubectl apply -f manifests/00-web-assets.yaml
+k apply -f manifests/00-web-assets.yaml
 ```
 
 Alternatively, you can create it directly from files. During the exam, you might prefer this method to save time.

@@ -252,7 +252,7 @@ node-monitor-nd7m2   1/1     Running   0          34s   192.168.1.7   node01    
 **CronJobs** are used for scheduled or periodic tasks. They create temporary Job objects at defined times to execute specific operations — for instance, backups, cleanup scripts, or data synchronization tasks. Unlike Deployments or DaemonSets, CronJobs are not designed for continuously running services; they execute once per schedule and terminate upon completion.
 
 ```bash
-kubectl create cronjob my-job --image=busybox:1.37 --schedule="*/2 * * * *"  -- date > manifests/03-cronjob.yaml
+k create cronjob my-job --image=busybox:1.37 --schedule="*/2 * * * *"  -- date > manifests/03-cronjob.yaml
 ```
 
 ```yaml
@@ -291,13 +291,13 @@ k get cronjob,job -A
 If we don't want to wait, we can create it manually:
 
 ```bash
-kubectl create job myjob1 --from=cronjob/my-job
+k create job myjob1 --from=cronjob/my-job
 ```
 
 The Pods should run the command and then go into the `Complete` state:
 
 ```bash
-kubectl get pod -l=job-name=myjob1
+k get pod -l=job-name=myjob1
 ```
 
 You should see an output similar to this:

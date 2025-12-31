@@ -10,7 +10,7 @@ This directory contains the Kubernetes bundle manifests (Kustomize bases and ove
 From the directory that contains the `kustomization.yaml` you want to apply:
 
 ```bash
-kubectl -n <namespace> apply -k .
+k -n <namespace> apply -k .
 ```
 
 ## Delete
