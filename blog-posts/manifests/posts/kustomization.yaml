@@ -15,3 +15,4 @@ resources:
   - ./20251124-ckad-understanding-deployments-rolling-updates.yaml
   - ./20251229-cka-resources-allocation.yaml
   - ./20260102-ckad-helm.yaml
+  - ./20260103-ckad-kustomize.yaml
