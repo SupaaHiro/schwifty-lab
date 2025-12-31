@@ -225,7 +225,7 @@ Kustomize is a fundamental tool for keeping Kubernetes configurations clean and 
 
 ## Final Cleanup
 
-To wrap up, let's remove the namespaces created for this exercise:
+To wrap up, let's clean-up everything we created for this exercise:
 
 ```bash
 k delete -k overlays/staging/

@@ -225,7 +225,7 @@ Kustomize è uno strumento fondamentale per mantenere pulite e modulabili le con
 
 ## Pulizia finale
 
-Per concludere, rimuoviamo il namespace creato per questo esercizio:
+Per concludere, puliamo le risorse create durante questo esercizio:
 
 ```bash
 k delete -k overlays/staging/
