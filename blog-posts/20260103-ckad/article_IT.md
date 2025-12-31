@@ -223,7 +223,7 @@ In questo esercizio abbiamo esplorato Kustomize e come possa semplificare la ges
 
 Kustomize è uno strumento fondamentale per mantenere pulite e modulabili le configurazioni Kubernetes, rendendolo essenziale per chi prepara l’esame CKAD o gestisce cluster con ambienti multipli.
 
-# Pulizia finale
+## Pulizia finale
 
 Per concludere, rimuoviamo il namespace creato per questo esercizio:
 

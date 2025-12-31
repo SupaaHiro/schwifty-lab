@@ -223,7 +223,7 @@ In this exercise, we explored Kustomize and how it can simplify the management o
 
 Kustomize is a fundamental tool for keeping Kubernetes configurations clean and modular, making it essential for those preparing for the CKAD exam or managing clusters with multiple environments.
 
-# Final Cleanup
+## Final Cleanup
 
 To wrap up, let's remove the namespaces created for this exercise:
 

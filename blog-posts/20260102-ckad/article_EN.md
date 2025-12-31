@@ -361,9 +361,9 @@ Helm is a fundamental tool in the Kubernetes ecosystem and represents an essenti
 
 In daily practice, Helm will save you valuable time and reduce configuration errors, allowing you to focus on the most important aspects of your application development.
 
-# Final Cleanup
+## Final Cleanup
 
-To conclude, let's remove the namespace created for this exercise:
+To wrap up, let's remove the namespaces created for this exercise:
 
 ```bash
 k delete ns nginx

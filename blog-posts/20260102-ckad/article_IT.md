@@ -360,7 +360,7 @@ Helm è uno strumento fondamentale nell'ecosistema Kubernetes e rappresenta una 
 
 Nella pratica quotidiana, Helm ti farà risparmiare tempo prezioso e ridurrà gli errori di configurazione, permettendoti di concentrarti sugli aspetti più importanti dello sviluppo delle tue applicazioni.
 
-# Pulizia finale
+## Pulizia finale
 
 Per concludere, rimuoviamo il namespace creato per questo esercizio:
 
