@@ -51,6 +51,18 @@ $ chmod 700 get_helm.sh
 $ ./get_helm.sh
 ```
 
+Verifica che Helm sia stato installato correttamente controllando la versione:
+
+```bash
+helm version
+```
+
+Dovresti vedere un output simile a questo:
+
+```bash
+version.BuildInfo{Version:"v4.0.4", GitCommit:"8650e1dad9e6ae38b41f60b712af9218a0d8cc11", GitTreeState:"clean", GoVersion:"go1.25.5", KubeClientVersion:"v1.34"}
+```
+
 Per capire come funziona Helm, creeremo un semplice chart Helm per distribuire una piccola applicazione web basata su Nginx. Un modo rapido per creare un chart di esempio è utilizzare il comando `helm create`, che genera una struttura di directory di base per un chart Helm.
 
 ```bash

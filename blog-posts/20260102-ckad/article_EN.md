@@ -51,6 +51,18 @@ $ chmod 700 get_helm.sh
 $ ./get_helm.sh
 ```
 
+Verify that Helm was installed correctly by checking the version:
+
+```bash
+helm version
+```
+
+You should see output similar to this:
+
+```bash
+version.BuildInfo{Version:"v4.0.4", GitCommit:"8650e1dad9e6ae38b41f60b712af9218a0d8cc11", GitTreeState:"clean", GoVersion:"go1.25.5", KubeClientVersion:"v1.34"}
+```
+
 To understand how Helm works, we'll create a simple Helm chart to deploy a small Nginx-based web application. A quick way to create a sample chart is to use the `helm create` command, which generates a basic directory structure for a Helm chart.
 
 ```bash
@@ -283,6 +295,7 @@ Finally, when you no longer need the application, you can remove it with the `he
 ```bash
 helm uninstall my-nginx-release -n nginx
 ```
+
 To complete our overview of Helm, let's see how to add an external Helm chart repository. For example, we can search for a WordPress application on [Artifact Hub](https://artifacthub.io/) and add the official [repository](https://artifacthub.io/packages/search?ts_query_web=wordpress&sort=relevance&page=1) from Bitnami, which hosts a chart for WordPress.
 
 ```bash
