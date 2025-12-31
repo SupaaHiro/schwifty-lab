@@ -22,6 +22,8 @@ You can start from the beginning of the series here: [*CKAD Preparation — What
 
 ## Prerequisites
 
+A linux or Windows machine with Docker installed and running. Alternatively, you can use this [Single node Ubuntu Environment](https://killercoda.com/playgrounds/scenario/ubuntu) on [KillerCoda](https://killercoda.com/playgrounds).
+
 For this exercise, you’ll need Python 3.12 (or newer) and Docker 28 (or newer) to build the container image.
 
 On Windows, you can download and install Python from the official releases page:

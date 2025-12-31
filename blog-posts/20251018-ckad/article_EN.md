@@ -23,7 +23,7 @@ You can start from the beginning of the series here: [*CKAD Preparation — What
 ## Prerequisites
 
 ⚠️ Important:
-Verify that your Kubernetes cluster is configured with a CNI plugin that implements NetworkPolicy. Without such support, any defined policies will be silently ignored. I ran some local tests with Kubernetes on Docker Desktop and with minikube, but neither supports them natively. In the end I opted for a temporary environment on https://killercoda.com/playgrounds/course/kubernetes-playgrounds
+Verify that your Kubernetes cluster is configured with a CNI plugin that implements NetworkPolicy. Without such support, any defined policies will be silently ignored. I ran some local tests with Kubernetes on Docker Desktop and with minikube, but neither supports them natively. In the end I opted for a temporary environment using one of the [KillerCoda Kubernetes Playgrounds](https://killercoda.com/playgrounds/course/kubernetes-playgrounds)
 
 ## Getting the Resources
 
