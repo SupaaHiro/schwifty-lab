@@ -4,5 +4,5 @@ resources:
 namespace: production
 nameSuffix: -prod
 
-patchesStrategicMerge:
-  - patch.yaml
+patches:
+  - path: patch.yaml

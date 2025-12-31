@@ -100,8 +100,10 @@ resources:
   - deployment.yaml
   - service.yaml
 
-commonLabels:
-  app: nginx
+labels:
+  - includeSelectors: true
+    pairs:
+      app: nginx
 ```
 
 In Kustomize i transformers sono strumenti che permettono di modificare le risorse in modo dichiarativo. Ad esempio, possiamo usare un transformer per cambiare l'immagine del container o il numero di repliche senza dover modificare direttamente i file YAML originali.
@@ -119,8 +121,10 @@ kustomize/
   overlays/
     staging/
       kustomization.yaml
+      patch.yaml
     production/
       kustomization.yaml
+      patch.yaml
 ```
 
 Nella cartella `overlays/staging/`, creiamo il file `kustomization.yaml` con il seguente contenuto:
@@ -132,8 +136,8 @@ resources:
 namespace: staging
 nameSuffix: -staging
 
-patchesStrategicMerge:
-  - patch.yaml
+patches:
+  - path: patch.yaml
 ```
 
 Creiamo il file `patch.yaml` con le modifiche specifiche per staging, ad esempio il numero di repliche:
@@ -156,8 +160,8 @@ resources:
 namespace: production
 nameSuffix: -prod
 
-patchesStrategicMerge:
-  - patch.yaml
+patches:
+  - path: patch.yaml
 ```
 
 Creiamo il file `patch.yaml` con le modifiche specifiche per produzione, ad esempio il numero di repliche:
@@ -173,19 +177,19 @@ spec:
 
 Per applicare la configurazione staging:
 ```bash
-kubectl apply -k overlays/staging/
+k apply -k overlays/staging/
 ```
 
 Per applicare la configurazione produzione:
 ```bash
-kubectl apply -k overlays/production/
+k apply -k overlays/production/
 ```
 
 Verifichiamo che le risorse siano state create correttamente:
 
 ```bash
-kubectl get deploy, svc, po -n staging
-kubectl get deploy, svc, po -n production
+k get deploy, svc, po -n staging
+k get deploy, svc, po -n production
 ```
 
 È possibile generare i manifesti finali senza applicarli:

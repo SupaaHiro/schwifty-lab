@@ -4,5 +4,5 @@ resources:
 namespace: staging
 nameSuffix: -staging
 
-patchesStrategicMerge:
-  - patch.yaml
+patches:
+  - path: patch.yaml
