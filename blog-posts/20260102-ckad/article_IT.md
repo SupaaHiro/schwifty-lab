@@ -284,6 +284,49 @@ Infine, quando non hai più bisogno dell'applicazione, puoi rimuoverla con il co
 helm uninstall my-nginx-release -n nginx
 ```
 
+Per finire la nostra panoramica su Helm, vediamo come aggiungere un repository di chart Helm esterno. Ad esempio, possiamo cercare un applicazione WordPress su [Artifact Hub](https://artifacthub.io/) e aggiungere il [repository](https://artifacthub.io/packages/search?ts_query_web=wordpress&sort=relevance&page=1) ufficiale di Bitnami, che ospita un chart per WordPress.
+
+```bash
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo update
+```
+
+Ora possiamo cercare il chart di WordPress nel repository di Bitnami:
+
+```bash
+helm search repo bitnami/wordpress --versions
+```
+
+L'opzione `--versions` mostra tutte le versioni disponibili del chart.
+
+Possiamo installare WordPress utilizzando il chart di Bitnami con il seguente comando:
+
+```bash
+helm install my-wordpress bitnami/wordpress -n wordpress --create-namespace --version 28.0.4 --set wordpressUsername=admin,wordpressPassword=pass123
+```
+
+In questo modo, Helm scaricherà il chart di WordPress dal repository di Bitnami e lo installerà nel namespace `wordpress`, creando il namespace se non esiste già. Abbiamo anche specificato alcune configurazioni personalizzate, come il nome utente e la password di WordPress e la password di root di MariaDB.
+
+Se vogliamo aggiornare la versione di WordPress in futuro, possiamo usare il comando `helm upgrade`:
+
+```bash
+helm upgrade my-wordpress bitnami/wordpress -n wordpress --version 28.1.0
+```
+
+Se guardiamo l'history del rilascio di WordPress, vedremo le diverse versioni installate:
+
+```bash
+helm history my-wordpress -n wordpress
+```
+
+Ecco un esempio di output:
+
+```bash
+REVISION        UPDATED                         STATUS          CHART                   APP VERSION     DESCRIPTION
+1               Wed Dec 31 09:56:53 2025        superseded      wordpress-28.0.4        6.9.0           Install complete
+2               Wed Dec 31 09:59:28 2025        deployed        wordpress-28.1.0        6.9.0           Upgrade complete
+```
+
 ## Ricapitolando: Cosa Abbiamo Visto
 
 In questo esercizio abbiamo esplorato Helm, il package manager di Kubernetes, e come possa semplificare notevolmente la gestione delle applicazioni.
@@ -299,6 +342,7 @@ Abbiamo imparato a:
 - Installare un chart nel cluster con `helm install` e verificarne lo stato.
 - Gestire i rilasci con `helm list`, `helm upgrade`, `helm rollback` e `helm history`.
 - Rimuovere completamente un'applicazione con `helm uninstall`.
+- Aggiungere repository di chart esterni e installare applicazioni da essi.
 
 Helm è uno strumento fondamentale nell'ecosistema Kubernetes e rappresenta una competenza essenziale per l'esame CKAD. La capacità di utilizzare chart Helm esistenti, comprenderli e personalizzarli ti permetterà di distribuire applicazioni complesse in modo rapido ed efficiente, mantenendo al contempo la riproducibilità e la gestibilità nel tempo.
 
