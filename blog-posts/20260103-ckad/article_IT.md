@@ -175,6 +175,13 @@ spec:
   replicas: 5
 ```
 
+Creiamo i namespace necessari:
+
+```bash
+k create ns staging
+k create ns production
+```
+
 Per applicare la configurazione staging:
 ```bash
 k apply -k overlays/staging/
