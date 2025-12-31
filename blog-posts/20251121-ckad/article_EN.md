@@ -22,7 +22,7 @@ You can start from the beginning of the series here: [*CKAD Preparation — What
 
 ## Prerequisites
 
-A running Kubernetes cluster (Minikube, Docker Desktop, or [KillerCoda Playgrounds](https://killercoda.com/playgrounds)) and basic familiarity with Pods and YAML manifests.
+A running Kubernetes cluster (Minikube, Docker Desktop, or https://killercoda.com/playgrounds/course/kubernetes-playgrounds) and basic familiarity with Pods and YAML manifests.
 
 ## Getting the Resources
 

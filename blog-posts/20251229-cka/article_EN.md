@@ -18,7 +18,7 @@ This article is not part of the CKAD series: If you want to start preparing for 
 
 ## Prerequisites
 
-A working Kubernetes cluster (Minikube, Docker Desktop, or [KillerCoda Playgrounds](https://killercoda.com/playgrounds)) with *a single worker node* and a basic understanding of Pods and YAML manifests.
+A working Kubernetes cluster (Minikube, Docker Desktop, or https://killercoda.com/playgrounds/course/kubernetes-playgrounds) with *a single worker node* and a basic understanding of Pods and YAML manifests.
 
 Optionally, a metrics server (for example `metrics-server`) can be installed in the cluster to monitor resource usage. You can install it by running the following command:
 

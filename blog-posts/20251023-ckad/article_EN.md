@@ -22,7 +22,7 @@ You can start from the beginning of the series here: [*CKAD Preparation — What
 
 ## Prerequisites
 
-A running Kubernetes cluster (Minikube, Docker Desktop, or [KillerCoda Playgrounds](https://killercoda.com/playgrounds)) and basic familiarity with Pods and YAML manifests.
+A running Kubernetes cluster (Minikube, Docker Desktop, or https://killercoda.com/playgrounds/course/kubernetes-playgrounds) and basic familiarity with Pods and YAML manifests.
 
 ## Getting the Resources
 
@@ -51,7 +51,7 @@ An emptyDir volume is created when a Pod is scheduled on a node and deleted when
 
 ### Persistent Volumes (PVC)
 
-Persistent volumes are used when data must outlive a Pod’s lifecycle — for example, application databases or user-generated content.  
+Persistent volumes are used when data must outlive a Pod’s lifecycle — for example, application databases or user-generated content.
 A Pod mounts a PersistentVolumeClaim (PVC), which is a request for storage resources in the cluster. The PVC then binds to a PersistentVolume (PV) provisioned by the cluster or dynamically by a storage class.
 
 ## Hands-On Challenge
@@ -188,13 +188,13 @@ k exec -it deploy/nginx-pvc -- cat /usr/share/nginx/html/index.html
 
 ## Wrapping Up: What We’ve Covered
 
-In this exercise, we practiced how to use both ephemeral and persistent storage in Kubernetes.  
+In this exercise, we practiced how to use both ephemeral and persistent storage in Kubernetes.
 We built:
 
 - A multi-container Pod that shared temporary data using an emptyDir volume.
 - A Deployment using a PersistentVolumeClaim to retain data across Pod restarts.
 
-Understanding when to use ephemeral vs persistent volumes is essential for designing robust, CKAD-ready applications.  
+Understanding when to use ephemeral vs persistent volumes is essential for designing robust, CKAD-ready applications.
 Ephemeral volumes are perfect for transient data (logs, caches, scratch space), while persistent volumes ensure state durability across restarts and rescheduling events.
 
 📝 In later modules, we’ll explore StatefulSets and dynamic provisioning for stateful workloads like databases.

@@ -22,7 +22,7 @@ You can start from the beginning of the series here: [*CKAD Preparation — What
 
 ## Prerequisites
 
-A running instance of Kubernetes. You can use Kubernetes for Docker Desktop, Minikube, or a temporary environment on [KillerCoda Playgrounds](https://killercoda.com/playgrounds).
+A running instance of Kubernetes. You can use Kubernetes for Docker Desktop, Minikube, or a temporary environment on https://killercoda.com/playgrounds/course/kubernetes-playgrounds.
 
 ## Getting the Resources
 

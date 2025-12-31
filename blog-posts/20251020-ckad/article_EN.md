@@ -60,7 +60,7 @@ python get-pip.py
 sudo ln -s /usr/local/bin/pip3.12 /usr/local/bin/pip
 ```
 
-Finally, we’ll try publishing the image to a Kubernetes cluster. You can use Kubernetes from Docker Desktop, Minikube, or a temporary environment on [KillerCoda Playgrounds](https://killercoda.com/playgrounds).
+Finally, we’ll try publishing the image to a Kubernetes cluster. You can use Kubernetes from Docker Desktop, Minikube, or a temporary environment on https://killercoda.com/playgrounds/course/kubernetes-playgrounds.
 
 ## Getting the Resources
 

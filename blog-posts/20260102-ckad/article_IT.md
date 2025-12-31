@@ -22,7 +22,7 @@ Puoi iniziare dall'inizio della serie qui: [*CKAD Preparation — What is Kubern
 
 ## Prerequisiti
 
-Un cluster Kubernetes in esecuzione (Minikube, Docker Desktop o [KillerCoda Playgrounds](https://killercoda.com/playgrounds)) e una familiarità di base con i Pod e i manifesti YAML.
+Un cluster Kubernetes in esecuzione (Minikube, Docker Desktop o https://killercoda.com/playgrounds/course/kubernetes-playgrounds) e una familiarità di base con i Pod e i manifesti YAML.
 
 ## Ottenere le Risorse
 
