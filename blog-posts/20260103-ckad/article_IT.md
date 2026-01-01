@@ -75,6 +75,13 @@ spec:
           image: nginx:1.27
           ports:
             - containerPort: 80
+          resources:
+            limits:
+              memory: 256Mi
+              cpu: 200m
+            requests:
+              memory: 64Mi
+              cpu: 50m
 ```
 
 E il file `service.yaml` con il seguente contenuto:

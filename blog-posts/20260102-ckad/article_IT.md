@@ -113,6 +113,13 @@ spec:
           imagePullPolicy: { { .Values.image.pullPolicy } }
           ports:
             - containerPort: 80
+          resources:
+            limits:
+              memory: 256Mi
+              cpu: 200m
+            requests:
+              memory: 64Mi
+              cpu: 50m
 ```
 
 > I file presenti nella cartella templates/ non sono semplici manifesti YAML statici. Helm utilizza infatti Go Templating, un sistema di template che permette di inserire espressioni dinamiche all’interno dei file YAML.
