@@ -35,7 +35,8 @@ Application Observability and Maintenance
 - Utilize container logs
 - Debugging in Kubernetes
 
-Discover and use resources that extend Kubernetes (CRD, Operators)
+Application Environment, Configuration and Security
+- Discover and use resources that extend Kubernetes (CRD, Operators)
 - Understand authentication, authorization and admission control
 - Understand requests, limits, quotas
 - Understand ConfigMaps
