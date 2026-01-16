@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="ApiResilience.Client/ApiResilience.Client.csproj" />
+  <Project Path="ApiResilience.Contracts/ApiResilience.Contracts.csproj" />
+  <Project Path="ApiResilience.Server/ApiResilience.Server.csproj" />
+</Solution>

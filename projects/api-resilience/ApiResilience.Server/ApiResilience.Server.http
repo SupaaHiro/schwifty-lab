@@ -1,0 +1,6 @@
+@ApiResilience.Server_HostAddress = http://localhost:5210
+
+GET {{ApiResilience.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
