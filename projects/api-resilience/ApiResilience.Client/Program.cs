@@ -43,7 +43,7 @@ builder.Services.AddHttpClient<WeatherForecastClient>(client =>
   };
   options.CircuitBreaker.OnOpened = args =>
   {
-    httpClientLogger.LogError("  CircuitBreaker OPENED");
+    httpClientLogger.LogWarning("  CircuitBreaker OPENED");
     return default;
   };
   options.CircuitBreaker.OnHalfOpened = args =>
