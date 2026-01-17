@@ -11,12 +11,19 @@ public sealed class Worker(ILogger<Worker> logger, WeatherForecastClient client)
 {
   protected override async Task ExecuteAsync(CancellationToken stoppingToken)
   {
-    while (!stoppingToken.IsCancellationRequested)
+    try
     {
-
-      await ExecuteOneAsync(stoppingToken);
-      await Task.Delay(1_000, stoppingToken);
+      while (!stoppingToken.IsCancellationRequested)
+      {
+        await ExecuteOneAsync(stoppingToken);
+        await Task.Delay(1_000, stoppingToken);
+      }
     }
+    catch (TaskCanceledException)
+    {
+      logger.LogWarning("Worker is stopping due to cancellation.");
+    }
+
   }
 
   private async Task ExecuteOneAsync(CancellationToken cancellationToken)
@@ -46,10 +53,6 @@ public sealed class Worker(ILogger<Worker> logger, WeatherForecastClient client)
     catch (TimeoutRejectedException)
     {
       logger.LogError("Err (TimeoutRejectedException): {duration}ms", stopwatch.ElapsedMilliseconds);
-    }
-    catch (TaskCanceledException)
-    {
-      logger.LogError("Err (TaskCanceledException): {duration}ms", stopwatch.ElapsedMilliseconds);
     }
     catch (BrokenCircuitException)
     {

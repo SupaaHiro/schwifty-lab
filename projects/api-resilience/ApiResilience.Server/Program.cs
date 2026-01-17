@@ -1,4 +1,6 @@
 using ApiResilience.Contracts;
+using ApiResilience.Server;
+using Microsoft.AspNetCore.Http.Features;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +15,23 @@ builder.Configuration.AddUserSecrets<Program>();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+// Add error handling middleware with custom problem details
+builder.Services.AddProblemDetails(options =>
+{
+  options.CustomizeProblemDetails = context =>
+  {
+    // Sets the instance to the HTTP method and path of the request.
+    context.ProblemDetails.Instance = $"{context.HttpContext.Request.Method} {context.HttpContext.Request.Path}";
+    // Adds the request ID to the problem details extensions.
+    context.ProblemDetails.Extensions.TryAdd("messageId", context.HttpContext.TraceIdentifier);
+
+    // Adds the trace ID from the activity feature to the problem details extensions.
+    var activity = context.HttpContext.Features.Get<IHttpActivityFeature>()?.Activity;
+    context.ProblemDetails.Extensions.TryAdd("traceId", activity);
+  };
+});
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -22,12 +41,10 @@ if (app.Environment.IsDevelopment())
   app.MapScalarApiReference();
 }
 
+app.UseExceptionHandler();
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+var summaries = new[] { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching" };
 
 app.MapGet("/weatherforecast", async () =>
 {

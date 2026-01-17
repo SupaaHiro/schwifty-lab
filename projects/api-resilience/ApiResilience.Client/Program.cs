@@ -29,9 +29,9 @@ builder.Services.AddHttpClient<WeatherForecastClient>(client =>
 
   options.RateLimiter.DefaultRateLimiterOptions.PermitLimit = 3;
 
-  options.TotalRequestTimeout.Timeout = TimeSpan.FromSeconds(2);
+  options.TotalRequestTimeout.Timeout = TimeSpan.FromSeconds(5);
 
-  options.Retry.MaxRetryAttempts = 2;
+  options.Retry.MaxRetryAttempts = 5;
   options.Retry.OnRetry = args =>
   {
     if (args.AttemptNumber > 0)
