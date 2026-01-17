@@ -1,5 +1,6 @@
 <Solution>
   <Project Path="ApiResilience.Client/ApiResilience.Client.csproj" />
   <Project Path="ApiResilience.Contracts/ApiResilience.Contracts.csproj" />
+  <Project Path="ApiResilience.Logger/ApiResilience.Logger.csproj" Id="0e1d9b28-e717-433a-9444-b5cec1eebbc5" />
   <Project Path="ApiResilience.Server/ApiResilience.Server.csproj" />
 </Solution>

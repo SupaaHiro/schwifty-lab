@@ -1,15 +1,9 @@
 ﻿using ApiResilience.Client;
+using ApiResilience.Logger;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Http.Resilience;
-
-static void ConfigureLogger(ILoggingBuilder builder)
-{
-  builder.ClearProviders();
-  builder.AddColorConsoleLogger();
-}
 
 var builder = Host.CreateApplicationBuilder(args);
 
@@ -19,7 +13,12 @@ builder.Configuration.AddEnvironmentVariables();
 builder.Configuration.AddCommandLine(args);
 builder.Configuration.AddUserSecrets<Program>();
 
-builder.Services.AddLogging(ConfigureLogger);
+// Add logging
+builder.Services.AddLogging(builder => {
+  builder.ClearProviders();
+  builder.AddColorConsoleLogger();
+});
+
 builder.Services
   .AddHttpClient<WeatherForecastClient>(client => {
     var url = builder.Configuration.GetValue<string>("ServerEndpointUrl") ?? throw new InvalidProgramException("Unable to find ServerEndpointUrl configuration value.");

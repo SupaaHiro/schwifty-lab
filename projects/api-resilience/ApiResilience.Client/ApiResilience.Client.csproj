@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ApiResilience.Contracts\ApiResilience.Contracts.csproj" />
+    <ProjectReference Include="..\ApiResilience.Logger\ApiResilience.Logger.csproj" />
   </ItemGroup>
 
 	<ItemGroup>

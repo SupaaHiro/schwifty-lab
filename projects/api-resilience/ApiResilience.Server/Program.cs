@@ -1,4 +1,5 @@
 using ApiResilience.Contracts;
+using ApiResilience.Logger;
 using ApiResilience.Server;
 using Microsoft.AspNetCore.Http.Features;
 using Scalar.AspNetCore;
@@ -10,6 +11,12 @@ builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnC
 builder.Configuration.AddEnvironmentVariables();
 builder.Configuration.AddCommandLine(args);
 builder.Configuration.AddUserSecrets<Program>();
+
+// Add logging
+builder.Services.AddLogging(builder => {
+  builder.ClearProviders();
+  builder.AddColorConsoleLogger();
+});
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

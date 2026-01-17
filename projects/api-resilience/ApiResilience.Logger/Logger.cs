@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 using System.Collections.Concurrent;
 using System.Runtime.Versioning;
 
-namespace ApiResilience.Client;
+namespace ApiResilience.Logger;
 
 public sealed class ColorConsoleLoggerConfiguration
 {
