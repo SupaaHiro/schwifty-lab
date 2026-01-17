@@ -3,11 +3,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Http.Resilience;
 
 static void ConfigureLogger(ILoggingBuilder builder)
 {
   builder.ClearProviders();
-  builder.AddColorConsoleLogger((config) => config.SimplifiedOutput = true);
+  builder.AddColorConsoleLogger();
 }
 
 var builder = Host.CreateApplicationBuilder(args);
@@ -18,15 +19,16 @@ builder.Configuration.AddEnvironmentVariables();
 builder.Configuration.AddCommandLine(args);
 builder.Configuration.AddUserSecrets<Program>();
 
-var url = builder.Configuration.GetValue<string>("ServerEndpointUrl") ?? throw new InvalidProgramException("Unable to find ServerEndpointUrl configuration value.");
 builder.Services.AddLogging(ConfigureLogger);
-builder.Services.AddHttpClient<WeatherForecastClient>(client =>
+builder.Services
+  .AddHttpClient<WeatherForecastClient>(client => {
+    var url = builder.Configuration.GetValue<string>("ServerEndpointUrl") ?? throw new InvalidProgramException("Unable to find ServerEndpointUrl configuration value.");
+    client.BaseAddress = new Uri(url);
+  })
+  .AddStandardResilienceHandler(options =>
 {
-  client.BaseAddress = new Uri(url);
-}).AddStandardResilienceHandler((options) =>
-{
-  var httpClientLogger = LoggerFactory.Create(ConfigureLogger).CreateLogger<WeatherForecastClient>();
-
+  var httpClientLogger = builder.Services.BuildServiceProvider().GetRequiredService<ILogger<WeatherForecastClient>>();
+  
   options.RateLimiter.DefaultRateLimiterOptions.PermitLimit = 3;
 
   options.TotalRequestTimeout.Timeout = TimeSpan.FromSeconds(5);
