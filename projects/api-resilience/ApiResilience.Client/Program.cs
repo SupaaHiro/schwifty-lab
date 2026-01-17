@@ -36,12 +36,12 @@ builder.Services
   options.Retry.MaxRetryAttempts = 5;
   options.Retry.OnRetry = args =>
   {
-    if (args.AttemptNumber > 0)
-      httpClientLogger.LogWarning("  Retrying request. Attempt {attempt}.", args.AttemptNumber);
+    httpClientLogger.LogWarning("  Retrying request. Attempt {attempt}.", args.AttemptNumber + 1);
 
     return default;
   };
-  options.Retry.Delay = TimeSpan.FromMilliseconds(100);
+  options.Retry.Delay = TimeSpan.FromMilliseconds(20);
+  options.Retry.UseJitter = true;
 
   options.CircuitBreaker.SamplingDuration = TimeSpan.FromSeconds(5);
   options.CircuitBreaker.FailureRatio = 0.9;
@@ -63,7 +63,7 @@ builder.Services
     return default;
   };
 
-  options.AttemptTimeout.Timeout = TimeSpan.FromMilliseconds(500);
+  options.AttemptTimeout.Timeout = TimeSpan.FromMilliseconds(100);
 });
 builder.Services.AddHostedService<Worker>();
 
