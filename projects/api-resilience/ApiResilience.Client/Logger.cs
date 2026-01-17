@@ -18,6 +18,8 @@ public sealed class ColorConsoleLoggerConfiguration
     [LogLevel.Warning] = ConsoleColor.Yellow,
     [LogLevel.Error] = ConsoleColor.Red,
   };
+
+  public bool SimplifiedOutput { get; set; }
 }
 
 public sealed class ColorConsoleLogger(
@@ -45,13 +47,14 @@ public sealed class ColorConsoleLogger(
     if (config.EventId == 0 || config.EventId == eventId.Id)
     {
       ConsoleColor originalColor = Console.ForegroundColor;
+      if (!config.SimplifiedOutput)
+      {
+        Console.ForegroundColor = config.LogLevelToColorMap[logLevel];
+        Console.WriteLine($"[{eventId.Id,2}: {logLevel,-12}]");
 
-      Console.ForegroundColor = config.LogLevelToColorMap[logLevel];
-      Console.WriteLine($"[{eventId.Id,2}: {logLevel,-12}]");
-
-      Console.ForegroundColor = originalColor;
-      Console.Write($"     {name} - ");
-
+        Console.ForegroundColor = originalColor;
+        Console.Write($"     {name} - ");
+      }
       Console.ForegroundColor = config.LogLevelToColorMap[logLevel];
       Console.Write($"{formatter(state, exception)}");
 

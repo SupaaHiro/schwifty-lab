@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 static void ConfigureLogger(ILoggingBuilder builder)
 {
   builder.ClearProviders();
-  builder.AddColorConsoleLogger();
+  builder.AddColorConsoleLogger((config) => config.SimplifiedOutput = true);
 }
 
 var builder = Host.CreateApplicationBuilder(args);
