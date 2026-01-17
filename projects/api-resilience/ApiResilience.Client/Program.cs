@@ -3,23 +3,30 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole());
-var logger = loggerFactory.CreateLogger("ApiResilience.Client");
+static void ConfigureLogger(ILoggingBuilder builder)
+{
+  builder.ClearProviders();
+  builder.AddColorConsoleLogger();
+}
+
 var builder = Host.CreateApplicationBuilder(args);
 
+builder.Services.AddLogging(ConfigureLogger);
 builder.Services.AddHttpClient<WeatherForecastClient>(client =>
 {
   client.BaseAddress = new Uri("https://localhost:3000");
-}).AddStandardResilienceHandler(options =>
+}).AddStandardResilienceHandler((options) =>
 {
+  var httpClientLogger = LoggerFactory.Create(ConfigureLogger).CreateLogger<WeatherForecastClient>();
+
   options.RateLimiter.DefaultRateLimiterOptions.PermitLimit = 3;
 
   options.TotalRequestTimeout.Timeout = TimeSpan.FromSeconds(2);
-  
+
   options.Retry.MaxRetryAttempts = 2;
   options.Retry.OnRetry = args =>
   {
-    logger.LogWarning("  Retrying request. Attempt {attempt}.", args.AttemptNumber);
+    httpClientLogger.LogWarning("  Retrying request. Attempt {attempt}.", args.AttemptNumber);
 
     return default;
   };
@@ -31,17 +38,17 @@ builder.Services.AddHttpClient<WeatherForecastClient>(client =>
   options.CircuitBreaker.BreakDuration = TimeSpan.FromSeconds(10);
   options.CircuitBreaker.OnClosed = args =>
   {
-    logger.LogWarning("  CircuitBreaker CLOSED");
+    httpClientLogger.LogWarning("  CircuitBreaker CLOSED");
     return default;
   };
   options.CircuitBreaker.OnOpened = args =>
   {
-    logger.LogError("  CircuitBreaker OPENED");
+    httpClientLogger.LogError("  CircuitBreaker OPENED");
     return default;
   };
   options.CircuitBreaker.OnHalfOpened = args =>
   {
-    logger.LogWarning("  CircuitBreaker HALF-OPEN");
+    httpClientLogger.LogWarning("  CircuitBreaker HALF-OPEN");
     return default;
   };
 
