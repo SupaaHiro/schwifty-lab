@@ -1,4 +1,5 @@
 ﻿using ApiResilience.Client;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -11,10 +12,17 @@ static void ConfigureLogger(ILoggingBuilder builder)
 
 var builder = Host.CreateApplicationBuilder(args);
 
+// Configure application configuration sources
+builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+builder.Configuration.AddEnvironmentVariables();
+builder.Configuration.AddCommandLine(args);
+builder.Configuration.AddUserSecrets<Program>();
+
+var url = builder.Configuration.GetValue<string>("ServerEndpointUrl") ?? throw new InvalidProgramException("Unable to find ServerEndpointUrl configuration value.");
 builder.Services.AddLogging(ConfigureLogger);
 builder.Services.AddHttpClient<WeatherForecastClient>(client =>
 {
-  client.BaseAddress = new Uri("https://localhost:3000");
+  client.BaseAddress = new Uri(url);
 }).AddStandardResilienceHandler((options) =>
 {
   var httpClientLogger = LoggerFactory.Create(ConfigureLogger).CreateLogger<WeatherForecastClient>();
@@ -26,7 +34,8 @@ builder.Services.AddHttpClient<WeatherForecastClient>(client =>
   options.Retry.MaxRetryAttempts = 2;
   options.Retry.OnRetry = args =>
   {
-    httpClientLogger.LogWarning("  Retrying request. Attempt {attempt}.", args.AttemptNumber);
+    if (args.AttemptNumber > 0)
+      httpClientLogger.LogWarning("  Retrying request. Attempt {attempt}.", args.AttemptNumber);
 
     return default;
   };
