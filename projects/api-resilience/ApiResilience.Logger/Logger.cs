@@ -22,9 +22,7 @@ public sealed class ColorConsoleLoggerConfiguration
   public bool SimplifiedOutput { get; set; }
 }
 
-public sealed class ColorConsoleLogger(
-    string name,
-    Func<ColorConsoleLoggerConfiguration> getCurrentConfig) : ILogger
+public sealed class ColorConsoleLogger(string name, Func<ColorConsoleLoggerConfiguration> getCurrentConfig) : ILogger
 {
   public IDisposable? BeginScope<TState>(TState state) where TState : notnull => default!;
 

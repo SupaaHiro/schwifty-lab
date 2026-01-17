@@ -1,4 +1,4 @@
-@ApiResilience.Server_HostAddress = http://localhost:5210
+@ApiResilience.Server_HostAddress = https://localhost:3000
 
 GET {{ApiResilience.Server_HostAddress}}/weatherforecast/
 Accept: application/json
