@@ -86,10 +86,10 @@ app.MapGet("/weatherforecast", async (ServerSettingsService settingsService) =>
     if (elapsedSeconds >= serverSettings.WarmupSeconds)
     {
         var chance = Random.Shared.NextDouble();
-        if (chance < serverSettings.DelayProbability)
+        if (chance < serverSettings.ErrorProbability)
+            throw new ResponseInternalErrorException("Something went wrong while fetching the weather forecast."); 
+        else if (chance < serverSettings.ErrorProbability + serverSettings.DelayProbability)
             await Task.Delay(serverSettings.DelayDurationMs);
-        else if (chance < serverSettings.DelayProbability + serverSettings.ErrorProbability)
-            throw new ResponseInternalErrorException("Something went wrong while fetching the weather forecast.");
     }
 
     // Happy path: return a 5-day weather forecast

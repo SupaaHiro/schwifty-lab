@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ApiResilience.Server;
 
+[CombinedProbabilityValidation]
 public sealed class ServerSettings
 {
     public const string SectionName = "Server";
@@ -30,6 +31,26 @@ public sealed class ServerSettings
     /// </summary>
     [Range(0.0, 1.0, ErrorMessage = "ErrorProbability must be between 0.0 and 1.0")]
     public double ErrorProbability { get; set; } = 0.2;
+}
+
+[AttributeUsage(AttributeTargets.Class)]
+public sealed class CombinedProbabilityValidationAttribute : ValidationAttribute
+{
+    protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
+    {
+        if (value is ServerSettings settings)
+        {
+            if (settings.DelayProbability + settings.ErrorProbability > 1.0)
+            {
+                return new ValidationResult(
+                    "The sum of DelayProbability and ErrorProbability cannot exceed 1.0 (100%)",
+                    [nameof(ServerSettings.DelayProbability), nameof(ServerSettings.ErrorProbability)]
+                );
+            }
+        }
+
+        return ValidationResult.Success;
+    }
 }
 
 public sealed class ServerSettingsService

@@ -28,16 +28,16 @@ public sealed class Worker(ILogger<Worker> logger, WeatherForecastClient client)
 
     private async Task ExecuteOneAsync(CancellationToken cancellationToken)
     {
-        Stopwatch stopwatch = Stopwatch.StartNew();
+        var stopwatch = Stopwatch.StartNew();
         try
         {
             _ = await client.GetWeatherForecastAsync(cancellationToken);
             stopwatch.Stop();
 
             var duration = stopwatch.ElapsedMilliseconds;
-            if (duration >= 1_000)
+            if (logger.IsEnabled(LogLevel.Warning) && duration >= 1_000)
                 logger.LogWarning("200 (OK): {duration}ms", stopwatch.ElapsedMilliseconds);
-            else
+            else if (logger.IsEnabled(LogLevel.Information))
                 logger.LogInformation("200 (OK): {duration}ms", stopwatch.ElapsedMilliseconds);
         }
         catch (HttpRequestException httpEx)

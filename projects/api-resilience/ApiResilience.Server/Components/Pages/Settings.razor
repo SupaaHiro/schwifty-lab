@@ -4,288 +4,157 @@
 
 <PageTitle>Server Settings</PageTitle>
 
-<div class="settings-container">
-    <h1>Server Resilience Settings</h1>
-    <p class="settings-description">
-        Configure API resilience testing parameters. These settings control delays and errors introduced during API calls.
-    </p>
+<h1>Server Resilience Settings</h1>
+<p class="settings-description">
+  Configure API resilience testing parameters. These settings control delays and errors introduced during API calls.
+</p>
 
-    <EditForm Model="@editModel" OnValidSubmit="@HandleValidSubmit">
-        <DataAnnotationsValidator />
-        <ValidationSummary class="validation-summary" />
+<div class="row">
+  <div class="col-md-6 d-flex flex-column">
+    <EditForm Model="@editModel" OnValidSubmit="@HandleValidSubmit" class="d-flex flex-column flex-fill">
+      <DataAnnotationsValidator />
+      <ValidationSummary class="validation-summary" />
 
-        <div class="form-section">
-            <h3>Delay Configuration</h3>
-            <div class="form-group">
-                <label for="delayProbability">Delay Probability:</label>
-                <InputNumber id="delayProbability" class="form-control" @bind-Value="editModel.DelayProbability" step="0.01" />
-                <small class="form-text">Probability of introducing delay (0.0-1.0 where 0.2 = 20%)</small>
-                <ValidationMessage For="@(() => editModel.DelayProbability)" />
-            </div>
-
-            <div class="form-group">
-                <label for="delayDuration">Delay Duration (milliseconds):</label>
-                <InputNumber id="delayDuration" class="form-control" @bind-Value="editModel.DelayDurationMs" />
-                <small class="form-text">Duration of delay when triggered (0-30000 ms)</small>
-                <ValidationMessage For="@(() => editModel.DelayDurationMs)" />
-            </div>
+      <div class="form-section flex-fill">
+        <h3>Edit Settings</h3>
+        
+        <div class="alert alert-info">
+          <strong>Note:</strong> The sum of Delay Probability and Error Probability cannot exceed 100% (1.0).
+          <br />
+          Current total: <strong>@((editModel.DelayProbability + editModel.ErrorProbability) * 100)%</strong>
         </div>
 
-        <div class="form-section">
-            <h3>Error Configuration</h3>
-            <div class="form-group">
-                <label for="errorProbability">Error Probability:</label>
-                <InputNumber id="errorProbability" class="form-control" @bind-Value="editModel.ErrorProbability" step="0.01" />
-                <small class="form-text">Probability of throwing errors (0.0-1.0 where 0.2 = 20%)</small>
-                <ValidationMessage For="@(() => editModel.ErrorProbability)" />
-            </div>
+        <div class="form-group">
+          <label for="delayProbability">Delay Probability:</label>
+          <InputNumber id="delayProbability" class="form-control" @bind-Value="editModel.DelayProbability" step="0.01" />
+          <small class="form-text">Probability of introducing delay (0.0-1.0 where 0.2 = 20%)</small>
+          <ValidationMessage For="@(() => editModel.DelayProbability)" />
         </div>
 
-        <div class="form-actions">
-            <button type="submit" class="btn btn-primary">Apply Settings</button>
-            <button type="button" class="btn btn-secondary" @onclick="ResetToDefaults">Reset to Defaults</button>
+        <div class="form-group">
+          <label for="delayDuration">Delay Duration (milliseconds):</label>
+          <InputNumber id="delayDuration" class="form-control" @bind-Value="editModel.DelayDurationMs" />
+          <small class="form-text">Duration of delay when triggered (0-30000 ms)</small>
+          <ValidationMessage For="@(() => editModel.DelayDurationMs)" />
         </div>
+
+        <div class="form-group">
+          <label for="errorProbability">Error Probability:</label>
+          <InputNumber id="errorProbability" class="form-control" @bind-Value="editModel.ErrorProbability" step="0.01" />
+          <small class="form-text">Probability of throwing errors (0.0-1.0 where 0.2 = 20%)</small>
+          <ValidationMessage For="@(() => editModel.ErrorProbability)" />
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Apply Settings</button>
+        <button type="button" class="btn btn-secondary" @onclick="ResetToDefaults">Reset to Defaults</button>
+      </div>
     </EditForm>
 
     @if (!string.IsNullOrEmpty(statusMessage))
     {
-        <div class="alert alert-@(isSuccess ? "success" : "danger") mt-3">
-            @statusMessage
-        </div>
+      <div class="alert alert-@(isSuccess ? "success" : "danger") mt-3">
+        @statusMessage
+      </div>
     }
-
-    <div class="current-settings">
-        <h3>Current Active Settings</h3>
-        <table class="table table-sm">
-            <tbody>
-                <tr>
-                    <td><strong>Warmup Period:</strong></td>
-                    <td>@currentSettings.WarmupSeconds seconds</td>
-                </tr>
-                <tr>
-                    <td><strong>Delay Probability:</strong></td>
-                    <td>@(currentSettings.DelayProbability * 100)%</td>
-                </tr>
-                <tr>
-                    <td><strong>Delay Duration:</strong></td>
-                    <td>@currentSettings.DelayDurationMs ms</td>
-                </tr>
-                <tr>
-                    <td><strong>Error Probability:</strong></td>
-                    <td>@(currentSettings.ErrorProbability * 100)%</td>
-                </tr>
-            </tbody>
-        </table>
+  </div>
+  <div class="col-md-6 d-flex flex-column">
+    <div class="current-settings flex-fill">
+      <h3>Current Settings</h3>
+      <table class="table table-sm">
+        <tbody>
+          <tr>
+            <td><strong>Delay Probability:</strong></td>
+            <td>@(currentSettings.DelayProbability * 100)%</td>
+          </tr>
+          <tr>
+            <td><strong>Delay Duration:</strong></td>
+            <td>@currentSettings.DelayDurationMs ms</td>
+          </tr>
+          <tr>
+            <td><strong>Error Probability:</strong></td>
+            <td>@(currentSettings.ErrorProbability * 100)%</td>
+          </tr>
+          <tr>
+            <td colspan="2" class="table-info">
+              <strong>Total Probability:</strong> @((currentSettings.DelayProbability + currentSettings.ErrorProbability) * 100)%
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
+  </div>
 </div>
 
-<style>
-    .settings-container {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 2rem;
-    }
-
-    .settings-description {
-        color: #6c757d;
-        margin-bottom: 2rem;
-    }
-
-    .form-section {
-        margin-bottom: 2rem;
-        padding: 1.5rem;
-        background-color: #f8f9fa;
-        border-radius: 0.5rem;
-    }
-
-    .form-section h3 {
-        font-size: 1.2rem;
-        margin-bottom: 1rem;
-        color: #495057;
-    }
-
-    .form-group {
-        margin-bottom: 1.5rem;
-    }
-
-    .form-group label {
-        display: block;
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-        color: #212529;
-    }
-
-    .form-control {
-        width: 100%;
-        padding: 0.5rem;
-        font-size: 1rem;
-        border: 1px solid #ced4da;
-        border-radius: 0.25rem;
-    }
-
-    .form-text {
-        display: block;
-        margin-top: 0.25rem;
-        color: #6c757d;
-        font-size: 0.875rem;
-    }
-
-    .form-actions {
-        margin-top: 2rem;
-        display: flex;
-        gap: 1rem;
-    }
-
-    .btn {
-        padding: 0.5rem 1.5rem;
-        font-size: 1rem;
-        border-radius: 0.25rem;
-        border: none;
-        cursor: pointer;
-    }
-
-    .btn-primary {
-        background-color: #1b6ec2;
-        color: white;
-    }
-
-    .btn-primary:hover {
-        background-color: #1861ac;
-    }
-
-    .btn-secondary {
-        background-color: #6c757d;
-        color: white;
-    }
-
-    .btn-secondary:hover {
-        background-color: #5a6268;
-    }
-
-    .validation-summary {
-        padding: 1rem;
-        background-color: #f8d7da;
-        border: 1px solid #f5c6cb;
-        border-radius: 0.25rem;
-        color: #721c24;
-        margin-bottom: 1.5rem;
-    }
-
-    .current-settings {
-        margin-top: 3rem;
-        padding: 1.5rem;
-        background-color: #e7f3ff;
-        border-radius: 0.5rem;
-    }
-
-    .current-settings h3 {
-        font-size: 1.2rem;
-        margin-bottom: 1rem;
-        color: #004085;
-    }
-
-    .table {
-        width: 100%;
-        margin-top: 1rem;
-    }
-
-    .table td {
-        padding: 0.5rem;
-        border-bottom: 1px solid #dee2e6;
-    }
-
-    .alert {
-        padding: 1rem;
-        border-radius: 0.25rem;
-        margin-top: 1rem;
-    }
-
-    .alert-success {
-        background-color: #d4edda;
-        border: 1px solid #c3e6cb;
-        color: #155724;
-    }
-
-    .alert-danger {
-        background-color: #f8d7da;
-        border: 1px solid #f5c6cb;
-        color: #721c24;
-    }
-</style>
-
 @code {
-    private ServerSettingsModel editModel = new();
-    private ApiResilience.Server.ServerSettings currentSettings = new();
-    private string statusMessage = string.Empty;
-    private bool isSuccess = false;
+  private ServerSettingsModel editModel = new();
+  private ApiResilience.Server.ServerSettings currentSettings = new();
+  private string statusMessage = string.Empty;
+  private bool isSuccess = false;
 
-    protected override void OnInitialized()
+  protected override void OnInitialized()
+  {
+    LoadCurrentSettings();
+  }
+
+  private void LoadCurrentSettings()
+  {
+    currentSettings = SettingsService.GetRuntimeSettings();
+    editModel = new ServerSettingsModel
     {
-        LoadCurrentSettings();
-    }
+      DelayProbability = currentSettings.DelayProbability,
+      DelayDurationMs = currentSettings.DelayDurationMs,
+      ErrorProbability = currentSettings.ErrorProbability
+    };
+  }
 
-    private void LoadCurrentSettings()
+  private void HandleValidSubmit()
+  {
+    try
     {
-        currentSettings = SettingsService.GetRuntimeSettings();
-        editModel = new ServerSettingsModel
-        {
-            WarmupSeconds = currentSettings.WarmupSeconds,
-            DelayProbability = currentSettings.DelayProbability,
-            DelayDurationMs = currentSettings.DelayDurationMs,
-            ErrorProbability = currentSettings.ErrorProbability
-        };
-    }
+      var newSettings = new ApiResilience.Server.ServerSettings
+      {
+        DelayProbability = editModel.DelayProbability,
+        DelayDurationMs = editModel.DelayDurationMs,
+        ErrorProbability = editModel.ErrorProbability
+      };
 
-    private void HandleValidSubmit()
+      SettingsService.UpdateSettings(newSettings);
+      currentSettings = SettingsService.GetRuntimeSettings();
+
+      statusMessage = "Settings updated successfully!";
+      isSuccess = true;
+    }
+    catch (Exception ex)
     {
-        try
-        {
-            var newSettings = new ApiResilience.Server.ServerSettings
-            {
-                WarmupSeconds = editModel.WarmupSeconds,
-                DelayProbability = editModel.DelayProbability,
-                DelayDurationMs = editModel.DelayDurationMs,
-                ErrorProbability = editModel.ErrorProbability
-            };
-
-            SettingsService.UpdateSettings(newSettings);
-            currentSettings = SettingsService.GetRuntimeSettings();
-            
-            statusMessage = "Settings updated successfully!";
-            isSuccess = true;
-        }
-        catch (Exception ex)
-        {
-            statusMessage = $"Error updating settings: {ex.Message}";
-            isSuccess = false;
-        }
+      statusMessage = $"Error updating settings: {ex.Message}";
+      isSuccess = false;
     }
+  }
 
-    private void ResetToDefaults()
+  private void ResetToDefaults()
+  {
+    editModel = new ServerSettingsModel
     {
-        editModel = new ServerSettingsModel
-        {
-            WarmupSeconds = 10,
-            DelayProbability = 0.2,
-            DelayDurationMs = 5_000,
-            ErrorProbability = 0.2
-        };
-        statusMessage = "Form reset to default values. Click 'Apply Settings' to save.";
-        isSuccess = false;
-    }
+      DelayProbability = 0.2,
+      DelayDurationMs = 5_000,
+      ErrorProbability = 0.2
+    };
+    statusMessage = "Form reset to default values. Click 'Apply Settings' to save.";
+    isSuccess = false;
+  }
 
-    private class ServerSettingsModel
-    {
-        [Range(0, 600, ErrorMessage = "WarmupSeconds must be between 0 and 600")]
-        public int WarmupSeconds { get; set; } = 10;
+  [CombinedProbabilityValidation]
+  private class ServerSettingsModel
+  {
+    [Range(0.0, 1.0, ErrorMessage = "DelayProbability must be between 0.0 and 1.0")]
+    public double DelayProbability { get; set; } = 0.2;
 
-        [Range(0.0, 1.0, ErrorMessage = "DelayProbability must be between 0.0 and 1.0")]
-        public double DelayProbability { get; set; } = 0.2;
+    [Range(0, 30_000, ErrorMessage = "DelayDurationMs must be between 0 and 30000")]
+    public int DelayDurationMs { get; set; } = 5_000;
 
-        [Range(0, 30_000, ErrorMessage = "DelayDurationMs must be between 0 and 30000")]
-        public int DelayDurationMs { get; set; } = 5_000;
-
-        [Range(0.0, 1.0, ErrorMessage = "ErrorProbability must be between 0.0 and 1.0")]
-        public double ErrorProbability { get; set; } = 0.2;
-    }
+    [Range(0.0, 1.0, ErrorMessage = "ErrorProbability must be between 0.0 and 1.0")]
+    public double ErrorProbability { get; set; } = 0.2;
+  }
 }
