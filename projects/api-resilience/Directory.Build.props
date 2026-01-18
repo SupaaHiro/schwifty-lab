@@ -1,0 +1,78 @@
+<Project>
+    
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <VersionPrefix>10.0.0</VersionPrefix>
+        <Authors>schwifty-lab | Hiro’s Blog</Authors>
+        <Company>schwifty-lab | Hiro’s Blog</Company>
+        <GenerateDocumentationFile>false</GenerateDocumentationFile>
+        
+        <!-- Enforce code style rules during build -->
+        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+
+        <!-- Required for the IDE0005 rule (Remove unnecessary using directives)  -->
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+
+        <!-- 
+        CS1591 = Missing XML comment for publicly visible type or member 'Type_or_Member' (The DocumentationFile compiler option was specified, but one or more constructs did not have comments)   
+        -->
+        <NoWarn>$(NoWarn);CS1591</NoWarn>
+        
+        <!-- Required to allow centralized floating versions (e.g. *-CI-*) consider setting it to 'false' and explicit versions upon production release. -->
+        <CentralPackageFloatingVersionsEnabled>true</CentralPackageFloatingVersionsEnabled>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Lindhart.Analyser.MissingAwaitWarning" Condition="$(MSBuildProjectExtension) == '.csproj'" />
+
+        <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Condition="$(MSBuildProjectExtension) == '.csproj'">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+
+        <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Condition="$(MSBuildProjectExtension) == '.csproj'">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+
+        <PackageReference Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Condition="$(MSBuildProjectExtension) == '.csproj'">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+
+        <PackageReference Include="Philips.CodeAnalysis.DuplicateCodeAnalyzer" >
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+        </PackageReference>
+
+        <!--<PackageReference Include="SecurityCodeScan.VS2019" >
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+        </PackageReference>-->
+
+        <PackageReference Include="DogmaSolutions.Analyzers">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <!-- Prefer file in solution directory, else use parent directory -->
+        <_BannedSymbolsFile Include="$(SolutionDir)BannedSymbols.txt" Condition="Exists('$(SolutionDir)BannedSymbols.txt')" />
+        <_BannedSymbolsFile Include="$(MSBuildThisFileDirectory)\BannedSymbols.txt" Condition="!Exists('$(SolutionDir)BannedSymbols.txt') and Exists('$(MSBuildThisFileDirectory)\BannedSymbols.txt')" />
+
+        <_DuplicateCodeAllowedFile Include="$(SolutionDir)DuplicateCode.Allowed.txt" Condition="Exists('$(SolutionDir)DuplicateCode.Allowed.txt')" />
+        <_DuplicateCodeAllowedFile Include="$(MSBuildThisFileDirectory)\DuplicateCode.Allowed.txt" Condition="!Exists('$(SolutionDir)DuplicateCode.Allowed.txt') and Exists('$(MSBuildThisFileDirectory)\DuplicateCode.Allowed.txt')" />
+
+        <AdditionalFiles Include="@(_BannedSymbolsFile)" />
+        <AdditionalFiles Include="@(_DuplicateCodeAllowedFile)" />
+    </ItemGroup>
+
+    <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+        <Message Text="Banned symbols: $(SolutionDir)BannedSymbols.txt" Importance="high" />
+        <Message Text="Duplicate code detection exceptions: $(SolutionDir)DuplicateCode.Allowed.txt" Importance="high" />
+    </Target>
+    
+</Project>

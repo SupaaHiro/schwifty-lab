@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Configuration;
@@ -10,107 +10,111 @@ namespace ApiResilience.Logger;
 
 public sealed class ColorConsoleLoggerConfiguration
 {
-  public int EventId { get; set; }
+    public int EventId { get; set; }
 
-  public Dictionary<LogLevel, ConsoleColor> LogLevelToColorMap { get; set; } = new()
-  {
-    [LogLevel.Trace] = ConsoleColor.DarkGray,
-    [LogLevel.Debug] = ConsoleColor.Gray,
-    [LogLevel.Information] = ConsoleColor.Green,
-    [LogLevel.Warning] = ConsoleColor.Yellow,
-    [LogLevel.Error] = ConsoleColor.Red,
-    [LogLevel.Critical] = ConsoleColor.DarkRed,
-  };
+    public Dictionary<LogLevel, ConsoleColor> LogLevelToColorMap { get; set; } = new()
+    {
+        [LogLevel.Trace] = ConsoleColor.DarkGray,
+        [LogLevel.Debug] = ConsoleColor.Gray,
+        [LogLevel.Information] = ConsoleColor.Green,
+        [LogLevel.Warning] = ConsoleColor.Yellow,
+        [LogLevel.Error] = ConsoleColor.Red,
+        [LogLevel.Critical] = ConsoleColor.DarkRed,
+    };
 
-  public bool SimplifiedOutput { get; set; }
+    public bool SimplifiedOutput { get; set; }
 }
 
 public sealed class ColorConsoleLogger(string name, Func<ColorConsoleLoggerConfiguration> getCurrentConfig) : ILogger
 {
-  public IDisposable? BeginScope<TState>(TState state) where TState : notnull => default!;
+    public IDisposable? BeginScope<TState>(TState state) where TState : notnull => default!;
 
-  public bool IsEnabled(LogLevel logLevel) =>
-      getCurrentConfig().LogLevelToColorMap.ContainsKey(logLevel);
+    public bool IsEnabled(LogLevel logLevel) =>
+        getCurrentConfig().LogLevelToColorMap.ContainsKey(logLevel);
 
-  public void Log<TState>(
-      LogLevel logLevel,
-      EventId eventId,
-      TState state,
-      Exception? exception,
-      Func<TState, Exception?, string> formatter)
-  {
-    if (!IsEnabled(logLevel))
+    public void Log<TState>(
+        LogLevel logLevel,
+        EventId eventId,
+        TState state,
+        Exception? exception,
+        Func<TState, Exception?, string> formatter)
     {
-      return;
+        if (!IsEnabled(logLevel)) return;
+
+        ArgumentNullException.ThrowIfNull(formatter);
+
+        var config = getCurrentConfig();
+        if (config.EventId == 0 || config.EventId == eventId.Id)
+        {
+            var originalColor = Console.ForegroundColor;
+            if (!config.SimplifiedOutput)
+            {
+                Console.ForegroundColor = config.LogLevelToColorMap[logLevel];
+                Console.WriteLine($"[{eventId.Id,2}: {logLevel,-12}]");
+
+                Console.ForegroundColor = originalColor;
+                Console.Write($"     {name} - ");
+            }
+            Console.ForegroundColor = config.LogLevelToColorMap[logLevel];
+            Console.Write($"{formatter(state, exception)}");
+
+            Console.ForegroundColor = originalColor;
+            Console.WriteLine();
+        }
     }
-
-    ColorConsoleLoggerConfiguration config = getCurrentConfig();
-    if (config.EventId == 0 || config.EventId == eventId.Id)
-    {
-      ConsoleColor originalColor = Console.ForegroundColor;
-      if (!config.SimplifiedOutput)
-      {
-        Console.ForegroundColor = config.LogLevelToColorMap[logLevel];
-        Console.WriteLine($"[{eventId.Id,2}: {logLevel,-12}]");
-
-        Console.ForegroundColor = originalColor;
-        Console.Write($"     {name} - ");
-      }
-      Console.ForegroundColor = config.LogLevelToColorMap[logLevel];
-      Console.Write($"{formatter(state, exception)}");
-
-      Console.ForegroundColor = originalColor;
-      Console.WriteLine();
-    }
-  }
 }
 
 [UnsupportedOSPlatform("browser")]
 [ProviderAlias("ColorConsole")]
 public sealed class ColorConsoleLoggerProvider : ILoggerProvider
 {
-  private readonly IDisposable? _onChangeToken;
-  private ColorConsoleLoggerConfiguration _currentConfig;
-  private readonly ConcurrentDictionary<string, ColorConsoleLogger> _loggers =
-      new(StringComparer.OrdinalIgnoreCase);
+    private readonly IDisposable? _onChangeToken;
+    private ColorConsoleLoggerConfiguration _currentConfig;
+    private readonly ConcurrentDictionary<string, ColorConsoleLogger> _loggers =
+        new(StringComparer.OrdinalIgnoreCase);
 
-  public ColorConsoleLoggerProvider(
-      IOptionsMonitor<ColorConsoleLoggerConfiguration> config)
-  {
-    _currentConfig = config.CurrentValue;
-    _onChangeToken = config.OnChange(updatedConfig => _currentConfig = updatedConfig);
-  }
+    public ColorConsoleLoggerProvider(IOptionsMonitor<ColorConsoleLoggerConfiguration> config)
+    {
+        ArgumentNullException.ThrowIfNull(config);
 
-  public ILogger CreateLogger(string categoryName) =>
-      _loggers.GetOrAdd(categoryName, name => new ColorConsoleLogger(name, GetCurrentConfig));
+        _currentConfig = config.CurrentValue;
+        _onChangeToken = config.OnChange(updatedConfig => _currentConfig = updatedConfig);
+    }
 
-  private ColorConsoleLoggerConfiguration GetCurrentConfig() => _currentConfig;
+    public ILogger CreateLogger(string categoryName) =>
+        _loggers.GetOrAdd(categoryName, name => new ColorConsoleLogger(name, GetCurrentConfig));
 
-  public void Dispose()
-  {
-    _loggers.Clear();
-    _onChangeToken?.Dispose();
-  }
+    private ColorConsoleLoggerConfiguration GetCurrentConfig() => _currentConfig;
+
+    public void Dispose()
+    {
+        _loggers.Clear();
+        _onChangeToken?.Dispose();
+    }
 }
 
 public static class ColorConsoleLoggerExtensions
 {
-  public static ILoggingBuilder AddColorConsoleLogger(this ILoggingBuilder builder)
-  {
-    builder.AddConfiguration();
+    public static ILoggingBuilder AddColorConsoleLogger(this ILoggingBuilder builder)
+    {
+        ArgumentNullException.ThrowIfNull(builder);
 
-    builder.Services.TryAddEnumerable(ServiceDescriptor.Singleton<ILoggerProvider, ColorConsoleLoggerProvider>());
+        builder.AddConfiguration();
 
-    LoggerProviderOptions.RegisterProviderOptions<ColorConsoleLoggerConfiguration, ColorConsoleLoggerProvider>(builder.Services);
+        builder.Services.TryAddEnumerable(ServiceDescriptor.Singleton<ILoggerProvider, ColorConsoleLoggerProvider>());
 
-    return builder;
-  }
+        LoggerProviderOptions.RegisterProviderOptions<ColorConsoleLoggerConfiguration, ColorConsoleLoggerProvider>(builder.Services);
 
-  public static ILoggingBuilder AddColorConsoleLogger(this ILoggingBuilder builder, Action<ColorConsoleLoggerConfiguration> configure)
-  {
-    builder.AddColorConsoleLogger();
-    builder.Services.Configure(configure);
+        return builder;
+    }
 
-    return builder;
-  }
+    public static ILoggingBuilder AddColorConsoleLogger(this ILoggingBuilder builder, Action<ColorConsoleLoggerConfiguration> configure)
+    {
+        ArgumentNullException.ThrowIfNull(builder);
+
+        builder.AddColorConsoleLogger();
+        builder.Services.Configure(configure);
+
+        return builder;
+    }
 }
