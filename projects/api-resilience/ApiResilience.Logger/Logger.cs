@@ -46,19 +46,18 @@ public sealed class ColorConsoleLogger(string name, Func<ColorConsoleLoggerConfi
         var config = getCurrentConfig();
         if (config.EventId == 0 || config.EventId == eventId.Id)
         {
-            var originalColor = Console.ForegroundColor;
             if (!config.SimplifiedOutput)
             {
                 Console.ForegroundColor = config.LogLevelToColorMap[logLevel];
                 Console.WriteLine($"[{eventId.Id,2}: {logLevel,-12}]");
 
-                Console.ForegroundColor = originalColor;
+                Console.ResetColor();
                 Console.Write($"     {name} - ");
             }
             Console.ForegroundColor = config.LogLevelToColorMap[logLevel];
             Console.Write($"{formatter(state, exception)}");
 
-            Console.ForegroundColor = originalColor;
+            Console.ResetColor();
             Console.WriteLine();
         }
     }
