@@ -1,6 +1,7 @@
 using ApiResilience.Contracts;
 using ApiResilience.Logger;
 using ApiResilience.Server;
+using ApiResilience.Server.Components;
 using Microsoft.AspNetCore.Http.Features;
 using Scalar.AspNetCore;
 
@@ -41,11 +42,22 @@ builder.Services.AddProblemDetails(options =>
 });
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
+// Configure and validate ServerSettings
+builder.Services.AddOptions<ServerSettings>()
+    .Bind(builder.Configuration.GetSection(ServerSettings.SectionName))
+    .ValidateDataAnnotations()
+    .ValidateOnStart();
+
+// Register RuntimeServerSettingsService as singleton for runtime configuration
+builder.Services.AddSingleton<ServerSettingsService>();
+
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents();
+
 var app = builder.Build();
 
 // Track application startup time and define warmup period
 var appStartTime = DateTimeOffset.UtcNow;
-const int warmupSeconds = 10;
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -57,19 +69,26 @@ if (app.Environment.IsDevelopment())
 app.UseMiddleware<RequestTimingMiddleware>();
 app.UseExceptionHandler();
 app.UseHttpsRedirection();
+app.UseAntiforgery();
+app.MapStaticAssets();
+app.MapRazorComponents<App>()
+    .AddInteractiveServerRenderMode();
 
 var summaries = new[] { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching" };
 
-app.MapGet("/weatherforecast", async () =>
+// Define the weather forecast endpoint
+app.MapGet("/weatherforecast", async (ServerSettingsService settingsService) =>
 {
+    var serverSettings = settingsService.GetRuntimeSettings();
+
     // After the warmup period, introduce random delays and errors
     var elapsedSeconds = (DateTimeOffset.UtcNow - appStartTime).TotalSeconds;
-    if (elapsedSeconds >= warmupSeconds)
+    if (elapsedSeconds >= serverSettings.WarmupSeconds)
     {
         var chance = Random.Shared.NextDouble();
-        if (chance < 0.2)
-            await Task.Delay(5_000);
-        else if (chance < 0.4)
+        if (chance < serverSettings.DelayProbability)
+            await Task.Delay(serverSettings.DelayDurationMs);
+        else if (chance < serverSettings.DelayProbability + serverSettings.ErrorProbability)
             throw new ResponseInternalErrorException("Something went wrong while fetching the weather forecast.");
     }
 

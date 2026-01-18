@@ -25,12 +25,12 @@ public sealed class RequestTimingMiddleware(RequestDelegate next, ILogger<Reques
             var duration = stopwatch.ElapsedMilliseconds;
             if (statusCode >= 200 && statusCode < 300)
             {
-                if (duration >= 1_000)
+                if (_logger.IsEnabled(LogLevel.Warning) && duration >= 1_000)
                     _logger.LogWarning("{statusCode} (OK): {duration}ms", statusCode, duration);
-                else
+                else if (_logger.IsEnabled(LogLevel.Information))
                     _logger.LogInformation("{statusCode} (OK): {duration}ms", statusCode, duration);
             }
-            else if (statusCode >= 400)
+            else if (_logger.IsEnabled(LogLevel.Error) && statusCode >= 400)
             {
                 _logger.LogError("Err ({statusCode}): {duration}ms", statusCode, duration);
             }
