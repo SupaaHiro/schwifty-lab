@@ -43,6 +43,10 @@ builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 var app = builder.Build();
 
+// Track application startup time and define warmup period
+var appStartTime = DateTimeOffset.UtcNow;
+const int warmupSeconds = 10;
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -58,12 +62,16 @@ var summaries = new[] { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm",
 
 app.MapGet("/weatherforecast", async () =>
 {
-    // Simulate random delays and errors to test the resilience pipeline of the client
-    var chance = Random.Shared.NextDouble();
-    if (chance < 0.2)
-        await Task.Delay(5_000);
-    else if (chance < 0.4)
-        throw new ResponseInternalErrorException("Something went wrong while fetching the weather forecast.");
+    // After the warmup period, introduce random delays and errors
+    var elapsedSeconds = (DateTimeOffset.UtcNow - appStartTime).TotalSeconds;
+    if (elapsedSeconds >= warmupSeconds)
+    {
+        var chance = Random.Shared.NextDouble();
+        if (chance < 0.2)
+            await Task.Delay(5_000);
+        else if (chance < 0.4)
+            throw new ResponseInternalErrorException("Something went wrong while fetching the weather forecast.");
+    }
 
     // Happy path: return a 5-day weather forecast
     var forecast = Enumerable.Range(1, 5).Select(index =>
