@@ -14,9 +14,12 @@ public sealed class ColorConsoleLoggerConfiguration
 
   public Dictionary<LogLevel, ConsoleColor> LogLevelToColorMap { get; set; } = new()
   {
+    [LogLevel.Trace] = ConsoleColor.DarkGray,
+    [LogLevel.Debug] = ConsoleColor.Gray,
     [LogLevel.Information] = ConsoleColor.Green,
     [LogLevel.Warning] = ConsoleColor.Yellow,
     [LogLevel.Error] = ConsoleColor.Red,
+    [LogLevel.Critical] = ConsoleColor.DarkRed,
   };
 
   public bool SimplifiedOutput { get; set; }

@@ -1,7 +1,5 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-using static System.Net.WebRequestMethods;
 
 namespace ApiResilience.Server;
 
@@ -19,7 +17,7 @@ public sealed class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logge
       // Note: In this demo, all exceptions are treated as internal server errors (500).
       // In a real-world application, you would have more sophisticated logic to determine the appropriate status code, 
       // possibly based on custom exception types or other criteria.
-      
+
       var problemDetails = new ProblemDetails
       {
         Status = StatusCodes.Status500InternalServerError,
@@ -31,7 +29,7 @@ public sealed class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logge
       httpContext.Response.StatusCode = (int)problemDetails.Status;
       await httpContext.Response.WriteAsJsonAsync(problemDetails, cancellationToken);
 
-      _logger.LogError("Err ({statusCode}) - {Message} ", httpContext.Response.StatusCode, exception.Message);
+      _logger.LogTrace("  Handled {Exception} for request {Method} {Path}", exception.GetType().Name, httpContext.Request.Method, httpContext.Request.Path);
 
       return true;
 

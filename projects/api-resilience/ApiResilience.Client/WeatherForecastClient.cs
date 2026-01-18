@@ -1,5 +1,5 @@
-using System.Net.Http.Json;
 using ApiResilience.Contracts;
+using System.Net.Http.Json;
 
 namespace ApiResilience.Client;
 

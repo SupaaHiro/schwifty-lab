@@ -13,7 +13,8 @@ builder.Configuration.AddCommandLine(args);
 builder.Configuration.AddUserSecrets<Program>();
 
 // Add logging
-builder.Services.AddLogging(builder => {
+builder.Services.AddLogging(builder =>
+{
   builder.ClearProviders();
   builder.AddColorConsoleLogger();
 });
@@ -29,6 +30,7 @@ builder.Services.AddProblemDetails(options =>
   {
     // Sets the instance to the HTTP method and path of the request.
     context.ProblemDetails.Instance = $"{context.HttpContext.Request.Method} {context.HttpContext.Request.Path}";
+
     // Adds the request ID to the problem details extensions.
     context.ProblemDetails.Extensions.TryAdd("messageId", context.HttpContext.TraceIdentifier);
 
@@ -48,6 +50,7 @@ if (app.Environment.IsDevelopment())
   app.MapScalarApiReference();
 }
 
+app.UseMiddleware<RequestTimingMiddleware>();
 app.UseExceptionHandler();
 app.UseHttpsRedirection();
 
@@ -55,19 +58,14 @@ var summaries = new[] { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm",
 
 app.MapGet("/weatherforecast", async () =>
 {
-
   // Simulate random delays and errors to test the resilience pipeline of the client
   var chance = Random.Shared.NextDouble();
   if (chance < 0.2)
-  {
     await Task.Delay(5_000);
-  }
   else if (chance < 0.4)
-  {
     throw new Exception("Something went wrong while fetching the weather forecast.");
 
-  }
-
+  // Happy path: return a 5-day weather forecast
   var forecast = Enumerable.Range(1, 5).Select(index =>
         new WeatherForecast
         (
