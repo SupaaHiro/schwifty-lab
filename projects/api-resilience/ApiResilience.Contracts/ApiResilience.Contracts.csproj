@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+    <PropertyGroup>
+        <ProductName>ApiResilience.Contracts</ProductName>
+        <ProductVersion>1.0.0</ProductVersion>
+        <Description>Contracts library for ApiResilience project.</Description>
+    </PropertyGroup>
 
 </Project>
