@@ -12,16 +12,13 @@
 <div class="row">
   <div class="col-md-6 d-flex flex-column">
     <EditForm Model="@editModel" OnValidSubmit="@HandleValidSubmit" class="d-flex flex-column flex-fill">
-      <DataAnnotationsValidator />
-      <ValidationSummary class="validation-summary" />
-
       <div class="form-section flex-fill">
         <h3>Edit Settings</h3>
-        
+
         <div class="alert alert-info">
           <strong>Note:</strong> The sum of Delay Probability and Error Probability cannot exceed 100% (1.0).
           <br />
-          Current total: <strong>@((editModel.DelayProbability + editModel.ErrorProbability) * 100)%</strong>
+          Current total: <strong>@(((editModel.DelayProbability + editModel.ErrorProbability) * 100).ToString("F2"))%</strong>
         </div>
 
         <div class="form-group">
@@ -44,20 +41,18 @@
           <small class="form-text">Probability of throwing errors (0.0-1.0 where 0.2 = 20%)</small>
           <ValidationMessage For="@(() => editModel.ErrorProbability)" />
         </div>
-      </div>
 
-      <div class="form-actions">
-        <button type="submit" class="btn btn-primary">Apply Settings</button>
-        <button type="button" class="btn btn-secondary" @onclick="ResetToDefaults">Reset to Defaults</button>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Apply Settings</button>
+          <button type="button" class="btn btn-secondary" @onclick="ResetToDefaults">Reset to Defaults</button>
+        </div>
+
+        <DataAnnotationsValidator />
+        <ValidationSummary class="validation-summary py-3" />
       </div>
     </EditForm>
 
-    @if (!string.IsNullOrEmpty(statusMessage))
-    {
-      <div class="alert alert-@(isSuccess ? "success" : "danger") mt-3">
-        @statusMessage
-      </div>
-    }
   </div>
   <div class="col-md-6 d-flex flex-column">
     <div class="current-settings flex-fill">
@@ -85,6 +80,13 @@
       </table>
     </div>
   </div>
+
+  @if (!string.IsNullOrEmpty(statusMessage))
+  {
+    <div class="alert alert-@(isSuccess ? "success" : "danger") mt-3">
+      @statusMessage
+    </div>
+  }
 </div>
 
 @code {
@@ -145,7 +147,7 @@
     isSuccess = false;
   }
 
-  [CombinedProbabilityValidation]
+  [ServerSettingsModelValidationAttribute]
   private class ServerSettingsModel
   {
     [Range(0.0, 1.0, ErrorMessage = "DelayProbability must be between 0.0 and 1.0")]
@@ -156,5 +158,26 @@
 
     [Range(0.0, 1.0, ErrorMessage = "ErrorProbability must be between 0.0 and 1.0")]
     public double ErrorProbability { get; set; } = 0.2;
+  }
+
+
+  [AttributeUsage(AttributeTargets.Class)]
+  public sealed class ServerSettingsModelValidationAttribute : ValidationAttribute
+  {
+    protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
+    {
+      if (value is not ServerSettingsModel settings)
+        return new ValidationResult("Invalid object type");
+
+      if (settings.DelayProbability + settings.ErrorProbability > 1.0)
+      {
+        return new ValidationResult(
+            "The sum of DelayProbability and ErrorProbability cannot exceed 1.0 (100%)",
+            [nameof(ServerSettings.DelayProbability), nameof(ServerSettings.ErrorProbability)]
+        );
+      }
+
+      return ValidationResult.Success;
+    }
   }
 }
