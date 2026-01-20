@@ -497,13 +497,30 @@ Err (BrokenCircuitException): 0ms
 
 The resilience strategies are applied in a specific order, forming a pipeline:
 
-```mermaid
-flowchart TD
-    A[Rate Limiter] -->|Limits concurrent requests| B[Total Timeout]
-    B -->|Overall operation timeout| C[Retry Policy]
-    C -->|Automatic retry logic| D[Circuit Breaker]
-    D -->|Prevents cascading failures| E[Attempt Timeout]
-    E -->|Individual request timeout| F[HTTP Request]
+```
+Request Flow:
+┌─────────────────┐
+│  Rate Limiter   │ ← Limits concurrent requests
+└────────┬────────┘
+         │
+┌────────▼────────┐
+│ Total Timeout   │ ← Overall operation timeout
+└────────┬────────┘
+         │
+┌────────▼────────┐
+│ Retry Policy    │ ← Automatic retry logic
+└────────┬────────┘
+         │
+┌────────▼────────┐
+│Circuit Breaker  │ ← Prevents cascading failures
+└────────┬────────┘
+         │
+┌────────▼────────┐
+│Attempt Timeout  │ ← Individual request timeout
+└────────┬────────┘
+         │
+         ▼
+    HTTP Request
 ```
 
 This ordering is intentional:
