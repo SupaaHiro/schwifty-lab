@@ -1,0 +1,17 @@
+apiVersion: blog.supaahiro.io/v1alpha1
+kind: BlogPost
+metadata:
+  name: 20260120-dotnet-resilience
+spec:
+  id: 20260120-dotnet-resilience
+  title: Building Resilient Applications with .NET Resilience Pipelines
+  previewImage: https://supaahiro.github.io/schwifty-lab/blog-posts/20260120-dotnet/article.webp
+  summary: Learn how to build resilient HTTP clients in .NET using the standard resilience handler. Discover retry policies, circuit breakers, timeouts, and rate limiting through a hands-on demo application.
+  contentUrl: https://raw.githubusercontent.com/SupaaHiro/schwifty-lab/refs/heads/master/blog-posts/20260120-dotnet/article_EN.md
+  publishedOn: "2026-01-20T00:00:00Z"
+  author: Hiro
+  categoryId: dotnet
+  relatedPostsIds: []
+status:
+  published: true
+  indexed: true
