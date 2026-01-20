@@ -497,30 +497,13 @@ Err (BrokenCircuitException): 0ms
 
 The resilience strategies are applied in a specific order, forming a pipeline:
 
-```
-Request Flow:
-┌─────────────────┐
-│  Rate Limiter   │ ← Limits concurrent requests
-└────────┬────────┘
-         │
-┌────────▼────────┐
-│ Total Timeout   │ ← Overall operation timeout
-└────────┬────────┘
-         │
-┌────────▼────────┐
-│ Retry Policy    │ ← Automatic retry logic
-└────────┬────────┘
-         │
-┌────────▼────────┐
-│Circuit Breaker  │ ← Prevents cascading failures
-└────────┬────────┘
-         │
-┌────────▼────────┐
-│Attempt Timeout  │ ← Individual request timeout
-└────────┬────────┘
-         │
-         ▼
-    HTTP Request
+```mermaid
+flowchart TD
+    A[Rate Limiter] -->|Limits concurrent requests| B[Total Timeout]
+    B -->|Overall operation timeout| C[Retry Policy]
+    C -->|Automatic retry logic| D[Circuit Breaker]
+    D -->|Prevents cascading failures| E[Attempt Timeout]
+    E -->|Individual request timeout| F[HTTP Request]
 ```
 
 This ordering is intentional:
@@ -624,21 +607,3 @@ By understanding and properly configuring these resilience patterns, you can bui
 - [Polly Documentation](https://www.pollydocs.org/)
 - [Cloud Design Patterns: Retry](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
 - [Cloud Design Patterns: Circuit Breaker](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker)
-
-## Try It Yourself
-
-Clone the repository and experiment with different configurations:
-
-```bash
-git clone https://github.com/SupaaHiro/schwifty-lab.git
-cd schwifty-lab/projects/api-resilience
-```
-
-Try these experiments:
-
-1. **Experiment with timeout values**: What happens if `AttemptTimeout` is longer than `DelayDurationMs`?
-2. **Modify circuit breaker thresholds**: How does a lower `FailureRatio` affect behavior?
-3. **Adjust retry attempts**: Compare the difference between 3 and 10 retry attempts
-4. **Remove resilience patterns**: Comment out the resilience handler and observe the difference
-
-Happy coding, and may your applications be ever resilient!
