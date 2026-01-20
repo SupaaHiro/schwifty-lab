@@ -10,9 +10,11 @@ summary: "Learn how to build resilient HTTP clients in .NET using the standard r
 
 ## Introduction
 
+I recently stumbled upon a [video](https://www.youtube.com/watch?v=pgeHRp2Otlc) that explains resilience pipelines in .NET. Unfortunately, the source code was only available for Patreon supporters, and since I was already evaluating Visual Studio 2026, I thought: why not create a project to demonstrate how they work? I started with a simple ASP.NET Core Web API, but then one thing led to another, and I ended up with a project that I thought was worth sharing and documenting.
+
 In modern distributed systems, network failures, service degradations, and transient errors are inevitable. Building resilient applications that can gracefully handle these failures is crucial for delivering a reliable user experience. In this article, we'll explore how to leverage .NET's **resilience pipelines** to create robust HTTP clients that can withstand various failure scenarios.
 
-We'll build a complete demo application consisting of a server that simulates realistic failure scenarios (random delays and errors) and a client that demonstrates how resilience patterns automatically handle these issues. By the end of this article, you'll understand how to configure retry policies, circuit breakers, timeouts, and rate limiting to build production-ready resilient applications.
+This article introduce a complete demo application consisting of a server that simulates realistic failure scenarios (random delays and errors) and a client that demonstrates how resilience patterns automatically handle these issues. By the end of this article, you'll understand how to configure retry policies, circuit breakers, timeouts, and rate limiting to build production-ready resilient applications.
 
 ## Prerequisites
 
