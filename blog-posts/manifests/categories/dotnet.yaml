@@ -1,0 +1,8 @@
+apiVersion: blog.supaahiro.io/v1alpha1
+kind: BlogCategory
+metadata:
+  name: dotnet
+  namespace: default
+spec:
+  id: "dotnet"
+  displayName: ".NET"

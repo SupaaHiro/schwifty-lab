@@ -6,3 +6,4 @@ resources:
   - ./cka-preparation.yaml
   - ./ckad-preparation.yaml
   - ./talos.yaml
+  - ./dotnet.yaml

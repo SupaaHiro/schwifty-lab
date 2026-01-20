@@ -4,7 +4,7 @@ title: "Building Resilient Applications with .NET Resilience Pipelines"
 date: 2026-01-20
 categories: [dotnet, resilience, http]
 author: Hiro
-image: "https://supaahiro.github.io/schwifty-lab/blog-posts/20260120/article.webp"
+image: "https://supaahiro.github.io/schwifty-lab/blog-posts/20260120-dotnet/article.webp"
 summary: "Learn how to build resilient HTTP clients in .NET using the standard resilience handler. Discover retry policies, circuit breakers, timeouts, and rate limiting through a hands-on demo application."
 ---
 
