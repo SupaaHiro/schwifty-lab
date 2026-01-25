@@ -83,7 +83,7 @@ alias k='/usr/local/bin/kubectl'
 Verify the cluster is running:
 
 ```bash
-kubectl version --short
+k version --short
 ```
 
 You should see Kubernetes version 1.24.17.
@@ -93,7 +93,7 @@ You should see Kubernetes version 1.24.17.
 First, let's understand what API versions are available in our cluster:
 
 ```bash
-kubectl api-versions
+k api-versions
 ```
 
 This command lists all API versions supported by your cluster. You'll see output like:
@@ -112,7 +112,7 @@ storage.k8s.io/v1
 You can also list all available resource types:
 
 ```bash
-kubectl api-resources
+k api-resources
 ```
 
 This shows the short names, API groups, whether resources are namespaced, and the kind of each resource.
@@ -162,7 +162,7 @@ spec:
 Try to apply the old PodDisruptionBudget:
 
 ```bash
-kubectl apply -f manifests/01-pdb-old.yaml
+k apply -f manifests/01-pdb-old.yaml
 ```
 
 When you apply manifests with deprecated (but not yet removed) APIs, Kubernetes shows warnings. You should see a warning like:
@@ -172,24 +172,24 @@ When you apply manifests with deprecated (but not yet removed) APIs, Kubernetes 
 Apply the Pod manifest:
 
 ```bash
-kubectl apply -f manifests/02-pod.yaml
+k apply -f manifests/02-pod.yaml
 ```
 
 Verify both resources are created:
 
 ```bash
-kubectl get pdb,pod
+k get pdb,pod
 ```
 
 ### Step 3: Understanding PodDisruptionBudget API Evolution
 
 To better understand the deprecation timeline, here's the state of PodDisruptionBudget API across different Kubernetes versions:
 
-| Kubernetes Version | policy/v1beta1 | policy/v1 |
-|--------------------|----------------|----------|
-| ≤ 1.20 | ✅ Valid | ❌ Not Available |
-| 1.21–1.24 | ⚠️ Deprecated | ✅ Valid |
-| ≥ 1.25 | ❌ Removed | ✅ Valid |
+| Kubernetes Version | policy/v1beta1 | policy/v1        |
+|--------------------|----------------|------------------|
+| ≤ 1.20             | ✅ Valid      | ❌ Not Available |
+| 1.21–1.24          | ⚠️ Deprecated | ✅ Valid         |
+| ≥ 1.25             | ❌ Removed    | ✅ Valid         |
 
 Our cluster is currently running version 1.24, which is why we see deprecation warnings but the resource still works. Let's see what happens when we upgrade.
 
@@ -205,7 +205,7 @@ curl -sfL https://get.k3s.io | sh -
 Wait a few moments for the cluster to restart, then verify the new version:
 
 ```bash
-kubectl version --short
+k version --short
 ```
 
 You should now see Kubernetes version 1.25.16.
@@ -213,7 +213,7 @@ You should now see Kubernetes version 1.25.16.
 Let's try to apply the old PodDisruptionBudget manifest again:
 
 ```bash
-kubectl apply -f manifests/01-pdb-old.yaml
+k apply -f manifests/01-pdb-old.yaml
 ```
 
 This time, you'll see an error:
@@ -224,11 +224,70 @@ Error from server (NotFound): error when creating "manifests/01-pdb-old.yaml": t
 
 The API version `policy/v1beta1` no longer exists in Kubernetes 1.25! This is what happens when deprecated APIs are removed. Any existing resources using the old API version are automatically migrated by Kubernetes, but you cannot create new resources or update existing ones using the old API.
 
+#### Understanding Version Skew and Beta API Lifecycle
+
+To fully grasp why Beta APIs must be supported for at least 3 releases after deprecation, we need to understand Kubernetes' **version skew policy**. This is defined in **Rule #4a** of the [API deprecation policy](https://kubernetes.io/docs/reference/using-api/deprecation-policy/#deprecating-parts-of-the-api):
+
+- **GA API** versions may be marked as deprecated, but must not be removed within a major version of Kubernetes
+- **Beta API** versions are deprecated no more than 9 months or 3 minor releases after introduction (whichever is longer), and are no longer served 9 months or 3 minor releases after deprecation (whichever is longer)
+- **Alpha API** versions may be removed in any release without prior deprecation notice
+
+**What is the "2 minor version skew"?**
+
+Kubernetes officially supports a maximum skew of **2 minor versions** between:
+- Control plane
+- Kubelet
+- Client / API consumer (kubectl)
+
+For example, if your control plane is running **1.25**, the supported client/kubelet versions are **1.23–1.25**.
+
+> 👉 **Important**: This means "2 releases" refers to 2 **minor** versions, not major versions.
+
+Let's work through a concrete example to understand this better. Suppose a Beta API is introduced in Kubernetes 1.25:
+
+**1️⃣ Introduction**
+- **v1.25** → Beta API becomes available
+
+**2️⃣ Deprecation (after ≥ 3 minor releases)**
+- Not before **v1.28**:
+  - 1.26 (release 1)
+  - 1.27 (release 2)
+  - 1.28 (release 3) ← earliest deprecation point
+
+**3️⃣ Removal (after ≥ another 3 minor releases from deprecation)**
+- Not before **v1.31**:
+  - 1.29 (release 1)
+  - 1.30 (release 2)
+  - 1.31 (release 3) ← earliest removal point
+
+**Where does the 2-minor version skew come in?**
+
+Imagine this perfectly supported scenario:
+- **Control plane**: v1.31
+- **Client / workload**: v1.29
+- **Difference**: 2 minor versions ✅
+
+Even though the control plane is at v1.31 (where the Beta API is being removed), a client running v1.29 would still be compatible because:
+- The Beta API was introduced in v1.25
+- It was deprecated in v1.28
+- It's only removed in v1.31
+- A client at v1.29 (which is v1.31 - 2) would have had time to migrate to the new API version during the deprecation window
+
+This is why the "3 release minimum after deprecation" rule ensures that no supported client loses access to an API unexpectedly during a cluster upgrade within the supported version skew.
+
+> Notice that in case of the `PodDisruptionBudget`, the Beta API has been around for a long time (since Kubernetes 1.5), so it's an example of “stagnant” beta, exactly what Rule #4a wants to avoid in the future.
+
 ### Step 5: Migrating to Current API Versions
 
-Now let's create the correct, up-to-date versions of these resources.
+The existing PodDisruptionBudget resource was automatically migrated by Kubernetes during the upgrade.
 
-Create `manifests/04-pdb-new.yaml`:
+You can verify this by checking the resource:
+
+```bash
+k get pdb nginx-pdb-old -o yaml
+```
+
+The next time we want to create or update a PodDisruptionBudget, we must use the current API version: `policy/v1`. Any existing manifest must be updated accordingly to use the new API version:
 
 ```yaml
 # Current API version (stable since Kubernetes 1.21)
@@ -244,20 +303,6 @@ spec:
 ```
 
 The key change here is simply the API version: `policy/v1beta1` → `policy/v1`. Fortunately, for PodDisruptionBudget, the spec remains the same between these versions, making migration straightforward.
-
-Apply the updated resource:
-
-```bash
-kubectl apply -f manifests/03-pdb-new.yaml
-```
-
-Verify it was created successfully:
-
-```bash
-kubectl get pdb
-```
-
-You should now see the new `nginx-pdb` without any warnings.
 
 ### Step 6: Reading Kubernetes Changelogs and Deprecation Guides
 
@@ -282,7 +327,7 @@ To identify resources in your cluster using deprecated APIs, you can:
 1. **Check specific resource types**:
 
 ```bash
-kubectl get pdb -A -o json | grep -i apiVersion
+   get pdb -A -o json | grep -i apiVersion
 ```
 
 2. **Use third-party tools** like [Pluto](https://github.com/FairwindsOps/pluto) or [kubent (Kube No Trouble)](https://github.com/doitintl/kube-no-trouble):
@@ -331,6 +376,6 @@ Understanding and managing API deprecations is crucial for CKAD exam success and
 To wrap up, let's clean up everything we created for this exercise:
 
 ```bash
-kubectl delete pdb nginx-pdb
-kubectl delete pod nginx-pod
+k delete pdb nginx-pdb
+k delete pod nginx-pod
 ```
