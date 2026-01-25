@@ -1,0 +1,17 @@
+apiVersion: blog.supaahiro.io/v1alpha1
+kind: BlogPost
+metadata:
+  name: 20260126-ckad-api-deprecations
+spec:
+  id: 20260126-ckad-api-deprecations
+  title: CKAD Preparation — Understanding and Managing API Deprecations
+  previewImage: https://supaahiro.github.io/schwifty-lab/blog-posts/20260126-ckad/article.webp
+  summary: Learn how to identify, understand, and migrate Kubernetes resources using deprecated API versions. Master essential tools and techniques for maintaining application health across cluster upgrades.
+  contentUrl: https://raw.githubusercontent.com/SupaaHiro/schwifty-lab/refs/heads/master/blog-posts/20260126-ckad/article_EN.md
+  publishedOn: "2026-01-26T00:00:00Z"
+  author: Hiro
+  categoryId: ckad-preparation
+  relatedPostsIds: []
+status:
+  published: true
+  indexed: true

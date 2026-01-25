@@ -17,3 +17,4 @@ resources:
   - ./20260102-ckad-helm.yaml
   - ./20260103-ckad-kustomize.yaml
   - ./20260120-dotnet-resilience.yaml
+  - ./20260126-ckad-api-deprecations.yaml
