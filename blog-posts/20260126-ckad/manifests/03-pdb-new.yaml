@@ -1,0 +1,10 @@
+# Current API version (stable since Kubernetes 1.21)
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: nginx-pdb
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: nginx

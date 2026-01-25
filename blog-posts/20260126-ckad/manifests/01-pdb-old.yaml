@@ -1,0 +1,11 @@
+# This uses the v1beta1 API which was deprecated in Kubernetes 1.21
+# and removed in Kubernetes 1.25
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: nginx-pdb-old
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: nginx
