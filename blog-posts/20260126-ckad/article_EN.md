@@ -22,7 +22,38 @@ You can start from the beginning of the series here: [*CKAD Preparation — What
 
 ## Prerequisites
 
-A running Kubernetes cluster (like, Minikube, Docker Desktop, or use one of the [KillerCoda Kubernetes Playgrounds](https://killercoda.com/playgrounds/course/kubernetes-playgrounds)) and basic familiarity with Pods and YAML manifests.
+For this lab, you'll need:
+
+- An Ubuntu 24 (or higher) environment. We recommend using the [KillerCoda Ubuntu Playground](https://killercoda.com/playgrounds/scenario/ubuntu) for a fresh, isolated environment
+- Basic familiarity with Pods and YAML manifests
+- Command-line access to install and configure K3s
+
+**Note**: Unlike other labs in this series, this one requires specific Kubernetes versions (1.24 and 1.25) to demonstrate API deprecation and removal. We'll install K3s with these exact versions as part of the setup.
+
+### Setting Up the Environment
+
+First, let's install K3s version 1.24.17, which still supports the deprecated `policy/v1beta1` API for PodDisruptionBudget:
+
+```bash
+export INSTALL_K3S_VERSION="v1.24.17+k3s1"
+curl -sfL https://get.k3s.io | sh -
+```
+
+Create an alias for easier kubectl usage:
+
+```bash
+alias k='/usr/local/bin/kubectl'
+```
+
+Verify the cluster is running:
+
+```bash
+k version --short
+```
+
+Note: You can ignore the deprecation warning about the --short flag.
+
+You should see Kubernetes version 1.24.17.
 
 ## Getting the Resources
 
@@ -62,31 +93,6 @@ For example, when Kubernetes 1.22 was released, several beta APIs that had been 
 ## Hands-On Challenge: Identifying and Migrating Deprecated APIs
 
 Let's work through a practical scenario where we need to identify and migrate resources using deprecated APIs. We'll use a Kubernetes 1.24 cluster with deprecated APIs, then upgrade to 1.25 where those APIs are removed, experiencing firsthand how to handle this situation.
-
-For this exercise, we'll use the [KillerCoda Ubuntu Playground](https://killercoda.com/playgrounds/scenario/ubuntu) to set up a fresh environment.
-
-### Step 0: Setting Up the Environment
-
-First, let's install K3s version 1.24.17, which still supports the deprecated `policy/v1beta1` API for PodDisruptionBudget:
-
-```bash
-export INSTALL_K3S_VERSION="v1.24.17+k3s1"
-curl -sfL https://get.k3s.io | sh -
-```
-
-Create an alias for easier kubectl usage:
-
-```bash
-alias k='/usr/local/bin/kubectl'
-```
-
-Verify the cluster is running:
-
-```bash
-k version --short
-```
-
-You should see Kubernetes version 1.24.17.
 
 ### Step 1: Explore Available API Versions
 
