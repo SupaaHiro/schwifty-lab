@@ -355,19 +355,12 @@ Here are some strategies to stay ahead of API deprecations:
 
 ## Recap: What We've Covered
 
-In this exercise, we explored API deprecations in Kubernetes and learned essential skills for maintaining application health across cluster upgrades:
+In this article, we covered the fundamentals of API deprecations in Kubernetes as part of CKAD preparation, transitioning to the "Application Observability and Maintenance" domain. We explored both theoretical concepts and practical hands-on skills:
 
-- Understanding why API deprecations happen and Kubernetes' deprecation policy
-- Setting up a K3s cluster with a specific version to test deprecated APIs
-- Using `kubectl api-versions` and `kubectl api-resources` to explore available APIs
-- Identifying deprecated API versions in manifests
-- Recognizing deprecation warnings during `kubectl apply` on Kubernetes 1.24
-- Understanding the PodDisruptionBudget API evolution from v1beta1 to v1
-- Experiencing API removal firsthand by upgrading from Kubernetes 1.24 to 1.25
-- Migrating PodDisruptionBudget from `policy/v1beta1` to `policy/v1`
-- Reading Kubernetes CHANGELOGs and the Deprecation Guide to stay informed
-- Best practices for staying ahead of deprecations
-- Using third-party tools like pluto and kubent for automated detection
+- **Understanding Kubernetes API deprecation policy**: Why deprecations happen, the grace period rules, and the version skew policy that ensures compatibility across cluster upgrades
+- **Hands-on experience with deprecated APIs**: Setting up K3s 1.24, creating resources with deprecated `policy/v1beta1` API, upgrading to 1.25, and experiencing API removal firsthand
+- **Migration strategies and tools**: Migrating PodDisruptionBudget from v1beta1 to v1, reading CHANGELOGs and deprecation guides, and using tools like Pluto and kubent for automated detection
+- **Best practices**: Testing upgrades in staging, monitoring deprecation warnings, scanning manifests in CI/CD pipelines, and staying current with stable API versions
 
 Understanding and managing API deprecations is crucial for CKAD exam success and for maintaining production Kubernetes clusters. By staying current with API versions and following Kubernetes release notes, you ensure your applications remain compatible with cluster upgrades and benefit from the latest features and improvements.
 
