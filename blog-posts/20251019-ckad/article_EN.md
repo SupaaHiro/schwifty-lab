@@ -29,7 +29,7 @@ Application Deployment
 - [Kustomize](https://supaahiro.github.io/schwifty-lab/blog-posts/20260103-ckad/article_EN.html)
 
 Application Observability and Maintenance
-- Understand API deprecations
+- [Understand API deprecations](https://supaahiro.github.io/schwifty-lab/blog-posts/20260126-ckad/article_EN.html)
 - Implement probes and health checks
 - Use built-in CLI tools to monitor Kubernetes applications
 - Utilize container logs
