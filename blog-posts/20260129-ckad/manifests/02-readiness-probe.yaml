@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: readiness-demo
+  labels:
+    app: readiness-demo
+spec:
+  containers:
+    - name: nginx
+      image: nginx:1.27
+      ports:
+        - containerPort: 80
+      volumeMounts:
+        - name: html
+          mountPath: /usr/share/nginx/html
+      readinessProbe:
+        httpGet:
+          path: /ready
+          port: 80
+        initialDelaySeconds: 5
+        periodSeconds: 3
+        successThreshold: 1
+        failureThreshold: 3
+      resources:
+        limits:
+          memory: 128Mi
+          cpu: 100m
+        requests:
+          memory: 64Mi
+          cpu: 50m
+  volumes:
+    - name: html
+      emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: readiness-svc
+spec:
+  selector:
+    app: readiness-demo
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80

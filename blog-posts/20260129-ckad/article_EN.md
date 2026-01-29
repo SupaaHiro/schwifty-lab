@@ -16,7 +16,7 @@ This article continues our exploration of the **"Application Observability and M
 
 > Implement probes and health checks
 
-Probes and health checks are fundamental to building resilient applications in Kubernetes. They allow the cluster to understand when your application is ready to serve traffic, when it's still alive, and when it needs to be restarted. Mastering probes is essential for the CKAD exam and for building production-grade applications.
+Probes and health checks are fundamental to building resilient applications in Kubernetes. They allow the cluster to understand when your application is ready to serve traffic, when it's still alive, and when it needs to be restarted.
 
 You can start from the beginning of the series here: [*CKAD Preparation — What is Kubernetes*](https://supaahiro.github.io/schwifty-lab/blog-posts/20251019-ckad/article_EN.html).
 
@@ -35,7 +35,7 @@ cd schwifty-lab/blog-posts/20260129-ckad
 
 ## Understanding Kubernetes Probes
 
-Kubernetes provides three types of probes to monitor and manage the health of your applications:
+Kubernetes provides three types of probes:
 
 1. **Liveness Probe**: Determines if a container is running properly. If the liveness probe fails, Kubernetes kills the container and restarts it according to the restart policy.
 
@@ -81,29 +81,30 @@ metadata:
     app: liveness-demo
 spec:
   containers:
-  - name: web-app
-    image: registry.k8s.io/liveness
-    ports:
-    - containerPort: 8080
-    livenessProbe:
-      httpGet:
-        path: /healthz
-        port: 8080
-        httpHeaders:
-        - name: Custom-Header
-          value: Awesome
-      initialDelaySeconds: 3
-      periodSeconds: 5
-      timeoutSeconds: 1
-      failureThreshold: 3
-    resources:
-      limits:
-        memory: 128Mi
-        cpu: 100m
-      requests:
-        memory: 64Mi
-        cpu: 50m
+    - name: web-app
+      image: docker.io/supaahiro/ckad-test-liveness:1.0.0
+      ports:
+        - containerPort: 8080
+      livenessProbe:
+        httpGet:
+          path: /healthz
+          port: 8080
+          httpHeaders:
+            - name: Custom-Header
+              value: Awesome
+        initialDelaySeconds: 10
+        periodSeconds: 5
+        failureThreshold: 3
+      resources:
+        limits:
+          memory: 128Mi
+          cpu: 100m
+        requests:
+          memory: 64Mi
+          cpu: 50m
 ```
+
+Note: You can find the source code for the `supaahiro/ckad-test-liveness` image in the [src/](blog-posts/20260129-ckad/src) directory of this repository. It is a simple FastAPI application that simulates a failure after 30 seconds.
 
 Apply the manifest:
 
@@ -117,26 +118,26 @@ Watch the Pod status:
 k get pod liveness-http --watch
 ```
 
-The `registry.k8s.io/liveness` image is designed to fail its liveness probe after 10 seconds. Initially, the HTTP server returns a 200 status code for the first 10 seconds, then it starts returning 500 errors. After 3 consecutive failures (as specified by `failureThreshold`), Kubernetes will restart the container.
+The `registry.k8s.io/liveness` image is designed to fail its liveness probe after 30 seconds. Initially, the HTTP server returns a 200 status code for the first 30 seconds, then it starts returning 500 errors. After 3 consecutive failures (as specified by `failureThreshold`), Kubernetes will restart the container.
 
 You can see the restart count increasing:
 
 ```bash
-k describe pod liveness-http | grep -A 5 "Containers:"
+k describe pod liveness-http | grep "Restart Count:"
 ```
 
 Look for the `Restart Count` field and the events showing the container being killed and restarted.
 
 Let's understand what's happening:
-1. Container starts and the liveness probe waits 3 seconds (`initialDelaySeconds`)
+1. Container starts and the liveness probe waits 10 seconds (`initialDelaySeconds`)
 2. Every 5 seconds (`periodSeconds`), Kubernetes checks the `/healthz` endpoint
-3. After 10 seconds, the application starts failing the health check
+3. After 30 seconds, the application starts failing the health check
 4. After 3 consecutive failures (`failureThreshold` × `periodSeconds` = 15 seconds), the container is killed
 5. Kubernetes restarts the container, and the cycle repeats
 
 ### Step 2: Readiness Probe - Controlling Traffic Flow
 
-A readiness probe determines when a container is ready to accept traffic. This is crucial during application startup, configuration reloading, or when the application is temporarily unable to serve requests.
+A readiness probe determines when a container is ready to accept traffic.
 
 Let's create an example with both liveness and readiness probes:
 
@@ -151,37 +152,31 @@ metadata:
     app: readiness-demo
 spec:
   containers:
-  - name: nginx
-    image: nginx:1.27
-    ports:
-    - containerPort: 80
-    volumeMounts:
-    - name: html
-      mountPath: /usr/share/nginx/html
-    readinessProbe:
-      httpGet:
-        path: /ready
-        port: 80
-      initialDelaySeconds: 5
-      periodSeconds: 3
-      successThreshold: 1
-      failureThreshold: 3
-    livenessProbe:
-      httpGet:
-        path: /
-        port: 80
-      initialDelaySeconds: 10
-      periodSeconds: 5
-    resources:
-      limits:
-        memory: 128Mi
-        cpu: 100m
-      requests:
-        memory: 64Mi
-        cpu: 50m
+    - name: nginx
+      image: nginx:1.27
+      ports:
+        - containerPort: 80
+      volumeMounts:
+        - name: html
+          mountPath: /usr/share/nginx/html
+      readinessProbe:
+        httpGet:
+          path: /ready
+          port: 80
+        initialDelaySeconds: 5
+        periodSeconds: 3
+        successThreshold: 1
+        failureThreshold: 3
+      resources:
+        limits:
+          memory: 128Mi
+          cpu: 100m
+        requests:
+          memory: 64Mi
+          cpu: 50m
   volumes:
-  - name: html
-    emptyDir: {}
+    - name: html
+      emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
@@ -191,9 +186,9 @@ spec:
   selector:
     app: readiness-demo
   ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 80
+    - protocol: TCP
+      port: 80
+      targetPort: 80
 ```
 
 Apply the manifest:
@@ -213,7 +208,7 @@ You'll notice the Pod shows `0/1` in the READY column. This is because the readi
 Check the Service endpoints:
 
 ```bash
-k get endpoints readiness-svc
+k describe svc readiness-svc | grep Endpoints:
 ```
 
 The endpoints will be empty because the Pod is not ready. Even though the container is running, Kubernetes won't send traffic to it.
@@ -233,7 +228,7 @@ k get pod readiness-demo
 Now it should show `1/1` READY. Check the endpoints again:
 
 ```bash
-k get endpoints readiness-svc
+k describe svc readiness-svc | grep Endpoints:
 ```
 
 You should now see the Pod's IP address listed in the endpoints.
@@ -248,7 +243,7 @@ After a few seconds, check the Pod and endpoints:
 
 ```bash
 k get pod readiness-demo
-k get endpoints readiness-svc
+k describe svc readiness-svc | grep Endpoints:
 ```
 
 The Pod will show `0/1` READY again, and the endpoints will be empty. However, notice that the container is NOT restarted - it's still running. This is the key difference between readiness and liveness probes:
@@ -271,35 +266,24 @@ metadata:
     app: startup-demo
 spec:
   containers:
-  - name: slow-starter
-    image: nginx:1.27
-    ports:
-    - containerPort: 80
-    startupProbe:
-      httpGet:
-        path: /
-        port: 80
-      initialDelaySeconds: 0
-      periodSeconds: 5
-      failureThreshold: 30  # 30 * 5 = 150 seconds max startup time
-    livenessProbe:
-      httpGet:
-        path: /
-        port: 80
-      periodSeconds: 5
-      failureThreshold: 3  # Only allows 15 seconds of downtime
-    readinessProbe:
-      httpGet:
-        path: /
-        port: 80
-      periodSeconds: 3
-    resources:
-      limits:
-        memory: 128Mi
-        cpu: 100m
-      requests:
-        memory: 64Mi
-        cpu: 50m
+    - name: slow-starter
+      image: nginx:1.27
+      ports:
+        - containerPort: 80
+      startupProbe:
+        httpGet:
+          path: /
+          port: 80
+        initialDelaySeconds: 0
+        periodSeconds: 5
+        failureThreshold: 30 # 30 * 5 = 150 seconds max startup time
+      resources:
+        limits:
+          memory: 128Mi
+          cpu: 100m
+        requests:
+          memory: 64Mi
+          cpu: 50m
 ```
 
 Apply the manifest:
@@ -337,30 +321,30 @@ metadata:
     app: tcp-demo
 spec:
   containers:
-  - name: redis
-    image: redis:7-alpine
-    ports:
-    - containerPort: 6379
-    livenessProbe:
-      tcpSocket:
-        port: 6379
-      initialDelaySeconds: 15
-      periodSeconds: 10
-      timeoutSeconds: 5
-      failureThreshold: 3
-    readinessProbe:
-      tcpSocket:
-        port: 6379
-      initialDelaySeconds: 5
-      periodSeconds: 5
-      timeoutSeconds: 3
-    resources:
-      limits:
-        memory: 256Mi
-        cpu: 200m
-      requests:
-        memory: 128Mi
-        cpu: 100m
+    - name: redis
+      image: redis:7-alpine
+      ports:
+        - containerPort: 6379
+      livenessProbe:
+        tcpSocket:
+          port: 6379
+        initialDelaySeconds: 15
+        periodSeconds: 10
+        timeoutSeconds: 5
+        failureThreshold: 3
+      readinessProbe:
+        tcpSocket:
+          port: 6379
+        initialDelaySeconds: 5
+        periodSeconds: 5
+        timeoutSeconds: 3
+      resources:
+        limits:
+          memory: 256Mi
+          cpu: 200m
+        requests:
+          memory: 128Mi
+          cpu: 100m
 ```
 
 Apply the manifest:
@@ -400,43 +384,43 @@ metadata:
     app: exec-demo
 spec:
   containers:
-  - name: postgres
-    image: postgres:16-alpine
-    env:
-    - name: POSTGRES_PASSWORD
-      value: mysecretpassword
-    - name: POSTGRES_USER
-      value: testuser
-    - name: POSTGRES_DB
-      value: testdb
-    ports:
-    - containerPort: 5432
-    livenessProbe:
-      exec:
-        command:
-        - /bin/sh
-        - -c
-        - pg_isready -U testuser -d testdb
-      initialDelaySeconds: 30
-      periodSeconds: 10
-      timeoutSeconds: 5
-      failureThreshold: 3
-    readinessProbe:
-      exec:
-        command:
-        - /bin/sh
-        - -c
-        - pg_isready -U testuser -d testdb
-      initialDelaySeconds: 10
-      periodSeconds: 5
-      timeoutSeconds: 3
-    resources:
-      limits:
-        memory: 512Mi
-        cpu: 500m
-      requests:
-        memory: 256Mi
-        cpu: 250m
+    - name: postgres
+      image: postgres:16-alpine
+      env:
+        - name: POSTGRES_PASSWORD
+          value: mysecretpassword
+        - name: POSTGRES_USER
+          value: testuser
+        - name: POSTGRES_DB
+          value: testdb
+      ports:
+        - containerPort: 5432
+      livenessProbe:
+        exec:
+          command:
+            - /bin/sh
+            - -c
+            - pg_isready -U testuser -d testdb
+        initialDelaySeconds: 30
+        periodSeconds: 10
+        timeoutSeconds: 5
+        failureThreshold: 3
+      readinessProbe:
+        exec:
+          command:
+            - /bin/sh
+            - -c
+            - pg_isready -U testuser -d testdb
+        initialDelaySeconds: 10
+        periodSeconds: 5
+        timeoutSeconds: 3
+      resources:
+        limits:
+          memory: 512Mi
+          cpu: 500m
+        requests:
+          memory: 256Mi
+          cpu: 250m
 ```
 
 Apply the manifest:
@@ -459,218 +443,6 @@ You can verify PostgreSQL is working:
 k exec exec-probe-demo -- psql -U testuser -d testdb -c "SELECT version();"
 ```
 
-### Step 6: Understanding Probe Timing and Failure Scenarios
-
-Let's create a comprehensive example that demonstrates the interaction between different probe settings:
-
-Create the file `manifests/06-probe-timing.yaml`:
-
-```yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: probe-timing
-  labels:
-    app: probe-timing
-spec:
-  containers:
-  - name: app
-    image: nginx:1.27
-    ports:
-    - containerPort: 80
-    startupProbe:
-      httpGet:
-        path: /
-        port: 80
-      initialDelaySeconds: 0
-      periodSeconds: 2
-      failureThreshold: 15  # 30 seconds max startup time
-    livenessProbe:
-      httpGet:
-        path: /
-        port: 80
-      initialDelaySeconds: 0  # No delay needed because startup probe handles it
-      periodSeconds: 10
-      timeoutSeconds: 1
-      failureThreshold: 3  # 30 seconds before restart
-    readinessProbe:
-      httpGet:
-        path: /
-        port: 80
-      initialDelaySeconds: 0
-      periodSeconds: 5
-      timeoutSeconds: 1
-      successThreshold: 1
-      failureThreshold: 2  # 10 seconds before marked unready
-    resources:
-      limits:
-        memory: 128Mi
-        cpu: 100m
-      requests:
-        memory: 64Mi
-        cpu: 50m
-```
-
-Apply the manifest:
-
-```bash
-k apply -f manifests/06-probe-timing.yaml
-```
-
-Let's trace through what happens:
-
-**Timeline of probe execution:**
-
-```
-Time  | Startup Probe | Liveness Probe | Readiness Probe | Status
-------|---------------|----------------|-----------------|------------------
-0s    | Check #1      | DISABLED       | DISABLED        | Container starting
-2s    | Check #2      | DISABLED       | DISABLED        | Startup running
-4s    | ✓ SUCCESS     | -              | -               | Startup complete
-4s    | DISABLED      | Check #1       | Check #1        | Probes active
-9s    | DISABLED      | -              | Check #2        | -
-14s   | DISABLED      | Check #2       | Check #3        | -
-19s   | DISABLED      | -              | Check #4        | Pod ready
-24s   | DISABLED      | Check #3       | Check #5        | Normal operation
-```
-
-Key points:
-- Startup probe runs every 2 seconds until success (max 30 seconds)
-- Once startup succeeds, liveness and readiness probes begin
-- Liveness probe runs every 10 seconds
-- Readiness probe runs every 5 seconds
-- If liveness fails 3 times (30 seconds), container restarts
-- If readiness fails 2 times (10 seconds), traffic is stopped
-
-### Step 7: Best Practices and Common Pitfalls
-
-Let's examine some common mistakes and best practices:
-
-**❌ Common Mistake #1: Same endpoint for liveness and readiness**
-
-```yaml
-livenessProbe:
-  httpGet:
-    path: /health  # Same endpoint
-readinessProbe:
-  httpGet:
-    path: /health  # Same endpoint
-```
-
-**Why it's bad**: If `/health` depends on external services (database, cache), a temporary external failure will cause the liveness probe to fail and restart the container unnecessarily.
-
-**✓ Better approach**:
-
-```yaml
-livenessProbe:
-  httpGet:
-    path: /alive  # Only checks if process is alive
-readinessProbe:
-  httpGet:
-    path: /ready  # Checks if app can serve traffic (including dependencies)
-```
-
-**❌ Common Mistake #2: Aggressive timing on slow applications**
-
-```yaml
-livenessProbe:
-  periodSeconds: 1
-  failureThreshold: 2  # Only 2 seconds before restart!
-```
-
-**Why it's bad**: Temporary network hiccups or CPU spikes can trigger unnecessary restarts.
-
-**✓ Better approach**:
-
-```yaml
-livenessProbe:
-  periodSeconds: 10
-  failureThreshold: 3
-  timeoutSeconds: 5  # 30+ seconds before restart
-```
-
-**❌ Common Mistake #3: No startup probe for slow applications**
-
-```yaml
-livenessProbe:
-  initialDelaySeconds: 120  # Overly conservative
-  periodSeconds: 10
-```
-
-**Why it's bad**: During normal operation, failures won't be detected for up to 120 seconds.
-
-**✓ Better approach**:
-
-```yaml
-startupProbe:
-  periodSeconds: 5
-  failureThreshold: 30  # 150 seconds for startup
-livenessProbe:
-  periodSeconds: 10
-  failureThreshold: 3  # Quick detection during normal operation
-```
-
-### Step 8: Debugging Probe Failures
-
-When probes fail, Kubernetes provides events and logs to help diagnose the issue.
-
-Let's create a Pod with a failing probe:
-
-Create the file `manifests/07-failing-probe.yaml`:
-
-```yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: failing-probe
-spec:
-  containers:
-  - name: nginx
-    image: nginx:1.27
-    readinessProbe:
-      httpGet:
-        path: /nonexistent
-        port: 80
-      initialDelaySeconds: 5
-      periodSeconds: 5
-    resources:
-      limits:
-        memory: 128Mi
-        cpu: 100m
-```
-
-Apply it:
-
-```bash
-k apply -f manifests/07-failing-probe.yaml
-```
-
-The Pod will never become ready. Check the events:
-
-```bash
-k describe pod failing-probe
-```
-
-Look for events like:
-
-```
-Warning  Unhealthy  readiness probe failed: HTTP probe failed with statuscode: 404
-```
-
-You can also check the probe status:
-
-```bash
-k get pod failing-probe -o jsonpath='{.status.conditions[?(@.type=="Ready")]}' | jq
-```
-
-To debug further, check if the endpoint is accessible:
-
-```bash
-k exec failing-probe -- curl -I localhost/nonexistent
-```
-
-This shows the 404 error that's causing the probe to fail.
-
 ## Wrapping Up: What We've Covered
 
 In this article, we explored Kubernetes probes and health checks as part of the "Application Observability and Maintenance" domain for CKAD preparation. We covered both theoretical concepts and practical implementations:
@@ -679,9 +451,6 @@ In this article, we explored Kubernetes probes and health checks as part of the 
 - **Four probe mechanisms**: HTTP GET, TCP Socket, Exec commands, and gRPC health checks
 - **Probe configuration parameters**: initialDelaySeconds, periodSeconds, timeoutSeconds, successThreshold, and failureThreshold
 - **Hands-on implementations**: HTTP probes, TCP socket probes for Redis, exec probes for PostgreSQL, and timing configurations
-- **Best practices**: Separate liveness and readiness endpoints, appropriate timing for application behavior, using startup probes for slow applications
-- **Common pitfalls**: Same endpoint for different probes, aggressive timing, missing startup probes
-- **Debugging techniques**: Using describe, events, and logs to diagnose probe failures
 
 Mastering probes is essential for building resilient Kubernetes applications. They enable self-healing, proper traffic management, and graceful handling of application lifecycle events. These skills are not only crucial for the CKAD exam but also for designing production-grade applications that can withstand failures and maintain high availability.
 
@@ -690,6 +459,5 @@ Mastering probes is essential for building resilient Kubernetes applications. Th
 To clean up all resources created in this lab:
 
 ```bash
-k delete pod liveness-http readiness-demo startup-demo tcp-probe-demo exec-probe-demo probe-timing failing-probe
-k delete svc readiness-svc
+k delete -f manifests/
 ```
