@@ -1,0 +1,17 @@
+apiVersion: blog.supaahiro.io/v1alpha1
+kind: BlogPost
+metadata:
+  name: 20260129-ckad-implementing-probles-and-health-checks
+spec:
+  id: 20260129-ckad-implementing-probles-and-health-checks
+  title: CKAD Preparation — Implementing Probes and Health Checks
+  previewImage: https://supaahiro.github.io/schwifty-lab/blog-posts/20260129-ckad/article.webp
+  summary: Master Kubernetes probes and health checks with hands-on examples. Learn liveness, readiness, and startup probes to ensure application reliability and resilience in production environments.
+  contentUrl: https://raw.githubusercontent.com/SupaaHiro/schwifty-lab/refs/heads/master/blog-posts/20260129-ckad/article_EN.md
+  publishedOn: "2026-01-29T00:00:00Z"
+  author: Hiro
+  categoryId: ckad-preparation
+  relatedPostsIds: []
+status:
+  published: true
+  indexed: true

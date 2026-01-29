@@ -18,3 +18,4 @@ resources:
   - ./20260103-ckad-kustomize.yaml
   - ./20260120-dotnet-resilience.yaml
   - ./20260126-ckad-api-deprecations.yaml
+  - ./20260129-ckad-implementing-probles-and-health-checks.yaml
