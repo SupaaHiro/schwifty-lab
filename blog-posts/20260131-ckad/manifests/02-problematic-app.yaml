@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: problematic-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: problematic-app
+  template:
+    metadata:
+      labels:
+        app: problematic-app
+    spec:
+      containers:
+        - name: app
+          image: nginx:invalid-tag-9999
+          ports:
+            - containerPort: 80
+          resources:
+            limits:
+              memory: 128Mi
+              cpu: 100m
+            requests:
+              memory: 64Mi
+              cpu: 50m

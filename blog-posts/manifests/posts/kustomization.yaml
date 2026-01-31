@@ -19,3 +19,4 @@ resources:
   - ./20260120-dotnet-resilience.yaml
   - ./20260126-ckad-api-deprecations.yaml
   - ./20260129-ckad-implementing-probles-and-health-checks.yaml
+  - ./20260131-ckad-monitoring-kubernetes-applications-with-built-in-cli-tools.yaml

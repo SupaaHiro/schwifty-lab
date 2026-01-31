@@ -1,0 +1,89 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: idle-pod
+  labels:
+    app: resource-demo
+    load: idle
+spec:
+  containers:
+    - name: app
+      image: busybox:1.36
+      command: ["sh", "-c", "while true; do sleep 30; done"]
+      resources:
+        limits:
+          memory: 64Mi
+          cpu: 50m
+        requests:
+          memory: 32Mi
+          cpu: 25m
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cpu-intensive
+  labels:
+    app: resource-demo
+    load: high-cpu
+spec:
+  containers:
+    - name: app
+      image: busybox:1.36
+      command:
+        - sh
+        - -c
+        - |
+          while true; do
+            echo "Computing..." > /dev/null
+          done
+      resources:
+        limits:
+          memory: 64Mi
+          cpu: 200m
+        requests:
+          memory: 32Mi
+          cpu: 100m
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: memory-intensive
+  labels:
+    app: resource-demo
+    load: high-memory
+spec:
+  containers:
+    - name: app
+      image: busybox:1.36
+      command:
+        - sh
+        - -c
+        - |
+          dd if=/dev/zero of=/tmp/data bs=1M count=50
+          while true; do sleep 10; done
+      resources:
+        limits:
+          memory: 128Mi
+          cpu: 50m
+        requests:
+          memory: 64Mi
+          cpu: 25m
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: balanced-load
+  labels:
+    app: resource-demo
+    load: balanced
+spec:
+  containers:
+    - name: app
+      image: nginx:1.27
+      resources:
+        limits:
+          memory: 128Mi
+          cpu: 100m
+        requests:
+          memory: 64Mi
+          cpu: 50m
