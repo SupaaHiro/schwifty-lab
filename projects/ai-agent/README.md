@@ -39,10 +39,6 @@ OPENAI_API_KEY=your_openai_api_key_here
 
 ---
 
-## Dependency Installation
-
-The development environment uses conda + poetry. See [DEV-NOTES.md](DEV-NOTES.md) for detailed setup instructions.
-
 ### Quick Setup
 
 1. Create a conda environment:
