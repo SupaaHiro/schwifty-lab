@@ -1,6 +1,6 @@
 # 🤖 Smart AI Agent
 
-An AI agent combining ReAct and Retrieval-Augmented Generation (RAG), powered by **GPT-4o-mini** and **ChromaDB**.  
+An AI agent combining ReAct and Retrieval-Augmented Generation (RAG), powered by **GPT-4o-mini** and **ChromaDB**.
 It efficiently retrieves information from internal Markdown documents, enabling smart, context-aware responses.
 
 ---
@@ -17,7 +17,7 @@ It efficiently retrieves information from internal Markdown documents, enabling 
 
 ## Prerequisites
 
-- **Python 3.12.x**
+- **Python 3.14.x**
 - **VS Code** (recommended IDE)
 - Install dependencies as described below
 
@@ -41,26 +41,44 @@ OPENAI_API_KEY=your_openai_api_key_here
 
 ## Dependency Installation
 
-### Using Pip
+The development environment uses conda + poetry. See [DEV-NOTES.md](DEV-NOTES.md) for detailed setup instructions.
 
-Install required packages:
+### Quick Setup
+
+1. Create a conda environment:
 
 ```bash
-pip install -r requirements.txt
+conda create -n langchain-python-3.14 python=3.14.3
+conda activate langchain-python-3.14
 ```
 
-### Using Poetry
-
-Restore the environment with:
+2. Install Poetry:
 
 ```bash
+conda install -c conda-forge poetry poetry-plugin-export
+```
+
+3. Configure Poetry to not create virtual environments:
+
+```bash
+poetry config virtualenvs.create false
+poetry config --list | grep virtualenvs
+```
+
+4. Install dependencies:
+
+```bash
+poetry install
+```
+
+### Update Dependencies
+
+To check for outdated dependencies and update them:
+
+```bash
+poetry show --outdated
 poetry update
-```
-
-Activate the virtual environment:
-
-```bash
-.venv\Scripts\activate.bat
+poetry export -f requirements.txt --output requirements.txt --without-hashes
 ```
 
 ---
@@ -87,7 +105,7 @@ Agent: The auth code for the meeting scheduled on **28 January 2025** is **42**.
 You: exit
 ```
 
-Type your queries to interact with the agent.  
+Type your queries to interact with the agent.
 Type `exit` or `quit` to end the session.
 
 ---
@@ -96,12 +114,12 @@ Type `exit` or `quit` to end the session.
 
 Try these sample queries:
 
-- **Meeting details:**  
-  *Can you tell me the auth code for the 28 January 2025 meeting?*  
+- **Meeting details:**
+  *Can you tell me the auth code for the 28 January 2025 meeting?*
   → Searches the internal knowledge base for relevant info.
 
-- **Personalized responses:**  
-  *What's my lucky number?*  
+- **Personalized responses:**
+  *What's my lucky number?*
   → Uses conversation memory or context for a response.
 
 Feel free to experiment with questions related to your documentation or general queries!
@@ -125,5 +143,5 @@ Replace `<your-api-key>` with your actual LangSmith API key.
 
 ## License
 
-This project is licensed under a **No-Commercial License** (see LICENSE file).  
+This project is licensed under a **No-Commercial License** (see LICENSE file).
 It depends on third-party libraries that allow free use for personal, experimental, or research purposes, but may restrict commercial use.
