@@ -17,9 +17,12 @@ It efficiently retrieves information from internal Markdown documents, enabling 
 
 ## Prerequisites
 
-- **Python 3.14.x**
+- **Python 3.13.x**
 - **VS Code** (recommended IDE)
 - Install dependencies as described below
+
+
+> **Note:** Python 3.14 is not yet supported by LangChain due to compatibility issues (Pydantic V1 deprecation).
 
 ---
 
@@ -44,8 +47,8 @@ OPENAI_API_KEY=your_openai_api_key_here
 1. Create a conda environment:
 
 ```bash
-conda create -n langchain-python-3.14 python=3.14.3
-conda activate langchain-python-3.14
+conda create -n langchain-python-3.13 python=3.13.12
+conda activate langchain-python-3.13
 ```
 
 2. Install Poetry:
