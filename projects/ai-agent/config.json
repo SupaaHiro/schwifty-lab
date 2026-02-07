@@ -1,5 +1,5 @@
 {
-  "model": "gpt-4o-mini",
+  "model": "gpt-5-mini",
   "embedding_name": "text-embedding-3-small",
   "docs_path": "../assets/docs",
   "docs_glob": "**/*.md",
