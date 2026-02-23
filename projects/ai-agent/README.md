@@ -47,8 +47,8 @@ OPENAI_API_KEY=your_openai_api_key_here
 1. Create a conda environment:
 
 ```bash
-conda create -n langchain-python-3.13 python=3.13.12
-conda activate langchain-python-3.13
+conda create -n langchain-python3.13 python=3.13.12
+conda activate langchain-python3.13
 ```
 
 2. Install Poetry:
