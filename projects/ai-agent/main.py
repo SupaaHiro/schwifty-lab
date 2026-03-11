@@ -1,5 +1,5 @@
 from dotenv import load_dotenv
-from langchain_core.messages import AIMessage, HumanMessage
+from langchain_core.messages import HumanMessage
 
 from agent import build_agent, print_graph
 from core.config import Config
@@ -80,9 +80,9 @@ def main() -> None:
             continue
 
         response = result["messages"][-1].content if result["messages"] else ""
-        conversation_history.append(AIMessage(content=response))
         print(f"🤖 Agent: {response}")
 
+        conversation_history = result["messages"]
         if len(conversation_history) > cfg.agent.history_window:
             conversation_history = conversation_history[-cfg.agent.history_window:]
 
