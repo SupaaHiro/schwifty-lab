@@ -17,7 +17,7 @@ It efficiently retrieves information from internal Markdown documents, enabling 
 
 ## Prerequisites
 
-- **Python 3.13.x**
+- **Python 3.12.x**
 - **VS Code** (recommended IDE)
 - Install dependencies as described below
 

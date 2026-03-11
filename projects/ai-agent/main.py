@@ -16,9 +16,11 @@ print("✅ Configuration loaded successfully.")
 # Build the chat model from the configured provider
 if cfg.provider == "openai":
     from providers.openai import build_chat_model
+    assert cfg.openai is not None  # guaranteed by model_validator
     llm = build_chat_model(cfg.openai)
 elif cfg.provider == "llamacpp":
     from providers.llamacpp import build_chat_model
+    assert cfg.llamacpp is not None  # guaranteed by model_validator
     llm = build_chat_model(cfg.llamacpp)
 else:
     raise ValueError(f"Unknown provider '{cfg.provider}'. Check config.json.")
