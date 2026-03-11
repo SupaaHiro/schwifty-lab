@@ -1,0 +1,7 @@
+{
+  "provider": "llamacpp",
+  "llamacpp": {
+    "model": "local-model",
+    "base_url": "http://localhost:5000/v1"
+  }
+}

@@ -1,126 +1,90 @@
-from typing import Any, Literal, Final, TypedDict, List, Union, Annotated, Sequence, Iterator
 from dotenv import load_dotenv
-from langchain_core.messages import BaseMessage, HumanMessage, AIMessage, SystemMessage, ToolMessage
-from langgraph.graph.message import add_messages  # Reducer function
-from langgraph.graph import StateGraph, START, END
-from langgraph.prebuilt import ToolNode
+from langchain_core.messages import HumanMessage
 
-from tools import load_all_tools
+from agent import build_agent, print_graph
 from core.config import Config
-from core.chains import load_chains
-from core.vectordb import vdb_builder
-from core.utils import print_graph
+from core.vectordb import build_embeddings, vdb_builder
+from tools import load_all_tools
 
-# Load environment variables from .env file
-# Set OPENAI_API_KEY in your .env file for authentication
-# See https://platform.openai.com/account/api-keys
+# Load secrets from .env (OPENAI_API_KEY, optional LangSmith vars)
 load_dotenv()
 
-# Load configuration (config.json)
+# Load and validate configuration
 cfg = Config.load_from_file("config.json")
 
-# Function for building or loading the vector database retriever
-vdb_builder = vdb_builder(path=str(cfg.docs_path),
-                          glob=cfg.docs_glob,
-                          embedding_name=cfg.embedding_name,
-                          db_path=str(cfg.db_path),
-                          collection_name=cfg.collection_name,
-                          recreate=False)
+# Build the chat model from the configured provider
+if cfg.provider == "openai":
+    from providers.openai import build_chat_model
+    assert cfg.openai is not None  # guaranteed by model_validator
+    llm = build_chat_model(cfg.openai)
+elif cfg.provider == "llamacpp":
+    from providers.llamacpp import build_chat_model
+    assert cfg.llamacpp is not None  # guaranteed by model_validator
+    llm = build_chat_model(cfg.llamacpp)
+else:
+    raise ValueError(f"Unknown provider '{cfg.provider}'. Check config.json.")
 
-# Load all tools
-all_tools = load_all_tools(model=cfg.model,
-                           vdb_builder=vdb_builder,
-                           memory_path=str(cfg.memory_path))
+# Build embeddings (configured independently of the chat model provider)
+embeddings = build_embeddings(
+    embedding_provider=cfg.vectordb.embedding_provider,
+    embedding_name=cfg.vectordb.embedding_name,
+    embedding_base_url=cfg.vectordb.embedding_base_url,
+    embedding_api_key_env=cfg.vectordb.embedding_api_key_env,
+)
 
-# Load chains
-chains = load_chains(model=cfg.model, tools=all_tools)
-generate_chain = chains["generate_chain"]
+# Build the vector DB retriever closure (lazy — no I/O until first query)
+retriever_builder = vdb_builder(
+    embeddings=embeddings,
+    path=str(cfg.vectordb.docs_path),
+    glob=cfg.vectordb.docs_glob,
+    db_path=str(cfg.vectordb.db_path),
+    collection_name=cfg.vectordb.collection_name,
+    recreate=False,
+)
 
+# Load all agent tools
+all_tools = load_all_tools(
+    vdb_builder=retriever_builder,
+    memory_path=str(cfg.agent.memory_path),
+)
 
-class AgentState(TypedDict):
-    messages: Annotated[Sequence[BaseMessage], add_messages]
-
-
-def query_agent(state: AgentState) -> AgentState:
-    """Function to call the LLM with the current state."""
-
-    print(f"🤖 Querying the agent")
-
-    result = generate_chain.invoke({"messages": state['messages']})
-
-    return {"messages": [AIMessage(content=result.content, tool_calls=result.tool_calls if isinstance(result, AIMessage) else [])]}
-
-
-# Define the graph nodes
-AGENT_NODE: Final = "agent"
-TOOLS_NODE: Final = "tools"
-
-
-def route_from_agent_to_tools(state: AgentState):
-    """Conditional edges based on whether the agent made tool calls"""
-
-    result = state['messages'][-1]
-
-    if isinstance(result, AIMessage) and len(result.tool_calls) > 0:
-        for tool_call in result.tool_calls:
-            print(f"\n🛠️ Agent decided to use tool: {tool_call['name']}")
-        return True
-
-    return False
+# Compile the LangGraph agent
+app = build_agent(llm, all_tools)
 
 
-def main():
-    """Main function to run the AI agent in a conversation loop."""
+def main() -> None:
+    """Runs the AI agent in an interactive REPL loop."""
 
-    # Build the state graph
-    builder = StateGraph(state_schema=AgentState)
-    builder.add_node(AGENT_NODE, query_agent)
-    builder.add_node(TOOLS_NODE, ToolNode(all_tools))
-
-    builder.add_conditional_edges(
-        AGENT_NODE,
-        route_from_agent_to_tools,
-        {True: TOOLS_NODE, False: END}
-    )
-
-    builder.add_edge(TOOLS_NODE, AGENT_NODE)
-    builder.set_entry_point(AGENT_NODE)
-    app = builder.compile()
-
-    # Start a conversation loop with the agent
     print("🤖 Welcome to the AI Agent. You can ask questions about the loaded documents.\n")
     print_graph(app, "ascii")
     print("\nType 'exit' or 'quit' to end the conversation.")
+
     conversation_history = []
+
     while True:
-        # Ask for user input
         try:
             user_input = input("\n🧑‍💻 You: ")
         except KeyboardInterrupt:
-            user_input = 'exit'
+            user_input = "exit"
 
-        # Exit the loop if the user types 'exit' or 'quit'
-        if user_input.lower() in ['exit', 'quit']:
+        if user_input.lower() in ("exit", "quit"):
             print("\nExiting the conversation. Goodbye!")
             break
 
-        # Append user message to conversation history and invoke the agent
         conversation_history.append(HumanMessage(content=user_input))
-        result = app.invoke({'messages': conversation_history})
-        if not result or 'messages' not in result:
+
+        result = app.invoke(
+            {"messages": conversation_history[-cfg.agent.history_window:]})
+        if not result or "messages" not in result:
             print("🤖 Agent: No response from the agent.")
             continue
 
-        # Append agent response to conversation history and print it
-        response = (result['messages'][-1]
-                    ).content if result['messages'] else ""
-        conversation_history.append(
-            AIMessage(content=response))
+        response = result["messages"][-1].content if result["messages"] else ""
         print(f"🤖 Agent: {response}")
 
-        # Limit conversation history to last 10 messages to manage context length
-        if len(conversation_history) > 10:
-            conversation_history = conversation_history[-10:]
+        conversation_history = result["messages"]
+        if len(conversation_history) > cfg.agent.history_window:
+            conversation_history = conversation_history[-cfg.agent.history_window:]
 
 
 if __name__ == "__main__":
