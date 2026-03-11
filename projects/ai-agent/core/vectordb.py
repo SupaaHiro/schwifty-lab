@@ -125,17 +125,22 @@ def vdb_builder(
 
         collection = client.get_or_create_collection(
             name=collection_name, embedding_function=None)
-        for doc in docs_chunks:
-            doc_content = doc.page_content if hasattr(doc, "page_content") else str(doc)
+
+        doc_contents = [doc.page_content if hasattr(doc, "page_content") else str(doc) for doc in docs_chunks]
+        doc_ids = []
+        for i, doc in enumerate(docs_chunks):
             doc_id = doc.metadata.get("source", "")
             if not doc_id:
-                doc_id = f"Unknown Source [{str(hash(doc_content))}]"
-            collection.upsert(
-                ids=[doc_id],
-                documents=[doc_content],
-                embeddings=[embeddings.embed_query(doc_content)],
-                metadatas=[doc.metadata],
-            )
+                doc_id = f"Unknown Source [{str(hash(doc_contents[i]))}]"
+            doc_ids.append(doc_id)
+        doc_metadatas = [doc.metadata for doc in docs_chunks]
+        embeddings_list = embeddings.embed_documents(doc_contents)
+        collection.upsert(
+            ids=doc_ids,
+            documents=doc_contents,
+            embeddings=embeddings_list,
+            metadatas=doc_metadatas,
+        )
         print(f"ChromaDB collection '{collection_name}' updated with {len(docs_chunks)} documents.")
 
         retriever = VectorStoreRetriever(
