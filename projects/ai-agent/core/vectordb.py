@@ -11,13 +11,20 @@ import chromadb
 import os
 
 
-def build_embeddings(embedding_provider: str, embedding_name: str) -> Embeddings:
+def build_embeddings(
+    embedding_provider: str,
+    embedding_name: str,
+    embedding_base_url: str | None = None,
+    embedding_api_key_env: str = "OPENAI_API_KEY",
+) -> Embeddings:
     """
     Constructs an embeddings model from a provider name and model name.
 
     Args:
-      embedding_provider (str): Provider to use. Currently only 'openai' is supported.
+      embedding_provider (str): Provider to use: 'openai' or 'huggingface'.
       embedding_name (str): Name of the embedding model.
+      embedding_base_url (str | None): Optional base URL for OpenAI-compatible local servers.
+      embedding_api_key_env (str): Environment variable name holding the API key (openai only).
 
     Returns:
       Embeddings: A LangChain-compatible embeddings instance.
@@ -28,10 +35,20 @@ def build_embeddings(embedding_provider: str, embedding_name: str) -> Embeddings
 
     if embedding_provider == "openai":
         from langchain_openai import OpenAIEmbeddings
-        return OpenAIEmbeddings(model=embedding_name)
+        kwargs: dict = {"model": embedding_name}
+        if embedding_base_url:
+            kwargs["base_url"] = embedding_base_url
+        api_key = os.getenv(embedding_api_key_env)
+        if api_key:
+            kwargs["openai_api_key"] = api_key
+        return OpenAIEmbeddings(**kwargs)
+
+    if embedding_provider == "huggingface":
+        from langchain_huggingface import HuggingFaceEmbeddings
+        return HuggingFaceEmbeddings(model_name=embedding_name)
 
     raise ValueError(
-        f"Unknown embedding provider '{embedding_provider}'. Supported: 'openai'."
+        f"Unknown embedding provider '{embedding_provider}'. Supported: 'openai', 'huggingface'."
     )
 
 

@@ -11,7 +11,6 @@ load_dotenv()
 
 # Load and validate configuration
 cfg = Config.load_from_file("config.json")
-print("✅ Configuration loaded successfully.")
 
 # Build the chat model from the configured provider
 if cfg.provider == "openai":
@@ -29,6 +28,8 @@ else:
 embeddings = build_embeddings(
     embedding_provider=cfg.vectordb.embedding_provider,
     embedding_name=cfg.vectordb.embedding_name,
+    embedding_base_url=cfg.vectordb.embedding_base_url,
+    embedding_api_key_env=cfg.vectordb.embedding_api_key_env,
 )
 
 # Build the vector DB retriever closure (lazy — no I/O until first query)

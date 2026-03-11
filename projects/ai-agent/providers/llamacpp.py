@@ -39,8 +39,13 @@ def build_chat_model(config: LlamaCppConfig) -> ChatOpenAI:
       ChatOpenAI: A chat model instance targeting the local API server.
     """
 
-    return ChatOpenAI(
-        model=config.model,
-        base_url=config.base_url,
-        api_key="not-needed",
-    )
+    kwargs: dict = {
+        "model": config.model,
+        "base_url": config.base_url,
+        "api_key": "not-needed",
+    }
+
+    if config.extra_body:
+        kwargs["model_kwargs"] = {"extra_body": config.extra_body}
+
+    return ChatOpenAI(**kwargs)

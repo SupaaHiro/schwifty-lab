@@ -1,0 +1,8 @@
+{
+  "provider": "openai",
+  "openai": {
+    "model": "gpt-5-mini",
+    "base_url": null,
+    "api_key_env": "OPENAI_API_KEY"
+  }
+}

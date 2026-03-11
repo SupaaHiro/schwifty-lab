@@ -24,6 +24,10 @@ class LlamaCppConfig(BaseModel):
 
     model: str = Field(..., min_length=1, description="Model name as expected by the local server")
     base_url: str = Field(..., description="OpenAI-compatible API endpoint (e.g. 'http://localhost:8080/v1')")
+    extra_body: Optional[dict] = Field(
+        default=None,
+        description="Extra fields to pass in every request body (e.g. {'chat_template_kwargs': {'enable_thinking': false}})",
+    )
 
 
 class VectorDBConfig(BaseModel):
@@ -31,9 +35,17 @@ class VectorDBConfig(BaseModel):
 
     embedding_provider: str = Field(
         default="openai",
-        description="Provider for embeddings (currently only 'openai' is supported)",
+        description="Provider for embeddings: 'openai' (remote or local-compatible) or 'huggingface' (local, no API key required)",
     )
     embedding_name: str = Field(..., min_length=1, description="Embedding model name")
+    embedding_base_url: Optional[str] = Field(
+        default=None,
+        description="Optional custom base URL for OpenAI-compatible local embedding servers (e.g. Ollama, llama.cpp)",
+    )
+    embedding_api_key_env: str = Field(
+        default="OPENAI_API_KEY",
+        description="Name of the environment variable holding the embeddings API key (only used for 'openai' provider)",
+    )
     docs_path: Path = Field(..., description="Path to the source documents directory")
     docs_glob: str = Field(default="**/*.md", min_length=1, description="Glob pattern for document discovery")
     db_path: Path = Field(..., description="Path to the ChromaDB persistence directory")
