@@ -30,8 +30,8 @@ It retrieves information from internal Markdown documents and supports both clou
 
 ```bash
 # 1. Create and activate a conda environment
-conda create -n langchain-python3.13 python=3.13
-conda activate langchain-python3.13
+conda create -n langchain-python3.12 python=3.12
+conda activate langchain-python3.12
 
 # 2. Install Poetry
 conda install -c conda-forge poetry poetry-plugin-export
@@ -59,8 +59,8 @@ All settings live in `config.json`. Two example files are provided:
 
 | File | Purpose |
 |---|---|
-| `config.example.openai.json` | Ready-to-use template for OpenAI mode |
-| `config.example.llamacpp.json` | Ready-to-use template for llama.cpp mode |
+| `config.example.openai.json` | Example template for OpenAI mode |
+| `config.example.llamacpp.json` | Example template for llama.cpp mode |
 | `config.json` | Active configuration (edit this one) |
 
 ### Configuration reference
