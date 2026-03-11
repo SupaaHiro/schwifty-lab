@@ -26,7 +26,21 @@ def calculate(expression: str) -> str:
     try:
         import numexpr
         result = numexpr.evaluate(expression)
-        return str(float(result))
+
+        # Handle NumPy scalars and arrays without forcing through float(),
+        # to avoid precision loss and errors on non-scalar results.
+        if hasattr(result, "shape"):
+            # NumPy 0-d scalar: extract the underlying Python scalar
+            if result.shape == ():
+                try:
+                    return str(result.item())
+                except Exception:
+                    return str(result)
+            # NumPy array: return its string representation directly
+            return str(result)
+
+        # Fallback for plain Python scalars or other types
+        return str(result)
     except Exception as e:
         return f"Error evaluating '{expression}': {e}"
 
