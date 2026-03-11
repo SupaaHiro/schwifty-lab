@@ -205,6 +205,28 @@ function Get-TargetFiles {
     return , $results
 }
 
+function Convert-SignatureResult {
+    param(
+        [string] $ErrorMessage
+    )
+
+    # On Linux/macOS, Set-OpenAuthenticodeSignature throws on failure and returns
+    # nothing on success.  We build a Status/StatusMessage object that matches the
+    # pattern returned by the Windows Set-AuthenticodeSignature cmdlet.
+
+    if ($ErrorMessage) {
+        return [PSCustomObject]@{
+            Status        = 'UnknownError'
+            StatusMessage = $ErrorMessage
+        }
+    }
+
+    return [PSCustomObject]@{
+        Status        = 'Valid'
+        StatusMessage = 'Signature verified.'
+    }
+}
+
 function Invoke-FileSign {
     [OutputType([bool])]
     param(
@@ -220,7 +242,13 @@ function Invoke-FileSign {
             HashAlgorithm = 'SHA256'
         }
         if ($TimestampServer) { $params['TimeStampServer'] = $TimestampServer }
-        $result = Set-OpenAuthenticodeSignature @params
+        try {
+            Set-OpenAuthenticodeSignature @params
+            $result = Convert-SignatureResult
+        }
+        catch {
+            $result = Convert-SignatureResult -ErrorMessage $_.Exception.Message
+        }
     }
     else {
         $params = @{
