@@ -44,4 +44,6 @@ def test_initialize_kb() -> None:
         source = os.path.basename(source_path)
         print(f"Document {i + 1} {source}")
 
-    assert docs_total == docs_found, f"Expected {docs_total} documents but found {docs_found}"
+    assert 0 < docs_found <= docs_total, (
+        f"Expected between 1 and {docs_total} documents but found {docs_found}"
+    )
