@@ -2,16 +2,12 @@ from core.config import Config
 
 
 def test_config_loading() -> None:
-    """
-    Test function to load configuration from a JSON file and print its contents.
-    """
+    """Smoke test: loads config.json and validates the Pydantic model."""
 
-    # Prepare
-    config_path = "config.json"
-
-    # Act
-    cfg = Config.load_from_file(config_path)
+    cfg = Config.load_from_file("config.json")
     print(cfg)
 
-    # Assert
-    assert cfg is not None, ValueError("Failed to load configuration")
+    assert cfg is not None
+    assert cfg.provider in ("openai", "llamacpp")
+    assert cfg.vectordb is not None
+    assert cfg.agent is not None
