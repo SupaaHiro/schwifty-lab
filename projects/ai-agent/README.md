@@ -341,6 +341,27 @@ LANGSMITH_PROJECT=ai-agent
 
 ---
 
+## Supported Models
+
+This agent has been tested with and supports **Qwen3.5**, Alibaba's latest MoE language model family.
+See the [official Qwen3.5 documentation](https://unsloth.ai/docs/models/qwen3.5) for details on available variants and quantizations.
+
+### Running Qwen3.5 locally with llama.cpp
+
+```bash
+llama-server \
+  -hf unsloth/Qwen3.5-35B-A3B-GGUF:UD-Q4_K_XL \
+  --ctx-size 16384 \
+  --temp 1.0 --top-p 0.95 --top-k 20 --min-p 0.00 \
+  --chat-template-kwargs "{\"enable_thinking\": false}" \
+  --port 5000 \
+  --jinja
+```
+
+Then point the agent at `http://localhost:5000/v1` using the `llamacpp` provider (see [Mode B](#mode-b--fully-local-llamacpp) above).
+
+---
+
 ## License
 
 This project is licensed under a **No-Commercial License** (see LICENSE file).
