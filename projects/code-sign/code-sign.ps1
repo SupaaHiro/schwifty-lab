@@ -19,6 +19,8 @@
     -CertificatePassword (recommended for interactive use; avoid plain-text passwords
     in scripts or CI pipelines — use a SecureString from a vault instead).
 
+    Compatible with PowerShell 5.1 and later.
+
 .PARAMETER CertificatePath
     Path to the PFX/P12 file that contains the code-signing certificate and private key.
 
@@ -37,7 +39,7 @@
     Search sub-directories when SourcePath is a directory.
 
 .PARAMETER Extensions
-    File extensions to process.  Defaults to .ps1, .psm1, .psd1.
+    File extensions to process.  Defaults to .ps1, .psm1, .psd1, .exe, .dll.
 
 .PARAMETER ExcludeDirectory
     Directory names to skip during traversal.
@@ -92,7 +94,7 @@ param(
     [switch] $Recurse,
 
     [Parameter()]
-    [string[]] $Extensions = @('.ps1', '.psm1', '.psd1'),
+    [string[]] $Extensions = @('.ps1', '.psm1', '.psd1', '.exe', '.dll'),
 
     [Parameter()]
     [string[]] $ExcludeDirectory = @('.git', '.vs', 'bin', 'obj', 'node_modules'),
@@ -104,11 +106,18 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
+# PS 5.1 compatibility: $IsLinux / $IsMacOS / $IsWindows were introduced in PS 6.
+# Declare them as constants when absent so the rest of the script can reference
+# them unconditionally on any version.
+if (-not (Test-Path variable:IsLinux))  { $IsLinux   = $false }
+if (-not (Test-Path variable:IsMacOS))  { $IsMacOS   = $false }
+if (-not (Test-Path variable:IsWindows)){ $IsWindows  = $true  }
+
 # On non-Windows platforms, ensure the OpenAuthenticode module is available.
 if ($IsLinux -or $IsMacOS) {
     $moduleName = 'OpenAuthenticode'
     if (-not (Get-Module -ListAvailable -Name $moduleName)) {
-        Write-Host "Installing required module '$moduleName' from PSGallery..." -ForegroundColor Yellow
+        Write-Output "Installing required module '$moduleName' from PSGallery..."
         Install-Module -Name $moduleName -Scope CurrentUser -Force
     }
 }
@@ -118,19 +127,57 @@ if ($IsLinux -or $IsMacOS) {
 # ─────────────────────────────────────────────────────────────────────────────
 
 function Resolve-FullPath {
-    param([string] $Path, [string] $Label)
+<#
+.SYNOPSIS
+    Resolves a path string to its absolute form, throwing a descriptive error on failure.
+
+.PARAMETER Path
+    The path string to resolve.
+
+.PARAMETER Label
+    A human-readable label for the parameter (used in the error message).
+
+.OUTPUTS
+    System.String. The absolute path.
+#>
+    param(
+        [string] $Path,
+        [string] $Label
+    )
     try { return [IO.Path]::GetFullPath($Path) }
     catch { throw "$Label is not a valid path: '$Path'" }
 }
 
 function Import-SigningCertificate {
+<#
+.SYNOPSIS
+    Loads a PFX certificate and validates it for Authenticode code signing.
+
+.DESCRIPTION
+    On Windows the certificate is imported into the current user's personal store
+    (Cert:\CurrentUser\My) so that Set-AuthenticodeSignature can access the private key.
+    On Linux/macOS, Get-PfxCertificate is used instead (requires the OpenAuthenticode module).
+
+    Validation checks performed:
+      - Private key is present.
+      - Certificate has not expired.
+      - Enhanced Key Usage includes the Code Signing OID (1.3.6.1.5.5.7.3.3).
+
+.PARAMETER PfxPath
+    Absolute path to the PFX/P12 file.
+
+.PARAMETER Password
+    Password for the PFX file as a SecureString.
+
+.OUTPUTS
+    System.Security.Cryptography.X509Certificates.X509Certificate2
+#>
     [OutputType([System.Security.Cryptography.X509Certificates.X509Certificate2])]
     param(
-        [string]                    $PfxPath,
+        [string]                       $PfxPath,
         [System.Security.SecureString] $Password
     )
 
-    Write-Verbose "Importing certificate: $PfxPath"
     try {
         if ($IsLinux -or $IsMacOS) {
             $cert = Get-PfxCertificate `
@@ -158,7 +205,7 @@ function Import-SigningCertificate {
 
     $codeSignOid = '1.3.6.1.5.5.7.3.3'
     $eku = $cert.Extensions |
-    Where-Object { $_ -is [System.Security.Cryptography.X509Certificates.X509EnhancedKeyUsageExtension] }
+        Where-Object { $_ -is [System.Security.Cryptography.X509Certificates.X509EnhancedKeyUsageExtension] }
 
     if (-not $eku) {
         throw "Certificate '$($cert.Subject)' has no Enhanced Key Usage extension. A code-signing certificate is required."
@@ -169,11 +216,30 @@ function Import-SigningCertificate {
         throw "Certificate '$($cert.Subject)' does not carry the Code Signing EKU (OID $codeSignOid)."
     }
 
-    Write-Host "[CERT] $($cert.Subject)  |  expires $($cert.NotAfter.ToString('yyyy-MM-dd'))" -ForegroundColor Green
     return $cert
 }
 
-function Get-TargetFiles {
+function Get-TargetFilesSet {
+<#
+.SYNOPSIS
+    Returns the list of files inside a directory that match the given extensions,
+    optionally skipping excluded sub-directories.
+
+.PARAMETER Directory
+    Root directory to search.
+
+.PARAMETER Extensions
+    Array of file extensions to include (e.g. '.ps1', '.psm1').
+
+.PARAMETER ExcludeDirectory
+    Directory names to skip during traversal.
+
+.PARAMETER Recurse
+    When present, descends into sub-directories.
+
+.OUTPUTS
+    System.Collections.Generic.List[System.IO.FileInfo]
+#>
     param(
         [string]   $Directory,
         [string[]] $Extensions,
@@ -181,19 +247,20 @@ function Get-TargetFiles {
         [switch]   $Recurse
     )
 
-    $results = [System.Collections.Generic.List[System.IO.FileInfo]]::new()
+    $results = New-Object 'System.Collections.Generic.List[System.IO.FileInfo]'
 
     $items = Get-ChildItem -Path $Directory -File -Recurse:$Recurse.IsPresent
     foreach ($file in $items) {
         if ($Recurse) {
-            # Build path segments relative to the root to detect excluded dirs
+            # Build path segments relative to the root to detect excluded dirs.
             $relative = $file.FullName.Substring($Directory.Length)
             $parts = $relative.Split(
                 [char[]]@([IO.Path]::DirectorySeparatorChar, [IO.Path]::AltDirectorySeparatorChar),
                 [System.StringSplitOptions]::RemoveEmptyEntries
             )
-            # The last element is the filename itself; check intermediate segments only
-            $dirParts = $parts | Select-Object -SkipLast 1
+            # The last element is the filename itself; check intermediate segments only.
+            # Note: Select-Object -SkipLast is PS 7+ only; use array slicing instead.
+            $dirParts = if ($parts.Count -gt 1) { $parts[0..($parts.Count - 2)] } else { @() }
             if ($dirParts | Where-Object { $ExcludeDirectory -contains $_ }) { continue }
         }
 
@@ -206,13 +273,26 @@ function Get-TargetFiles {
 }
 
 function Convert-SignatureResult {
+<#
+.SYNOPSIS
+    Builds a normalised signature-result object for the Linux/macOS code path.
+
+.DESCRIPTION
+    On Linux/macOS, Set-OpenAuthenticodeSignature throws on failure and returns
+    nothing on success.  This function produces a Status/StatusMessage object
+    that mirrors the shape returned by Set-AuthenticodeSignature on Windows,
+    allowing Invoke-FileSign to use a single result-checking code path.
+
+.PARAMETER ErrorMessage
+    When provided, the result Status is set to 'UnknownError'.
+    When omitted (or empty), Status is set to 'Valid'.
+
+.OUTPUTS
+    PSCustomObject with Status and StatusMessage properties.
+#>
     param(
         [string] $ErrorMessage
     )
-
-    # On Linux/macOS, Set-OpenAuthenticodeSignature throws on failure and returns
-    # nothing on success.  We build a Status/StatusMessage object that matches the
-    # pattern returned by the Windows Set-AuthenticodeSignature cmdlet.
 
     if ($ErrorMessage) {
         return [PSCustomObject]@{
@@ -228,6 +308,28 @@ function Convert-SignatureResult {
 }
 
 function Invoke-FileSign {
+<#
+.SYNOPSIS
+    Signs a single file with an Authenticode certificate.
+
+.DESCRIPTION
+    Dispatches to Set-OpenAuthenticodeSignature (Linux/macOS) or
+    Set-AuthenticodeSignature (Windows) and normalises the result.
+    Returns $true on success, $false on failure (failure details are
+    written via Write-Warning).
+
+.PARAMETER FilePath
+    Absolute path of the file to sign.
+
+.PARAMETER Certificate
+    A valid code-signing X509Certificate2 with a private key.
+
+.PARAMETER TimestampServer
+    Optional RFC 3161 timestamp server URL.
+
+.OUTPUTS
+    System.Boolean
+#>
     [OutputType([bool])]
     param(
         [string] $FilePath,
@@ -261,16 +363,37 @@ function Invoke-FileSign {
     }
 
     if ($result.Status -eq 'Valid') {
-        Write-Host "  [OK]   $FilePath" -ForegroundColor Green
+        Write-Verbose "  [OK]   $FilePath"
         return $true
     }
     else {
-        Write-Warning "  [FAIL] $FilePath — $($result.Status): $($result.StatusMessage)"
+        Write-Warning "[FAIL] $FilePath — $($result.Status): $($result.StatusMessage)"
         return $false
     }
 }
 
 function Copy-SourceTree {
+<#
+.SYNOPSIS
+    Copies a file or directory tree to a destination, honouring the exclusion list.
+
+.DESCRIPTION
+    When Source is a single file, copies it directly to Destination.
+    When Source is a directory, mirrors the tree structure under Destination,
+    skipping any directory whose name appears in ExcludeDirectory.
+
+.PARAMETER Source
+    Path to the source file or directory.
+
+.PARAMETER Destination
+    Path to the destination file or directory.
+
+.PARAMETER ExcludeDirectory
+    Directory names to skip during traversal.
+
+.PARAMETER Recurse
+    When present, copies sub-directories recursively.
+#>
     param(
         [string]   $Source,
         [string]   $Destination,
@@ -316,7 +439,7 @@ function Copy-SourceTree {
 # ─────────────────────────────────────────────────────────────────────────────
 
 $CertificatePath = Resolve-FullPath $CertificatePath '-CertificatePath'
-$SourcePath = Resolve-FullPath $SourcePath      '-SourcePath'
+$SourcePath      = Resolve-FullPath $SourcePath      '-SourcePath'
 
 if (-not (Test-Path -LiteralPath $CertificatePath)) {
     throw "Certificate file not found: '$CertificatePath'"
@@ -326,7 +449,7 @@ if (-not (Test-Path -LiteralPath $SourcePath)) {
 }
 
 $isSingleFile = Test-Path -LiteralPath $SourcePath -PathType Leaf
-$isCopyMode = $PSBoundParameters.ContainsKey('DestinationPath')
+$isCopyMode   = $PSBoundParameters.ContainsKey('DestinationPath')
 
 if ($isCopyMode) {
     $DestinationPath = Resolve-FullPath $DestinationPath '-DestinationPath'
@@ -361,20 +484,14 @@ if (-not $CertificatePassword) {
 # ─────────────────────────────────────────────────────────────────────────────
 
 $cert = Import-SigningCertificate -PfxPath $CertificatePath -Password $CertificatePassword
+Write-Verbose "Certificate: $($cert.Subject)  |  expires $($cert.NotAfter.ToString('yyyy-MM-dd'))"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Main flow
 # ─────────────────────────────────────────────────────────────────────────────
 
-$modeLabel = if ($isCopyMode) { 'Copy then sign' } else { 'In-place sign' }
-Write-Host ''
-Write-Host "Mode   : $modeLabel" -ForegroundColor Cyan
-Write-Host "Source : $SourcePath"
-if ($isCopyMode) { Write-Host "Dest   : $DestinationPath" }
-Write-Host ''
-
 $successCount = 0
-$failCount = 0
+$failCount    = 0
 
 if ($isSingleFile) {
     # ── Single-file path ──────────────────────────────────────────────────────
@@ -401,7 +518,6 @@ if ($isSingleFile) {
 else {
     # ── Directory path ────────────────────────────────────────────────────────
     if ($isCopyMode) {
-        Write-Host "Copying tree ..." -ForegroundColor DarkCyan
         if ($PSCmdlet.ShouldProcess($SourcePath, "Copy to '$DestinationPath'")) {
             Copy-SourceTree -Source $SourcePath -Destination $DestinationPath `
                 -ExcludeDirectory $ExcludeDirectory -Recurse:$Recurse
@@ -409,7 +525,7 @@ else {
     }
 
     $signingRoot = if ($isCopyMode) { $DestinationPath } else { $SourcePath }
-    $files = Get-TargetFiles -Directory $signingRoot -Extensions $Extensions `
+    $files = Get-TargetFilesSet -Directory $signingRoot -Extensions $Extensions `
         -ExcludeDirectory $ExcludeDirectory -Recurse:$Recurse
 
     if ($files.Count -eq 0) {
@@ -417,8 +533,7 @@ else {
         exit 0
     }
 
-    Write-Host "Signing $($files.Count) file(s) in '$signingRoot' ..."
-    Write-Host ''
+    Write-Output "Signing $($files.Count) file(s) in '$signingRoot'..."
 
     foreach ($file in $files) {
         if ($PSCmdlet.ShouldProcess($file.FullName, 'Set-AuthenticodeSignature')) {
@@ -436,12 +551,6 @@ else {
 # Summary
 # ─────────────────────────────────────────────────────────────────────────────
 
-Write-Host ''
-Write-Host '─────────────────────────────────' -ForegroundColor DarkGray
-Write-Host "Signed : $successCount" -ForegroundColor Green
-if ($failCount -gt 0) {
-    Write-Host "Failed : $failCount" -ForegroundColor Red
-}
-Write-Host '─────────────────────────────────' -ForegroundColor DarkGray
+Write-Output "Signed: $successCount  |  Failed: $failCount"
 
 if ($failCount -gt 0) { exit 1 }
