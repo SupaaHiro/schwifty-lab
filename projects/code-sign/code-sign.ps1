@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Signs PowerShell scripts with an Authenticode certificate loaded from a PFX file.
 
@@ -17,7 +17,7 @@
     The certificate must be a valid, unexpired code-signing certificate that includes
     a private key.  Its password is requested interactively when not supplied via
     -CertificatePassword (recommended for interactive use; avoid plain-text passwords
-    in scripts or CI pipelines — use a SecureString from a vault instead).
+    in scripts or CI pipelines - use a SecureString from a vault instead).
 
     Compatible with PowerShell 5.1 and later.
 
@@ -367,7 +367,7 @@ function Invoke-FileSign {
         return $true
     }
     else {
-        Write-Warning "[FAIL] $FilePath — $($result.Status): $($result.StatusMessage)"
+        Write-Warning "[FAIL] $FilePath - $($result.Status): $($result.StatusMessage)"
         return $false
     }
 }
