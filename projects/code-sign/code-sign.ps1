@@ -77,6 +77,9 @@
     .\Invoke-ScriptSigning.ps1 -CertificatePath .\pki\code-sign.pfx -SourcePath .\src -Recurse -WhatIf
 #>
 [CmdletBinding(SupportsShouldProcess, DefaultParameterSetName = 'InPlace')]
+[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseDeclaredVarsMoreThanAssignment", "", Justification = "Backward compatibility with Powershell 5.1.")]
+[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidAssignmentToAutomaticVariable", "", Justification = "Backward compatibility with Powershell 5.1.")]
+[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseDeclaredVarsMoreThanAssignment", "", Justification = "Backward compatibility with Powershell 5.1.")]
 param(
     [Parameter(Mandatory)]
     [string] $CertificatePath,
