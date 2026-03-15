@@ -19,11 +19,11 @@ DEFAULT_AGE_KEYS = Path("~/.config/sops/age/keys.txt").expanduser()
 def check_sops():
     if not shutil.which("sops"):
         sys.exit(
-            "Errore: 'sops' non trovato nel PATH. Installarlo prima di procedere.")
+            "Error: 'sops' not found in PATH. Please install it before proceeding.")
 
 
 def find_sops_config(start: Path) -> Path | None:
-    """Risale la directory tree cercando .sops.yaml (come fa sops stesso)."""
+    """Walks up the directory tree looking for .sops.yaml (same behaviour as sops itself)."""
     for parent in [start, *start.parents]:
         candidate = parent / ".sops.yaml"
         if candidate.exists():
@@ -49,10 +49,10 @@ def build_env(age_keys: Path) -> dict:
 
 def cmd_encrypt(file: Path, age_keys: Path, sops_config: Path | None, verbose: bool):
     if file.name.endswith(ENC_SUFFIX):
-        sys.exit(f"Errore: il file è già cifrato (.enc.yaml): {file}")
+        sys.exit(f"Error: file is already encrypted (.enc.yaml): {file}")
     if file.suffix != ".yaml":
         sys.exit(
-            f"Errore: il file da cifrare deve avere estensione .yaml: {file}")
+            f"Error: the file to encrypt must have a .yaml extension: {file}")
 
     out_file = file.with_name(file.stem + ENC_SUFFIX)
 
@@ -63,13 +63,13 @@ def cmd_encrypt(file: Path, age_keys: Path, sops_config: Path | None, verbose: b
 
     result = run_sops(sops_args, build_env(age_keys), verbose)
     out_file.write_text(result.stdout)
-    print(f"Cifrato: {file} → {out_file}")
+    print(f"Encrypted: {file} → {out_file}")
 
 
 def cmd_decrypt(file: Path, age_keys: Path, sops_config: Path | None, verbose: bool):
     if not file.name.endswith(ENC_SUFFIX):
         sys.exit(
-            f"Errore: il file da decifrare deve avere estensione .enc.yaml: {file}")
+            f"Error: the file to decrypt must have a .enc.yaml extension: {file}")
 
     stem = file.name[: -len(ENC_SUFFIX)]
     out_file = file.with_name(stem + PLAIN_SUFFIX)
@@ -81,13 +81,13 @@ def cmd_decrypt(file: Path, age_keys: Path, sops_config: Path | None, verbose: b
 
     result = run_sops(sops_args, build_env(age_keys), verbose)
     out_file.write_text(result.stdout)
-    print(f"Decifrato: {file} → {out_file}")
+    print(f"Decrypted: {file} → {out_file}")
 
 
 def cmd_view(file: Path, age_keys: Path, sops_config: Path | None, verbose: bool):
     if not file.name.endswith(ENC_SUFFIX):
         sys.exit(
-            f"Errore: il file da visualizzare deve avere estensione .enc.yaml: {file}")
+            f"Error: the file to view must have a .enc.yaml extension: {file}")
 
     sops_args = ["sops", "--decrypt"]
     if sops_config:
@@ -101,36 +101,36 @@ def cmd_view(file: Path, age_keys: Path, sops_config: Path | None, verbose: bool
 def main():
     parser = argparse.ArgumentParser(
         prog="sops-tool",
-        description="Gestione secrets YAML con SOPS + age (stile kubectl)",
+        description="Manage YAML secrets with SOPS + age (kubectl-style)",
     )
     parser.add_argument(
         "--age-keys",
         type=Path,
         default=DEFAULT_AGE_KEYS,
         metavar="PATH",
-        help=f"Percorso chiavi age (default: {DEFAULT_AGE_KEYS})",
+        help=f"Path to age keys file (default: {DEFAULT_AGE_KEYS})",
     )
     parser.add_argument(
         "--sops-config",
         type=Path,
         default=None,
         metavar="PATH",
-        help="Percorso .sops.yaml (default: auto-detect risalendo la directory tree)",
+        help="Path to .sops.yaml (default: auto-detect by walking up the directory tree)",
     )
     parser.add_argument("-v", "--verbose",
-                        action="store_true", help="Output verboso")
+                        action="store_true", help="Verbose output")
 
     subparsers = parser.add_subparsers(
         dest="command", required=True, metavar="COMMAND")
 
     for cmd, help_text in [
-        ("encrypt", "Cifra un file .yaml → .enc.yaml"),
-        ("decrypt", "Decifra un file .enc.yaml → .yaml"),
-        ("view", "Visualizza un file .enc.yaml in chiaro (senza scrivere file)"),
+        ("encrypt", "Encrypt a .yaml file → .enc.yaml"),
+        ("decrypt", "Decrypt a .enc.yaml file → .yaml"),
+        ("view", "Display a .enc.yaml file in plaintext (without writing to disk)"),
     ]:
         sub = subparsers.add_parser(cmd, help=help_text)
         sub.add_argument(
-            "-f", "--file", type=Path, required=True, metavar="FILE", help="File di input"
+            "-f", "--file", type=Path, required=True, metavar="FILE", help="Input file"
         )
 
     args = parser.parse_args()
@@ -139,21 +139,21 @@ def main():
 
     file = args.file.resolve()
     if not file.exists():
-        sys.exit(f"Errore: file non trovato: {file}")
+        sys.exit(f"Error: file not found: {file}")
 
     age_keys = args.age_keys.expanduser()
     if not age_keys.exists():
-        sys.exit(f"Errore: chiavi age non trovate: {age_keys}")
+        sys.exit(f"Error: age keys file not found: {age_keys}")
 
     sops_config = args.sops_config
     if sops_config is None:
         sops_config = find_sops_config(file.parent)
         if args.verbose:
             if sops_config:
-                print(f"[config] .sops.yaml trovato: {sops_config}")
+                print(f"[config] .sops.yaml found: {sops_config}")
             else:
                 print(
-                    "[config] Nessun .sops.yaml trovato, sops userà la configurazione di default")
+                    "[config] No .sops.yaml found, sops will use its default configuration")
 
     dispatch = {"encrypt": cmd_encrypt,
                 "decrypt": cmd_decrypt, "view": cmd_view}
