@@ -2,40 +2,55 @@
 # This section configures CoreDNS for an on-premises Talos deployment.
 apiVersion: v1
 data:
-  Corefile: |
-    .:53 {
-        errors
-        health {
-            lameduck 5s
-        }
-        ready
-        log . {
-            class error
-        }
-        prometheus :9153
+    Corefile: |
+        .:53 {
+            errors
 
-        hosts {
-            10.96.0.1 kubernetes.default.svc.cluster.local kubernetes.default.svc kubernetes.default
-            fallthrough
-        }
+            health {
+                lameduck 5s
+            }
 
-        kubernetes cluster.lab.local in-addr.arpa ip6.arpa {
-            pods insecure
-            fallthrough in-addr.arpa ip6.arpa
-            ttl 30
+            ready
+
+            log . {
+                class error
+            }
+
+            prometheus :9153
+
+            hosts {
+                10.96.0.1 kubernetes.default.svc.cluster.lab.local kubernetes.default.svc kubernetes.default
+                fallthrough
+            }
+
+            kubernetes cluster.lab.local in-addr.arpa ip6.arpa {
+                pods insecure
+                fallthrough in-addr.arpa ip6.arpa
+                ttl 30
+            }
+
+            # Forward lab.local directly to the full-featured DNS (10.244.0.1)
+            # which has proper forwarding. The generic forward uses /etc/resolv.conf
+            # where 10.244.0.12 (basic DNS, no forwarding) is listed first and
+            # returns NXDOMAIN for external lab hosts — blocking fallback to 10.244.0.1.
+            forward lab.local 10.244.0.1 {
+               max_concurrent 1000
+            }
+
+            forward . /etc/resolv.conf {
+               max_concurrent 1000
+            }
+
+            cache 30 {
+               disable success cluster.lab.local
+               disable denial cluster.lab.local
+            }
+
+            loop
+            reload
+            loadbalance
         }
-        forward . /etc/resolv.conf {
-           max_concurrent 1000
-        }
-        cache 30 {
-           disable success cluster.lab.local
-           disable denial cluster.lab.local
-        }
-        loop
-        reload
-        loadbalance
-    }
 kind: ConfigMap
 metadata:
-  name: coredns
-  namespace: kube-system
+    name: coredns
+    namespace: kube-system
