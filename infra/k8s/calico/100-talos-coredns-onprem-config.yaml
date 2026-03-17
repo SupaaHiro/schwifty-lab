@@ -29,11 +29,11 @@ data:
                 ttl 30
             }
 
-            # Forward lab.local directly to the full-featured DNS (10.244.0.1)
-            # which has proper forwarding. The generic forward uses /etc/resolv.conf
-            # where 10.244.0.12 (basic DNS, no forwarding) is listed first and
-            # returns NXDOMAIN for external lab hosts — blocking fallback to 10.244.0.1.
-            forward lab.local 10.244.0.1 {
+            # Forward lab.local directly to PowerDNS (10.244.0.12), the authoritative
+            # server for lab.local. Direct forwarding is required so that cert-manager
+            # DNS-01 propagation checks resolve NS/A records from the actual authoritative
+            # source rather than through pfSense, which may return stale NS records.
+            forward lab.local 10.244.0.12 {
                max_concurrent 1000
             }
 
