@@ -1,18 +1,21 @@
-apiVersion: blog.supaahiro.io/v1alpha1
+apiVersion: blog.supaahiro.io/v1alpha2
 kind: BlogPost
 metadata:
   name: 20260304-ckad-utilizing-container-logs
 spec:
   id: 20260304-ckad-utilizing-container-logs
-  title: "CKAD Preparation — Application Observability and Maintenance: Utilizing Container Logs"
+  title: "CKAD Preparation \u2014 Application Observability and Maintenance: Utilizing\
+    \ Container Logs"
   previewImage: https://supaahiro.github.io/schwifty-lab/blog-posts/20260304-ckad/article.webp
-  summary: A practical and minimal guide to using container logs in Kubernetes for application observability and maintenance.
-  contentUrl: https://raw.githubusercontent.com/SupaaHiro/schwifty-lab/refs/heads/master/blog-posts/20260304-ckad/article_EN.md
-  publishedOn: "2026-03-04T00:00:00Z"
+  summary: A practical and minimal guide to using container logs in Kubernetes for
+    application observability and maintenance.
+  contentUrl:
+    en: https://raw.githubusercontent.com/SupaaHiro/schwifty-lab/refs/heads/master/blog-posts/20260304-ckad/article_EN.md
+  publishedOn: '2026-03-04T00:00:00Z'
   author: Hiro
   categoryId: ckad-preparation
   relatedPostsIds:
-    - 20260131-ckad-monitoring-kubernetes-applications-with-built-in-cli-tools
+  - 20260131-ckad-monitoring-kubernetes-applications-with-built-in-cli-tools
 status:
   published: true
   indexed: true

@@ -1,0 +1,146 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: blogposts.blog.supaahiro.io
+spec:
+  group: blog.supaahiro.io
+  names:
+    kind: BlogPost
+    listKind: BlogPostList
+    plural: blogposts
+    singular: blogpost
+    shortNames:
+      - bp
+  scope: Namespaced
+  versions:
+    # ── Deprecated: do not create new v1alpha1 resources ─────────
+    - name: v1alpha1
+      served: true
+      storage: false
+      additionalPrinterColumns:
+        - name: Title
+          type: string
+          description: "Title of the blog post."
+          jsonPath: .spec.title
+        - name: Version
+          type: string
+          description: "API version of the resource."
+          jsonPath: .apiVersion
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              required:
+                - id
+                - title
+                - summary
+                - previewImage
+                - contentUrl
+                - publishedOn
+                - author
+                - categoryId
+                - relatedPostsIds
+              properties:
+                id:
+                  type: string
+                  description: "Unique identifier of the post."
+                title:
+                  type: string
+                  description: "Title of the post."
+                summary:
+                  type: string
+                  description: "Short summary of the post."
+                previewImage:
+                  type: string
+                  description: "Url or path to the preview image for the post."
+                contentUrl:
+                  type: string
+                  description: "Url of the markdown file that contains the post content."
+                publishedOn:
+                  type: string
+                  format: date-time
+                  description: "Date and time when the post was published."
+                author:
+                  type: string
+                  description: "Name of the author of the post."
+                categoryId:
+                  type: string
+                  description: "Unique identifier of the category the post belongs to."
+                relatedPostsIds:
+                  type: array
+                  description: "List of post IDs related to this post."
+                  items:
+                    type: string
+            status:
+              type: object
+              properties:
+                published:
+                  type: boolean
+                  default: true
+                  description: "Indicates whether the post is published. Defaults to true."
+                indexed:
+                  type: boolean
+                  default: true
+                  description: "Indicates whether the post should be indexed by search engines."
+
+    # ── Current storage version ──────────────────────────────────
+    - name: v1alpha2
+      served: true
+      storage: true
+      additionalPrinterColumns:
+        - name: Title
+          type: string
+          description: "Title of the blog post."
+          jsonPath: .spec.title
+        - name: Author
+          type: string
+          description: "Author of the blog post."
+          jsonPath: .spec.author
+        - name: Published
+          type: boolean
+          description: "Indicates whether the post is published."
+          jsonPath: .status.published
+        - name: Published On
+          type: date
+          description: "Date when the post was published."
+          jsonPath: .spec.publishedOn
+        - name: Version
+          type: string
+          description: "API version of the resource."
+          jsonPath: .apiVersion
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              required: [id, title, summary, previewImage, publishedOn, author, categoryId]
+              properties:
+                id: { type: string, description: "Unique identifier of the post." }
+                title: { type: string, maxLength: 200, description: "Title of the post." }
+                summary: { type: string, maxLength: 1000, description: "Short summary of the post." }
+                previewImage: { type: string, description: "URL or path to the preview image." }
+                contentUrl:
+                  type: object
+                  description: "BCP 47 language code -> content URL map (e.g. {\"en\": \"https://...\"}). Omit for contentData-only posts."
+                  additionalProperties: { type: string }
+                  nullable: true
+                contentData:
+                  type: object
+                  description: "BCP 47 language code -> inline Markdown map (e.g. {\"en\": \"# Hello\\n...\"}). Omit for URL-delivered posts."
+                  additionalProperties: { type: string }
+                  nullable: true
+                publishedOn: { type: string, format: date-time, description: "Publication date/time (UTC)." }
+                author: { type: string, maxLength: 100, description: "Name of the post author." }
+                categoryId: { type: string, description: "Category identifier." }
+                relatedPostsIds:
+                  type: array
+                  description: "IDs of related posts."
+                  items: { type: string }
+            status:
+              type: object
+              properties:
+                published: { type: boolean, default: true, description: "Whether the post is published." }
+                indexed: { type: boolean, default: true, description: "Whether the post should be indexed." }

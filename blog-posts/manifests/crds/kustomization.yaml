@@ -3,5 +3,5 @@ kind: Kustomization
 metadata:
   name: blog-crds-bundle
 resources:
-  - ./blogapi-category-v1alpha.yaml
-  - ./blogapi-post-v1alpha1.yaml
+  - ./blogapi-category-v1alpha1.yaml
+  - ./blogapi-post-v1alpha2.yaml

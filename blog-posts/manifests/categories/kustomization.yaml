@@ -7,3 +7,4 @@ resources:
   - ./ckad-preparation.yaml
   - ./talos.yaml
   - ./dotnet.yaml
+  - ./devops.yaml

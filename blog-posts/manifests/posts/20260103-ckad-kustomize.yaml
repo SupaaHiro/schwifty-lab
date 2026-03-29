@@ -1,14 +1,18 @@
-apiVersion: blog.supaahiro.io/v1alpha1
+apiVersion: blog.supaahiro.io/v1alpha2
 kind: BlogPost
 metadata:
   name: 20260103-ckad-kustomize
 spec:
   id: 20260103-ckad-kustomize
-  title: CKAD Preparation — Using Kustomize to deploy an Nginx Application
+  title: "CKAD Preparation \u2014 Using Kustomize to deploy an Nginx Application"
   previewImage: https://supaahiro.github.io/schwifty-lab/blog-posts/20260103-ckad/article.webp
-  summary: Discover how to use Kustomize to manage reusable and modular Kubernetes configurations. Learn to create bases, overlays, and customizations for staging and production environments.
-  contentUrl: https://raw.githubusercontent.com/SupaaHiro/schwifty-lab/refs/heads/master/blog-posts/20260103-ckad/article_EN.md
-  publishedOn: "2026-01-03T00:00:00Z"
+  summary: Discover how to use Kustomize to manage reusable and modular Kubernetes
+    configurations. Learn to create bases, overlays, and customizations for staging
+    and production environments.
+  contentUrl:
+    en: https://raw.githubusercontent.com/SupaaHiro/schwifty-lab/refs/heads/master/blog-posts/20260103-ckad/article_EN.md
+    it: https://raw.githubusercontent.com/SupaaHiro/schwifty-lab/refs/heads/master/blog-posts/20260103-ckad/article_IT.md
+  publishedOn: '2026-01-03T00:00:00Z'
   author: Hiro
   categoryId: ckad-preparation
   relatedPostsIds: []
