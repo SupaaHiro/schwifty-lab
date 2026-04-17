@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: debug-target
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: debug-target
+  template:
+    metadata:
+      labels:
+        app: debug-target
+    spec:
+      containers:
+        - name: main
+          image: nginx:1.27
+          ports:
+            - containerPort: 80
+          resources:
+            limits:
+              memory: 128Mi
+              cpu: 100m
+            requests:
+              memory: 64Mi
+              cpu: 50m

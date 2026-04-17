@@ -32,8 +32,8 @@ Application Observability and Maintenance
 - [Understand API deprecations](https://supaahiro.github.io/schwifty-lab/blog-posts/20260126-ckad/article_EN.html)
 - [Implement probes and health checks](https://supaahiro.github.io/schwifty-lab/blog-posts/20260129-ckad/article_EN.html)
 - [Use built-in CLI tools to monitor Kubernetes applications](https://supaahiro.github.io/schwifty-lab/blog-posts/20260131-ckad/article_EN.html)
-- Utilize container logs
-- Debugging in Kubernetes
+- [Utilize container logs](https://supaahiro.github.io/schwifty-lab/blog-posts/20260304-ckad/article_EN.html)
+- [Debugging in Kubernetes](https://supaahiro.github.io/schwifty-lab/blog-posts/20260417-ckad/article_EN.html)
 
 Application Environment, Configuration and Security
 - Discover and use resources that extend Kubernetes (CRD, Operators)

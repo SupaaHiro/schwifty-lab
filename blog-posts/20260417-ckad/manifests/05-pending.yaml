@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pending-demo
+  labels:
+    app: pending-demo
+spec:
+  containers:
+    - name: app
+      image: nginx:1.27
+      resources:
+        requests:
+          # Requests 999 CPU cores — no node will ever satisfy this
+          cpu: "999"
+          memory: 128Mi
+        limits:
+          cpu: "999"
+          memory: 256Mi
